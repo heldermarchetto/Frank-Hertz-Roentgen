@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physik 12: Franck-Hertz-Versuch und Röntgenstrahlung</title>
+<style>
+:root{--blue:#1f4e9a;--blue2:#e8eef9;--green:#1e7b3a;--green2:#e3f4e8;--red:#b3261e;--red2:#fbe9e7;--gold:#e5a50a;--grey:#666;--line:#d5d9e0;--bg:#f6f7fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.45;color:#1d1d1f;background:var(--bg)}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.bar{max-width:1000px;margin:0 auto;padding:8px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.bar h1{font-size:17px;margin:0 8px 0 0;color:var(--blue)}
+.bar input{padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:15px;width:180px}
+.score{display:flex;gap:12px;font-weight:bold;font-size:17px;margin-left:auto}
+.score .s{color:var(--gold)} .score .w{color:var(--red)}
+button{font:inherit;cursor:pointer;border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:6px;padding:6px 12px}
+button.sec{background:#fff;color:var(--blue)}
+button.danger{background:#fff;color:var(--red);border-color:var(--red)}
+button:disabled{opacity:.45;cursor:default}
+nav{max-width:1000px;margin:0 auto;padding:0 14px;display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:transparent;color:var(--blue);border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 12px;font-weight:bold}
+nav button.on{border-bottom-color:var(--blue)}
+main{max-width:1000px;margin:0 auto;padding:16px 14px 80px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 14px}
+details.sec{background:#fff;border:1px solid var(--line);border-radius:10px;margin:0 0 14px}
+details.sec>summary{cursor:pointer;padding:12px 16px;font-weight:bold;font-size:17px;color:var(--blue);display:flex;justify-content:space-between;gap:10px;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"▸";margin-right:8px}
+details.sec[open]>summary::before{content:"▾"}
+details.sec>summary .prog{font-weight:normal;color:var(--grey);font-size:14px;white-space:nowrap}
+.secbody{padding:0 16px 10px}
+.intro{background:var(--blue2);border-radius:8px;padding:10px 14px;margin:6px 0 14px}
+.item{border-top:1px solid var(--line);padding:14px 0}
+.item:first-child{border-top:none}
+.ihead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.q{font-weight:bold;margin-bottom:8px}
+.tag{display:inline-block;font-size:12px;font-weight:bold;border-radius:10px;padding:1px 8px;margin-right:6px;vertical-align:1px}
+.tag.k{background:#ffe9b3;color:#7a5200}.tag.x{background:#e6e6e6;color:#444}.tag.op{background:var(--blue);color:#fff}
+.stars{font-size:18px;white-space:nowrap;color:#ccc}.stars.got{color:var(--gold)}
+.fb{margin-top:8px;padding:8px 12px;border-radius:6px;display:none}
+.fb.ok{display:block;background:var(--green2);color:var(--green)}
+.fb.no{display:block;background:var(--red2);color:var(--red)}
+.sol{margin-top:8px;padding:8px 12px;border-left:4px solid var(--green);background:#f3faf5;display:none}
+.sol.show{display:block}
+.opts label{display:block;padding:6px 10px;border:1px solid var(--line);border-radius:6px;margin:5px 0;cursor:pointer}
+.opts label:hover{background:#f2f5fb}
+.opts input{margin-right:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+input.num{padding:6px 8px;font-size:16px;width:150px;border:1px solid #aaa;border-radius:6px}
+select{font:inherit;padding:3px 4px;border:1px solid #999;border-radius:5px;max-width:100%}
+select.bad{border-color:var(--red);background:var(--red2)} select.good{border-color:var(--green);background:var(--green2)}
+.cloze{line-height:2.1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid #9aa7bd;background:#fff;color:#223;border-radius:16px;padding:5px 12px;font-weight:normal}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ord{list-style:none;padding:0;margin:0}
+.ord li{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:6px;padding:6px 8px;margin:5px 0;background:#fff}
+.ord li span.t{flex:1}
+.ord li button{padding:2px 9px}
+.ord li.good{border-color:var(--green);background:var(--green2)}
+.shorten p{margin:5px 0;padding:6px 10px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:#fff}
+.shorten p.cut{text-decoration:line-through;color:#999;background:#f4f4f4}
+textarea{width:100%;min-height:130px;font:inherit;padding:8px;border:1px solid #aaa;border-radius:6px}
+.wc{font-size:14px;color:var(--grey)}
+.kwlist{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.kwlist span{border-radius:12px;padding:2px 10px;font-size:14px}
+.kwlist .y{background:var(--green2);color:var(--green)}.kwlist .n{background:var(--red2);color:var(--red)}
+.match td{padding:5px 6px;vertical-align:top;border-bottom:1px solid #eee}
+.match td:first-child{font-weight:bold;white-space:nowrap}
+.drawwrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+svg.ts{background:#fff;border:1px solid var(--line);border-radius:8px;max-width:100%;height:auto;touch-action:manipulation}
+svg .hit{fill:transparent;cursor:pointer}
+svg .lvl{stroke:var(--blue);stroke-width:2.5}
+svg .lvl.sel{stroke:#e07b00;stroke-width:5}
+svg text{font-family:Arial,sans-serif;font-size:13px;fill:#333}
+.qbox{border:2px solid var(--blue);border-radius:8px;padding:10px 14px;background:#fff;margin:4px 0 10px}
+.tbl{border-collapse:collapse;width:100%;margin:8px 0}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tbl th{background:var(--blue2)}
+.modalbg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:50;padding:12px}
+.modalbg.show{display:flex}
+.modal{background:#fff;border-radius:10px;max-width:620px;width:100%;padding:18px 20px;max-height:90vh;overflow:auto}
+.modal h2{margin-top:0;color:var(--blue);font-size:20px}
+.modal textarea{min-height:90px;font-family:monospace;font-size:12px}
+.steps li{margin:8px 0}
+.done{color:var(--green);font-weight:bold}
+.flystar{position:fixed;font-size:44px;pointer-events:none;z-index:60;animation:fly 1s ease-out forwards}
+@keyframes fly{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.4);opacity:1}100%{transform:translateY(-120px) scale(1);opacity:0}}
+.big{font-size:26px}
+.note{font-size:14px;color:var(--grey)}
+.hide{display:none!important}
+.tag.g{background:#dfeefc;color:#1f4e9a}.tag.v{background:#e3f4e8;color:#1e7b3a}.tag.w{background:#f1e6fb;color:#6b2fa3}
+.readtext{background:#fffdf6;border:1px solid #eadfbf;border-radius:10px;padding:6px 18px 10px;font-size:16.5px;line-height:1.55}
+.readtext h3{color:var(--blue);margin:10px 0 6px}.readtext h4{margin:14px 0 4px;color:#333}
+.readtext ul,.readtext ol{padding-left:22px}.readtext li{margin:4px 0}
+.formula{font-size:19px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px}
+svg.fig,svg.plot{display:block;width:100%;max-width:620px;height:auto;margin:10px auto}
+.lab{background:#fff;border:2px solid var(--blue2);border-radius:10px;padding:10px 12px}
+.labgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+@media (max-width:820px){.labgrid{grid-template-columns:1fr}}
+.labgrid svg{width:100%;height:auto}
+.slider{flex:1;min-width:200px;accent-color:var(--blue);height:28px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:8px;z-index:70;display:none}
+
+/* ☁️ Online speichern */
+.cloudonly{display:none!important}
+.cloud .cloudonly{display:inline-flex!important}
+.cloud .nocloud{display:none!important}
+.who{font-weight:bold;color:var(--blue);align-items:center}
+.cstat{font-size:13px;font-weight:bold;padding:4px 10px;border-radius:14px;background:#eef1f6;color:#333;white-space:nowrap}
+.cstat:empty{display:none}
+html:not(.cloud) .cstat{display:none}
+.cstat.ok{color:var(--green);background:var(--green2)}.cstat.busy,.cstat.foto{color:#7a5200;background:#fff3cd}.cstat.off{color:var(--red);background:var(--red2)}
+.fs-ov{position:fixed;inset:0;background:rgba(15,23,42,.72);display:flex;align-items:flex-start;justify-content:center;z-index:400;padding:40px 16px;overflow:auto}
+.fs-box{background:#fff;border-radius:14px;padding:22px 24px;max-width:420px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.fs-box h2{margin:.1em 0 .3em;font-size:24px;color:var(--blue)}
+.fs-sub{font-size:14px;color:var(--grey);font-weight:normal}
+.fs-box label{display:block;font-weight:bold;margin:12px 0 4px}
+.fs-box input{font-size:20px;width:100%;border:2px solid #cbd5e1;border-radius:10px;padding:9px 12px}
+.fs-box input:focus{outline:none;border-color:var(--blue)}
+.fs-box .go{margin-top:16px;width:100%;font-size:18px;padding:11px;border-radius:10px;border:0;background:var(--green);color:#fff;font-weight:bold}
+.fs-box .go:disabled{opacity:.5}
+.fs-msg{margin-top:12px;font-weight:bold;border-radius:8px;padding:8px 10px;display:none}
+.fs-msg.bad{display:block;background:var(--red2);color:var(--red)}
+.fs-msg.info{display:block;background:var(--blue2);color:var(--blue)}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>⚛ Franck-Hertz &amp; Röntgen</h1>
+    <label class="nocloud">Name: <input id="name" placeholder="Vor- und Nachname"></label>
+    <button id="btnSave" class="nocloud">💾 Speichern</button>
+    <button id="btnLoad" class="sec nocloud">📂 Laden</button>
+    <button id="btnErase" class="danger nocloud">🗑 Alles löschen</button>
+    <span class="who cloudonly" id="who"></span>
+    <span class="cstat" id="cloudStatus"></span>
+    <button id="btnLogout" class="sec cloudonly">🚪 Abmelden</button>
+    <div class="score"><span class="s">⭐ <span id="sNum">0</span> / <span id="sMax">0</span></span><span class="w">✗ <span id="wNum">0</span></span></div>
+  </div>
+  <nav id="tabs"></nav>
+</header>
+<main id="app"></main>
+
+<div class="modalbg" id="mSave"><div class="modal">
+  <h2>💾 Fortschritt speichern</h2>
+  <p><b>Weg 1 – Datei:</b> Klicke auf „Datei herunterladen“. Die Datei landet meistens im Ordner <b>Downloads</b>. Bewahre sie gut auf (z. B. in OneDrive oder auf dem USB-Stick).</p>
+  <div class="row"><button id="doDownload">⬇ Datei herunterladen</button><span class="note" id="dlInfo"></span></div>
+  <p style="margin-top:16px"><b>Weg 2 – Code:</b> Kopiere diesen Code und füge ihn z. B. in eine E-Mail an dich selbst oder in ein Word-Dokument ein.</p>
+  <textarea id="codeOut" readonly></textarea>
+  <div class="row"><button id="doCopy" class="sec">📋 Code kopieren</button><span class="note" id="cpInfo"></span></div>
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="sec" data-close="mSave">Schließen</button></div>
+</div></div>
+
+<div class="modalbg" id="mLoad"><div class="modal">
+  <h2>📂 Fortschritt laden</h2>
+  <p><b>Weg 1 – Datei:</b> Wähle deine gespeicherte Datei (Endung <b>.json</b>) aus.</p>
+  <input type="file" id="fileIn" accept=".json,application/json,text/plain">
+  <p style="margin-top:16px"><b>Weg 2 – Code:</b> Füge deinen gespeicherten Code hier ein und klicke auf „Code laden“.</p>
+  <textarea id="codeIn" placeholder="PT-..."></textarea>
+  <div class="row"><button id="doLoadCode">Code laden</button><span class="note" id="ldInfo"></span></div>
+  <div class="row" style="justify-content:flex-end;margin-top:14px"><button class="sec" data-close="mLoad">Schließen</button></div>
+</div></div>
+
+<div class="modalbg" id="mErase"><div class="modal">
+  <h2>🗑 Alles löschen?</h2>
+  <p>Alle Sterne, Fehlversuche und Antworten werden gelöscht – auch der automatische Speicherstand im Browser. <b>Hast du vorher gespeichert?</b></p>
+  <div class="row" style="justify-content:flex-end"><button class="sec" data-close="mErase">Abbrechen</button><button class="danger" id="doErase">Ja, alles löschen</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const CLOUD_ON=(()=>{try{const q=new URLSearchParams(location.search).get('s');if(q&&/^[A-Za-z0-9_-]{20,}$/.test(q))return true;const l=JSON.parse(localStorage.getItem('fs-login')||'null');return !!(l&&l.s);}catch(e){return false}})();
+const APP_ID='physik12-franck-hertz-roentgen', APP_TITEL='Physik 12: Franck-Hertz und Röntgen';
+if(CLOUD_ON) document.documentElement.classList.add('cloud');
+/* =====================================================================
+   INHALT
+   Typen: info, mode, tutorial, mc, num, cloze, match, kw, order, shorten, write, draw, qhead
+   Bei mc / cloze / kw steht die richtige Antwort immer an erster Stelle (die Anzeige wird gemischt).
+   tag: "k" = Klausur-relevant, "x" = Zusatz (passt zum Thema)
+   ===================================================================== */
+
+const LEVELS = {
+  H: { title: "Energieniveauschema des Wasserstoffatoms (nicht maßstäblich)", levels: [
+    {k:"inf", n:"n → ∞", E:"0,00 eV", y:42},
+    {k:"6", n:"n = 6", E:"−0,38 eV", y:76},
+    {k:"5", n:"n = 5", E:"−0,54 eV", y:102},
+    {k:"4", n:"n = 4", E:"−0,85 eV", y:134},
+    {k:"3", n:"n = 3", E:"−1,51 eV", y:180},
+    {k:"2", n:"n = 2", E:"−3,40 eV", y:255},
+    {k:"1", n:"n = 1", E:"−13,60 eV", y:390}]},
+  Hg: { title: "Energieniveaus des Quecksilberatoms (vereinfacht, nicht maßstäblich)", levels: [
+    {k:"ion", n:"Ionisierung", E:"10,44 eV", y:42},
+    {k:"8.84", n:"", E:"8,84 eV", y:88},
+    {k:"7.73", n:"", E:"7,73 eV", y:128},
+    {k:"6.70", n:"", E:"6,70 eV", y:170},
+    {k:"5.46", n:"", E:"5,46 eV", y:214},
+    {k:"4.89", n:"", E:"4,89 eV", y:250},
+    {k:"4.67", n:"", E:"4,67 eV", y:282},
+    {k:"0", n:"Grundzustand", E:"0,00 eV", y:390}]},
+  Cu: { title: "Energien der Elektronen in den inneren Schalen von Kupfer (nicht maßstäblich)", levels: [
+    {k:"frei", n:"Elektron frei", E:"0 keV", y:42},
+    {k:"M", n:"M-Schale", E:"−0,08 keV", y:80},
+    {k:"L", n:"L-Schale", E:"−0,93 keV", y:130},
+    {k:"K", n:"K-Schale", E:"−8,98 keV", y:390}]}
+};
+
+const SECTIONS = [
+/* ---------------------------- START ---------------------------- */
+{ id:"start", part:"start", title:"Start", items:[
+  {type:"info", html:`<p>Hier lernst du zwei neue Themen: den <b>Franck-Hertz-Versuch</b> und die <b>Röntgenstrahlung</b>. Im Reiter <b>Wiederholung</b> frischst du ältere Themen auf.</p>
+  <p><b>So gehst du vor:</b> ① Lies zuerst die <b>Lesetexte</b> (📖) und beantworte die Fragen dazu. ② Dann <b>vertiefst</b> du dein Wissen: Fachbegriffe, Rechnen, Simulationen, Antworten schreiben.</p>
+  <p>Für jede richtig gelöste Aufgabe bekommst du einen <b>Stern ⭐</b>. Jeder falsche Versuch wird als <b>Fehlversuch ✗</b> gezählt. Oben siehst du immer deinen Stand.</p>
+  <p>Dein Fortschritt wird automatisch in diesem Browser gemerkt. Das ist <b>nicht sicher</b>. Speichere deshalb am Ende jeder Übung mit <b>💾 Speichern</b>.</p>`,
+   cloudHtml:`<p>Hier lernst du zwei neue Themen: den <b>Franck-Hertz-Versuch</b> und die <b>Röntgenstrahlung</b>. Im Reiter <b>Wiederholung</b> frischst du ältere Themen auf.</p>
+  <p><b>So gehst du vor:</b> ① Lies zuerst die <b>Lesetexte</b> (📖) und beantworte die Fragen dazu. ② Dann <b>vertiefst</b> du dein Wissen: Fachbegriffe, Rechnen, Simulationen, Antworten schreiben.</p>
+  <p>Für jede richtig gelöste Aufgabe bekommst du einen <b>Stern ⭐</b>. Jeder falsche Versuch wird als <b>Fehlversuch ✗</b> gezählt. Dein Fortschritt wird <b>automatisch online gespeichert</b> – deine Lehrkraft sieht Sterne und Fehlversuche.</p>`},
+  {type:"tutorial", id:"tut1"}
+]},
+
+/* ============================ FRANCK-HERTZ ============================ */
+{ id:"f1", part:"f", title:"F1 · 📖 Lesetext: Der Franck-Hertz-Versuch – Aufbau und Beobachtung", items:[
+  {type:"read", html:`<h3>Können Atome jede beliebige Energie aufnehmen?</h3>
+<p>Aus den Linienspektren weißt du: Atome senden nur Photonen <b>bestimmter</b> Energien aus. Man erklärt das mit <b>diskreten Energieniveaus</b>. Aber gilt das auch, wenn ein Atom Energie nicht durch Licht, sondern durch einen <b>Stoß</b> bekommt? Diese Frage beantworteten <b>James Franck</b> und <b>Gustav Hertz</b> 1914 in Berlin mit einem berühmten Versuch.</p>
+<h4>Aufbau</h4>
+<p>In einer Glasröhre befindet sich <b>Quecksilberdampf</b> (Hg) mit geringem Druck. Damit genug Quecksilber verdampft, steht die Röhre in einem kleinen <b>Ofen</b> (ca. 180 °C).</p>
+{{fig:fhTube}}
+<ul>
+<li>Eine <b>Glühkathode K</b> sendet Elektronen aus.</li>
+<li>Zwischen Kathode und <b>Gitter G</b> liegt die <b>Beschleunigungsspannung U<sub>B</sub></b> (0 bis etwa 30 V). Sie beschleunigt die Elektronen. Am Gitter hat ein Elektron (ohne Stöße) die kinetische Energie E<sub>kin</sub> = e · U<sub>B</sub>.</li>
+<li>Hinter dem Gitter liegt der <b>Auffänger A</b> (Anode). Zwischen Gitter und Auffänger liegt eine kleine <b>Gegenspannung U<sub>G</sub></b> (etwa 1,5 V). Sie bremst die Elektronen. Nur Elektronen, die am Gitter noch <b>genug Energie</b> haben (mehr als e · U<sub>G</sub>), erreichen den Auffänger.</li>
+<li>Ein <b>Messverstärker</b> misst den sehr kleinen <b>Auffängerstrom I</b> (Nanoampere).</li>
+</ul>
+<h4>Beobachtung</h4>
+<p>Man erhöht U<sub>B</sub> langsam und misst I. So erhält man die <b>Franck-Hertz-Kurve</b>:</p>
+{{fig:fhCurve}}
+<ul>
+<li>Zuerst steigt der Strom an.</li>
+<li>Dann fällt er plötzlich stark ab, steigt wieder an, fällt wieder ab … Es gibt mehrere <b>Maxima und Minima</b>.</li>
+<li>Der <b>Abstand</b> zwischen zwei benachbarten Maxima (oder Minima) ist immer gleich: <b>ΔU ≈ 4,9 V</b>.</li>
+<li>Das erste Maximum liegt nicht genau bei 4,9 V, sondern etwas höher. Das liegt an Spannungen in der Röhre selbst (Kontaktspannung). Wichtig ist nur der <b>Abstand</b> der Maxima.</li>
+<li>Außerdem sendet der Quecksilberdampf <b>ultraviolette Strahlung</b> mit λ ≈ 254 nm aus – aber erst, wenn U<sub>B</sub> größer als etwa 4,9 V ist.</li>
+</ul>`},
+  {type:"mc", id:"fl1", tag:"g", q:"Welche Frage wollten Franck und Hertz mit dem Versuch beantworten?", o:["Ob Atome auch bei Stößen nur bestimmte Energiebeträge aufnehmen können.","Wie schnell sich Licht in Quecksilber ausbreitet.","Wie groß die Ladung eines Elektrons ist.","Ob Quecksilber ein Metall oder ein Gas ist."], ex:"Es geht um die Energieaufnahme durch Stöße – nicht durch Licht."},
+  {type:"mc", id:"fl2", tag:"g", q:"Wozu dient die Beschleunigungsspannung U<sub>B</sub>?", o:["Sie beschleunigt die Elektronen zwischen Kathode und Gitter.","Sie heizt den Quecksilberdampf.","Sie bremst die Elektronen vor dem Auffänger.","Sie misst den Auffängerstrom."]},
+  {type:"mc", id:"fl3", tag:"g", q:"Wozu dient die kleine Gegenspannung U<sub>G</sub> zwischen Gitter und Auffänger?", o:["Nur Elektronen mit genug Energie am Gitter erreichen den Auffänger.","Sie beschleunigt die Elektronen noch einmal.","Sie verhindert, dass Quecksilber verdampft.","Sie erzeugt das ultraviolette Licht."], ex:"Elektronen mit zu wenig Energie werden vom Gegenfeld zurückgehalten – sie tragen nicht zum Strom bei."},
+  {type:"mc", id:"fl4", tag:"g", q:"Warum steht die Röhre in einem Ofen?", o:["Damit genug Quecksilber verdampft (genug Atome als Stoßpartner).","Damit die Elektronen schneller werden.","Damit die Röhre leuchtet.","Damit die Kathode keine Elektronen mehr aussendet."]},
+  {type:"mc", id:"fl5", tag:"g", q:"Was ist bei der Franck-Hertz-Kurve auf den Achsen aufgetragen?", o:["x-Achse: Beschleunigungsspannung U<sub>B</sub> · y-Achse: Auffängerstrom I","x-Achse: Zeit · y-Achse: Temperatur","x-Achse: Wellenlänge · y-Achse: Intensität","x-Achse: Auffängerstrom · y-Achse: Gegenspannung"]},
+  {type:"mc", id:"fl6", tag:"g", q:"Wie groß ist bei Quecksilber der Abstand zwischen zwei benachbarten Maxima?", o:["etwa 4,9 V","etwa 1,5 V","etwa 254 V","Der Abstand wird immer größer."]},
+  {type:"mc", id:"fl7", tag:"g", q:"Wann sendet der Quecksilberdampf ultraviolette Strahlung aus?", o:["erst ab einer Beschleunigungsspannung von etwa 4,9 V","schon bei 0 V","nur wenn die Gegenspannung ausgeschaltet ist","nie – die Röhre ist dunkel"]},
+]},
+
+{ id:"f2", part:"f", title:"F2 · 📖 Lesetext: Die Deutung – elastische und unelastische Stöße", items:[
+  {type:"read", html:`<h3>Was passiert in der Röhre?</h3>
+<p>Auf dem Weg von der Kathode zum Gitter stoßen die Elektronen sehr oft mit Quecksilberatomen zusammen. Es gibt zwei Arten von Stößen:</p>
+<table class="tbl"><tr><th>Energie des Elektrons</th><th>Art des Stoßes</th><th>Was passiert?</th></tr>
+<tr><td>E<sub>kin</sub> &lt; 4,9 eV</td><td><b>elastischer Stoß</b></td><td>Das Atom bleibt im <b>Grundzustand</b>. Das Elektron prallt ab wie ein Tischtennisball an einer Bowlingkugel. Es verliert dabei <b>fast keine Energie</b>, weil das Hg-Atom etwa 400 000-mal schwerer ist.</td></tr>
+<tr><td>E<sub>kin</sub> ≥ 4,9 eV</td><td><b>unelastischer Stoß</b></td><td>Das Elektron gibt <b>genau 4,9 eV</b> an das Atom ab. Das Atom wird <b>angeregt</b>: Es geht in den ersten angeregten Zustand über. Das Elektron behält nur die Restenergie.</td></tr></table>
+<h4>So erklärt man die Kurve</h4>
+<ol>
+<li><b>U<sub>B</sub> unter 4,9 V:</b> Es gibt nur elastische Stöße. Die Elektronen kommen mit E = e · U<sub>B</sub> am Gitter an. Je größer U<sub>B</sub>, desto mehr Elektronen schaffen das Gegenfeld: <b>I steigt</b>.</li>
+<li><b>U<sub>B</sub> ≈ 4,9 V:</b> Kurz vor dem Gitter erreichen die Elektronen 4,9 eV. Sie stoßen <b>unelastisch</b> und regen ein Atom an. Danach haben sie fast keine Energie mehr. Sie können das Gegenfeld nicht überwinden: <b>I fällt stark ab</b>.</li>
+<li><b>U<sub>B</sub> etwas größer:</b> Der unelastische Stoß findet <b>früher</b> statt (näher an der Kathode). Danach werden die Elektronen wieder beschleunigt und haben am Gitter wieder genug Energie: <b>I steigt wieder</b>.</li>
+<li><b>U<sub>B</sub> ≈ 2 · 4,9 V = 9,8 V:</b> Jedes Elektron kann jetzt <b>zweimal</b> unelastisch stoßen. Am Gitter hat es wieder zu wenig Energie: <b>zweites Minimum</b>. Bei 3 · 4,9 V gibt es drei Stöße usw.</li>
+</ol>
+<p>Der Strom fällt nicht ganz auf null: Nicht jedes Elektron stößt genau im richtigen Moment, und die Elektronen haben schon beim Austritt aus der Kathode etwas unterschiedliche Energien.</p>
+<h4>Das UV-Licht</h4>
+<p>Ein angeregtes Atom bleibt nur sehr kurz (ca. 10<sup>−8</sup> s) im angeregten Zustand. Dann geht es in den Grundzustand zurück und <b>emittiert ein Photon</b> mit E = 4,9 eV. Seine Wellenlänge ist λ = h · c / E ≈ <b>254 nm</b> (ultraviolett).</p>
+<h4>Was beweist der Versuch?</h4>
+<p>Quecksilberatome nehmen bei Stößen <b>nicht beliebige</b> Energiebeträge auf, sondern nur <b>bestimmte</b> (hier 4,9 eV). Das ist ein direkter Beweis für <b>diskrete Energieniveaus</b> im Atom – unabhängig von den Spektren. Die gleiche Energie zeigt sich zweimal: als Spannungsabstand der Maxima (4,9 V) und als Photonenenergie der UV-Linie (4,9 eV). Der Versuch bestätigt damit das <b>Bohr'sche Atommodell</b>.</p>`},
+  {type:"mc", id:"fd1", tag:"g", q:"Was passiert bei einem elastischen Stoß zwischen Elektron und Hg-Atom?", o:["Das Atom bleibt im Grundzustand, das Elektron verliert fast keine Energie.","Das Atom wird angeregt.","Das Elektron gibt genau 4,9 eV ab.","Das Atom wird ionisiert."]},
+  {type:"mc", id:"fd2", tag:"g", q:"Warum verliert das Elektron bei einem elastischen Stoß fast keine Energie?", o:["Das Hg-Atom ist viel schwerer als das Elektron.","Das Elektron ist schneller als das Atom.","Das Atom ist positiv geladen.","Weil das Gitter das Elektron schützt."], ex:"Wie ein Tischtennisball an einer Bowlingkugel: Der leichte Ball prallt ab und behält seine Energie."},
+  {type:"mc", id:"fd3", tag:"g", q:"Warum fällt der Auffängerstrom bei U<sub>B</sub> ≈ 4,9 V (plus Kontaktspannung) stark ab?", o:["Die Elektronen stoßen kurz vor dem Gitter unelastisch und können danach das Gegenfeld nicht mehr überwinden.","Die Kathode sendet keine Elektronen mehr aus.","Die Elektronen werden vom Gitter absorbiert, weil es positiv ist.","Das Quecksilber kondensiert."]},
+  {type:"mc", id:"fd4", tag:"g", q:"Warum steigt der Strom nach dem ersten Minimum wieder an?", o:["Der unelastische Stoß passiert früher; danach werden die Elektronen wieder beschleunigt und erreichen den Auffänger.","Die Atome geben die Energie an die Elektronen zurück.","Die Gegenspannung schaltet sich ab.","Es gibt dann keine Stöße mehr."]},
+  {type:"mc", id:"fd5", tag:"g", q:"Was passiert beim zweiten Minimum (bei etwa 2 · 4,9 V über dem ersten Anstieg)?", o:["Die Elektronen stoßen zweimal unelastisch.","Die Elektronen stoßen zweimal elastisch.","Das Atom wird zweimal ionisiert.","Ein Elektron regt zwei Atome gleichzeitig an."]},
+  {type:"mc", id:"fd6", tag:"g", q:"Woher kommt die UV-Strahlung mit λ ≈ 254 nm?", o:["Angeregte Hg-Atome gehen in den Grundzustand zurück und emittieren Photonen mit 4,9 eV.","Die Elektronen werden am Gitter abgebremst.","Die heiße Kathode leuchtet.","Die Gegenspannung erzeugt Licht."]},
+  {type:"mc", id:"fd7", tag:"g", q:"Was beweist der Franck-Hertz-Versuch?", o:["Atome nehmen auch bei Stößen nur bestimmte Energiebeträge auf: Es gibt diskrete Energieniveaus.","Elektronen sind Wellen.","Licht besteht aus Photonen.","Quecksilber ist radioaktiv."]},
+  {type:"order", id:"fd8", tag:"g", q:"Bringe die Erklärung des <b>ersten Stromabfalls</b> in die richtige Reihenfolge.", lines:[
+    "Die Elektronen werden von der Kathode zum Gitter beschleunigt.",
+    "Kurz vor dem Gitter erreichen sie eine kinetische Energie von 4,9 eV.",
+    "Sie stoßen unelastisch mit Hg-Atomen und geben 4,9 eV ab.",
+    "Die Atome werden dabei angeregt.",
+    "Die Elektronen haben danach zu wenig Energie, um das Gegenfeld zu überwinden.",
+    "Deshalb erreichen weniger Elektronen den Auffänger: Der Strom fällt ab."]},
+]},
+
+{ id:"f3", part:"f", title:"F3 · 📖 Lesetext: Ein Irrtum mit Nobelpreis", items:[
+  {type:"read", html:`<h3>Geschichte des Versuchs</h3>
+<p>Franck und Hertz untersuchten seit 1911 Stöße zwischen Elektronen und Gasatomen. 1914 veröffentlichten sie ihre Messungen an Quecksilberdampf. Sie fanden scharfe, regelmäßige Maxima mit einem Abstand zwischen 4,8 V und 5,0 V und nannten als besten Wert <b>4,9 V</b>.</p>
+<p>Ihre Deutung war aber <b>falsch</b>: Sie glaubten, sie hätten die <b>Ionisierungsenergie</b> von Quecksilber gemessen. Das Bohr'sche Atommodell (1913) kannten sie damals kaum.</p>
+<p><b>Niels Bohr</b> schlug 1915 vor: 4,9 eV ist die Energie, die das Atom vom <b>Grundzustand in einen angeregten Zustand</b> bringt – keine Ionisierung. Franck und Hertz prüften das: Sie beschossen Quecksilberdampf mit Elektronen von 4,9 eV und fanden <b>eine einzige UV-Linie bei 253,7 nm</b>. Ihre Photonenenergie passt genau: h · f = e · 4,9 V.</p>
+<p>Später trennten sie den Beschleunigungsraum vom Stoßraum. So konnten sie auch höhere Energieniveaus anregen. 1925 bekamen Franck und Hertz den <b>Nobelpreis für Physik</b>. Hertz sagte später sinngemäß: Sie hatten eine Landkarte eines unbekannten Landes gezeichnet, ohne es zu wissen.</p>
+<p class="note">Quelle (verändert): LEIFIphysik, „Franck-Hertz – Historisches“ und „Auszüge aus der Originalarbeit von Franck und Hertz 1914“.</p>`},
+  {type:"mc", id:"fg1", tag:"g", q:"Was glaubten Franck und Hertz 1914 gemessen zu haben?", o:["die Ionisierungsenergie von Quecksilber","die Anregungsenergie von Quecksilber","die Elementarladung","die Lichtgeschwindigkeit"]},
+  {type:"mc", id:"fg2", tag:"g", q:"Wer schlug die richtige Deutung vor?", o:["Niels Bohr","Albert Einstein","Max Planck","Wilhelm Conrad Röntgen"]},
+  {type:"mc", id:"fg3", tag:"g", q:"Welche Beobachtung bestätigte die richtige Deutung?", o:["Bei 4,9 eV entstand nur eine UV-Linie bei 253,7 nm mit passender Photonenenergie.","Bei 4,9 eV wurden viele Ionen gemessen.","Die Röhre wurde bei 4,9 V sehr heiß.","Die Kurve hatte nur ein Maximum."]},
+  {type:"mc", id:"fg4", tag:"g", q:"Wofür bekamen Franck und Hertz 1925 den Nobelpreis?", o:["für die Entdeckung der Gesetze beim Stoß von Elektronen auf Atome","für die Entdeckung der Röntgenstrahlung","für die Erklärung des Photoeffekts","für das Atommodell"]},
+]},
+
+{ id:"f4", part:"f", title:"F4 · Fachbegriffe und Zusammenhänge", intro:`<p>Jetzt sicherst du die Fachsprache. Sie zählt im Abitur ausdrücklich zur Bewertung.</p>
+<details><summary><b>📖 Glossar öffnen</b></summary><table class="tbl">
+<tr><td><b>Glühkathode</b></td><td>geheizte Elektrode, die Elektronen aussendet (glühelektrischer Effekt)</td></tr>
+<tr><td><b>Beschleunigungsspannung U<sub>B</sub></b></td><td>Spannung zwischen Kathode und Gitter; E<sub>kin</sub> = e · U<sub>B</sub></td></tr>
+<tr><td><b>Gegenspannung U<sub>G</sub></b></td><td>kleine bremsende Spannung zwischen Gitter und Auffänger</td></tr>
+<tr><td><b>Auffängerstrom</b></td><td>Strom der Elektronen, die den Auffänger erreichen</td></tr>
+<tr><td><b>elastischer Stoß</b></td><td>Stoß ohne Anregung; die kinetische Energie bleibt erhalten</td></tr>
+<tr><td><b>unelastischer Stoß</b></td><td>Stoß, bei dem das Elektron Energie an das Atom abgibt (Anregung)</td></tr>
+<tr><td><b>Anregungsenergie</b></td><td>Energie, um ein Atom vom Grundzustand in einen angeregten Zustand zu bringen (Hg: 4,9 eV)</td></tr>
+<tr><td><b>Stoßanregung</b></td><td>Anregung eines Atoms durch einen Stoß (statt durch ein Photon)</td></tr>
+</table></details>`, items:[
+  {type:"match", id:"fv1", tag:"v", q:"Ordne jedem Begriff die passende Bedeutung zu.", pairs:[
+    ["Glühkathode","geheizte Elektrode, die Elektronen aussendet"],
+    ["Beschleunigungsspannung","Spannung zwischen Kathode und Gitter, die die Elektronen beschleunigt"],
+    ["Gegenspannung","kleine bremsende Spannung zwischen Gitter und Auffänger"],
+    ["elastischer Stoß","Stoß ohne Anregung des Atoms"],
+    ["unelastischer Stoß","Stoß, bei dem das Elektron Energie an das Atom abgibt"],
+    ["Anregungsenergie","Energie vom Grundzustand bis zum angeregten Zustand"]]},
+  {type:"cloze", id:"fv2", tag:"v", q:"Stöße in der Röhre – wähle die passenden Wörter.", text:"Hat ein Elektron weniger als 4,9 eV, stößt es {{elastisch|unelastisch}} mit den Hg-Atomen. Die Atome bleiben im {{Grundzustand|angeregten Zustand}}. Erreicht das Elektron 4,9 eV, gibt es diese Energie bei einem {{unelastischen|elastischen}} Stoß ab. Das Atom wird {{angeregt|ionisiert}}. Das Elektron kann danach die {{Gegenspannung|Beschleunigungsspannung}} nicht mehr überwinden."},
+  {type:"cloze", id:"fv3", tag:"v", q:"Deutung – wähle die passenden Wörter.", text:"Der Abstand der Maxima beträgt {{4,9 V|254 V|1,5 V}}. Das zeigt: Hg-Atome nehmen bei Stößen nur {{bestimmte|beliebige}} Energiebeträge auf. Das angeregte Atom geht in den Grundzustand zurück und {{emittiert|absorbiert}} ein Photon mit λ ≈ {{254 nm|656 nm|4,9 nm}}. Der Versuch ist ein Beweis für {{diskrete Energieniveaus|die Wellennatur der Elektronen}}."},
+  {type:"mc", id:"fv4", tag:"v", q:"Was würde man beobachten, wenn Atome <b>beliebige</b> Energiebeträge aufnehmen könnten?", o:["Keine scharfen Maxima und Minima: Der Strom würde einfach gleichmäßig ansteigen (oder gleichmäßig abnehmen).","Maxima im Abstand von genau 4,9 V.","Die gleiche Kurve wie gemessen.","Gar keinen Strom."], ex:"Die regelmäßigen Einbrüche entstehen nur, weil genau 4,9 eV abgegeben werden."},
+  {type:"mc", id:"fv5", tag:"v", q:"Warum misst man den <b>Abstand</b> der Maxima und nicht die Lage des ersten Maximums?", o:["Die Lage der Maxima ist durch die Kontaktspannung in der Röhre verschoben; der Abstand ist davon unabhängig.","Das erste Maximum ist immer zu klein, um es zu sehen.","Das erste Maximum entsteht durch Ionisierung.","Weil das erste Maximum immer bei 0 V liegt."]},
+  {type:"mc", id:"fv6", tag:"v", q:"Warum beobachtet man mit Hg-Dampf kein sichtbares Leuchten?", o:["Die emittierten Photonen (254 nm) liegen im UV-Bereich.","Die Atome werden nicht angeregt.","Der Dampf ist zu kalt.","Das Licht wird vom Gitter absorbiert."]},
+  {type:"mc", id:"fv7", tag:"x", q:"Mit <b>Neon</b> haben die Minima einen Abstand von etwa 19 V. Zwischen Kathode und Gitter sieht man orange-rot leuchtende Schichten. Woher kommt das sichtbare Licht?", o:["Die angeregten Ne-Atome gehen zuerst in ein tieferes angeregtes Niveau über; dabei werden Photonen mit etwa 2 eV (orange-rot) emittiert.","Die Elektronen leuchten selbst orange.","Photonen mit 19 eV sind orange.","Das Glas wird heiß und glüht."], ex:"Ein Photon mit 19 eV hätte λ ≈ 65 nm (UV). Das sichtbare Licht stammt aus einem Übergang zwischen zwei angeregten Niveaus (ΔE ≈ 2 eV → λ ≈ 600–650 nm)."},
+  {type:"kw", id:"fv8", tag:"v", q:"Welche Begriffe brauchst du, um den <b>Abfall des Stroms</b> zu erklären? Wähle alle passenden – und nur diese.", good:["unelastischer Stoß","4,9 eV","Anregung","Gegenspannung","zu wenig Energie","Auffänger"], bad:["Ionisierung","Photoeffekt","Lorentzkraft","elastischer Stoß","Elektronen werden vernichtet"], ex:"Ionisierung war der historische Irrtum. Elastische Stöße verursachen keinen Energieverlust."},
+]},
+
+{ id:"f5", part:"f", title:"F5 · 🔬 Franck-Hertz-Labor (Simulation)", intro:`<p>Hier führst du den Versuch selbst durch. Bewege den Regler für U<sub>B</sub> und beobachte <b>gleichzeitig</b> den Strom und die Energie der Elektronen auf ihrem Weg. Mit „Messwert aufnehmen“ zeichnest du die Kurve Punkt für Punkt.</p><p class="note">Vereinfachtes Modell – die Zahlenwerte passen zu echten Messungen (Kontaktspannung ≈ 2,7 V).</p>`, items:[
+  {type:"fhlab"},
+  {type:"num", id:"fs1", tag:"v", q:"Miss mit Quecksilber die Lage des <b>dritten Maximums</b> (in V). Tipp: Kurve automatisch messen und den Regler genau einstellen.", a:16.8, tol:0.025, unit:"V", sol:"Die Maxima liegen bei etwa 7,1 V · 11,9 V · 16,8 V · 21,7 V · 26,6 V."},
+  {type:"num", id:"fs2", tag:"v", q:"Bestimme aus deinen Messwerten den <b>mittleren Abstand</b> zweier Maxima bei Quecksilber.", a:4.9, tol:0.03, unit:"V", sol:"Z. B. (26,6 V − 7,1 V) / 4 ≈ 4,9 V. Man nimmt den Abstand vom ersten zum letzten Maximum und teilt durch die Anzahl der Abstände – das ist genauer als ein einzelner Abstand."},
+  {type:"mc", id:"fs3", tag:"v", q:"Stelle U<sub>B</sub> = 20 V ein (Quecksilber). Wie oft stößt ein Elektron auf dem Weg zum Gitter unelastisch?", o:["3-mal","1-mal","4-mal","gar nicht"], ex:"Ohne Kontaktspannung bleiben etwa 20 V − 2,7 V ≈ 17,3 V. 17,3 / 4,9 ≈ 3,5 → 3 unelastische Stöße."},
+  {type:"mc", id:"fs4", tag:"v", q:"Beobachte das Energie-Diagramm unten. Was passiert mit der Energie eines Elektrons zwischen zwei unelastischen Stößen?", o:["Sie steigt gleichmäßig an, weil das Feld das Elektron beschleunigt.","Sie bleibt konstant.","Sie nimmt ab, weil das Elektron elastisch stößt.","Sie springt zwischen 0 und 4,9 eV hin und her."]},
+  {type:"mc", id:"fs5", tag:"v", q:"Wechsle zu <b>Neon</b> und stelle U<sub>B</sub> = 60 V ein. Wie viele leuchtende Schichten siehst du?", o:["3","1","2","6"], ex:"(60 V − 1 V) / 18,7 V ≈ 3,2 → drei Zonen mit unelastischen Stößen. In echten Neon-Röhren sieht man diese Schichten tatsächlich."},
+  {type:"mc", id:"fs6", tag:"v", q:"Was passiert mit den leuchtenden Zonen, wenn U<sub>B</sub> größer wird?", o:["Sie wandern in Richtung Kathode, und es kommen neue Zonen dazu.","Sie wandern zum Auffänger und verschwinden.","Sie werden breiter, aber es bleibt immer eine Zone.","Nichts – sie bleiben an derselben Stelle."], ex:"Bei größerem U<sub>B</sub> erreichen die Elektronen die Anregungsenergie schon nach einem kürzeren Weg."},
+]},
+
+{ id:"f6", part:"f", title:"F6 · Rechnen und Auswerten", intro:`<p><b>Formeln:</b> E<sub>kin</sub> = e · U · ΔE = h · f = h · c / λ · λ in nm ≈ 1240 / (E in eV)<br>e = 1,602 · 10<sup>−19</sup> C · h = 6,626 · 10<sup>−34</sup> J s · c = 2,998 · 10<sup>8</sup> m/s · m<sub>e</sub> = 9,109 · 10<sup>−31</sup> kg</p><p class="note">Eingabe: Komma oder Punkt; Zehnerpotenzen so: <b>1,2e15</b> oder <b>1,2*10^15</b>.</p>`, items:[
+  {type:"num", id:"fr1", tag:"v", q:"Bei einer Messung liegen die Maxima bei 7,1 V, 12,0 V, 16,9 V, 21,8 V und 26,7 V. Bestimme den mittleren Abstand.", a:4.9, tol:0.01, unit:"V", sol:"ΔU = (26,7 V − 7,1 V) / 4 = 19,6 V / 4 = 4,9 V"},
+  {type:"num", id:"fr2", tag:"v", q:"Berechne die Energie, die ein Hg-Atom beim unelastischen Stoß aufnimmt, in Joule.", a:7.85e-19, tol:0.01, unit:"J", sol:"E = e · ΔU = 1,602·10⁻¹⁹ C · 4,9 V ≈ 7,85·10⁻¹⁹ J"},
+  {type:"num", id:"fr3", tag:"v", q:"Berechne die Wellenlänge der Photonen, die die angeregten Hg-Atome aussenden.", a:253, tol:0.015, unit:"nm", sol:"λ = h · c / E = 6,626·10⁻³⁴ · 2,998·10⁸ / 7,85·10⁻¹⁹ m ≈ 2,53·10⁻⁷ m = 253 nm (gemessen: 253,7 nm)"},
+  {type:"num", id:"fr4", tag:"v", q:"Berechne die Frequenz dieser Strahlung.", a:1.185e15, tol:0.015, unit:"Hz", sol:"f = E / h = 7,85·10⁻¹⁹ J / 6,626·10⁻³⁴ J s ≈ 1,18·10¹⁵ Hz"},
+  {type:"num", id:"fr5", tag:"v", q:"Wie schnell ist ein Elektron mit E<sub>kin</sub> = 4,9 eV?", a:1.313e6, tol:0.015, unit:"m/s", sol:"v = √(2 · E / m) = √(2 · 7,85·10⁻¹⁹ J / 9,109·10⁻³¹ kg) ≈ 1,31·10⁶ m/s"},
+  {type:"num", id:"fr6", tag:"x", q:"Neon: Der Abstand der Minima beträgt 18,7 V. Welche Wellenlänge hätte ein Photon mit 18,7 eV?", a:66.3, tol:0.015, unit:"nm", sol:"λ ≈ 1240 nm · eV / 18,7 eV ≈ 66,3 nm (extremes UV – nicht sichtbar)"},
+  {type:"num", id:"fr7", tag:"x", q:"Bei einem elastischen Stoß verliert ein Elektron höchstens den Anteil 4 · m<sub>e</sub> / m<sub>Hg</sub> seiner Energie (m<sub>Hg</sub> = 3,33·10<sup>−25</sup> kg). Berechne diesen Anteil.", a:1.094e-5, tol:0.02, unit:"", sol:"4 · 9,109·10⁻³¹ / 3,33·10⁻²⁵ ≈ 1,09·10⁻⁵ – also etwa 0,001 %. Elastische Stöße kosten fast keine Energie."},
+  {type:"draw", id:"fr8", tag:"v", set:"Hg", need:[["0","4.89"]], q:"Zeichne im Energieniveauschema von Quecksilber die <b>Anregung</b> beim unelastischen Stoß.", ex:"Pfeil vom Grundzustand nach oben zu 4,89 eV."},
+  {type:"draw", id:"fr9", tag:"v", set:"Hg", need:[["4.89","0"]], q:"Zeichne den Übergang, bei dem danach die <b>UV-Strahlung</b> entsteht.", ex:"Pfeil von 4,89 eV nach unten zum Grundzustand: Emission eines Photons mit 4,89 eV (λ ≈ 254 nm)."},
+  {type:"mc", id:"fr10", tag:"v", q:"Laut Schema hat Hg auch ein Niveau bei 4,67 eV. Warum sieht man in der Franck-Hertz-Kurve trotzdem fast nur den Abstand 4,9 eV?", o:["Die Anregung in das Niveau 4,89 eV ist beim Stoß viel wahrscheinlicher; die anderen Übergänge sieht man nur mit verbesserten Röhren.","Das Niveau 4,67 eV gibt es nicht wirklich.","Die Elektronen haben nie 4,67 eV.","Niveaus unter 4,9 eV kann man grundsätzlich nicht anregen."], ex:"Franck und Hertz konnten mit verbesserten Röhren später auch andere Niveaus nachweisen."},
+]},
+
+{ id:"f7", part:"f", title:"F7 · ✍ Antworten-Trainer Franck-Hertz", intro:`<p>Hier übst du Textantworten in drei Schritten: <b>① Schlüsselwörter auswählen → ② Sätze ordnen → ③ selbst schreiben.</b> Beim Schreiben prüft das Programm, ob alle wichtigen Fachbegriffe vorkommen und ob deine Antwort kurz genug ist.</p>`, items:[
+  {type:"qhead", tag:"v", op:"Beschreiben", q:"Beschreiben Sie den Aufbau des Franck-Hertz-Versuchs.", plan:"Röhre mit Hg-Dampf im Ofen → Glühkathode → Beschleunigungsspannung bis zum Gitter → Gegenspannung bis zum Auffänger → Messung des Auffängerstroms"},
+  {type:"write", id:"fw1", tag:"v", stars:2, max:70, q:"Schreibe deine Antwort (höchstens 70 Wörter).", groups:[
+    {l:"Quecksilberdampf", r:/quecksilber|hg/},{l:"Glühkathode", r:/kathode/},{l:"Gitter", r:/gitter/},
+    {l:"Beschleunigungsspannung", r:/beschleunig/},{l:"Gegenspannung", r:/gegenspannung|gegenfeld|bremsspannung/},
+    {l:"Auffänger / Anode", r:/auffaeng|anode/},{l:"Strom messen", r:/strom/}],
+   model:"Eine Glasröhre enthält Quecksilberdampf und steht in einem Ofen. Eine Glühkathode sendet Elektronen aus. Die Beschleunigungsspannung U<sub>B</sub> zwischen Kathode und Gitter beschleunigt sie. Zwischen Gitter und Auffänger liegt eine kleine Gegenspannung. Ein Messverstärker misst den Auffängerstrom I in Abhängigkeit von U<sub>B</sub>. <i>(43 Wörter)</i>"},
+
+  {type:"qhead", tag:"v", op:"Erklären", q:"Erklären Sie den Verlauf der Franck-Hertz-Kurve für Quecksilber bis zum zweiten Minimum.", plan:"Anstieg (elastische Stöße) → Abfall (unelastischer Stoß bei 4,9 eV, Gegenspannung) → Wiederanstieg (Stoß früher, wieder beschleunigt) → zweites Minimum (zwei unelastische Stöße)"},
+  {type:"kw", id:"fw2k", tag:"v", q:"① Welche Schlüsselwörter gehören in die Antwort? Wähle alle passenden – und nur diese.", good:["elastische Stöße","unelastischer Stoß","4,9 eV","Anregung","Gegenspannung","Strom steigt / fällt","zweimal unelastisch"], bad:["Ionisierung","Photoeffekt","Bremsstrahlung","Elektronen werden vernichtet","Licht wird absorbiert"], ex:"Ionisierung war der historische Irrtum; Photoeffekt und Bremsstrahlung gehören zu anderen Themen."},
+  {type:"order", id:"fw2o", tag:"v", q:"② Bringe die Sätze in die richtige Reihenfolge.", lines:[
+    "Bei kleinen Spannungen stoßen die Elektronen nur elastisch und verlieren fast keine Energie.",
+    "Mit wachsender Spannung erreichen mehr Elektronen den Auffänger: Der Strom steigt.",
+    "Erreichen die Elektronen kurz vor dem Gitter 4,9 eV, stoßen sie unelastisch und regen Hg-Atome an.",
+    "Danach können sie die Gegenspannung nicht mehr überwinden: Der Strom fällt stark ab.",
+    "Bei größerer Spannung findet der Stoß früher statt; die Elektronen werden erneut beschleunigt und der Strom steigt wieder.",
+    "Bei etwa 4,9 V mehr stoßen die Elektronen zweimal unelastisch: Es entsteht das zweite Minimum."]},
+  {type:"write", id:"fw2w", tag:"v", stars:2, max:90, q:"③ Schreibe jetzt deine eigene Antwort (höchstens 90 Wörter).", groups:[
+    {l:"elastisch", r:/\belastisch/},{l:"unelastisch", r:/unelastisch|inelastisch/},{l:"4,9 eV", r:/4[,.]9/},
+    {l:"anregen / Anregung", r:/anreg|angereg|reg(t|en)\b[^.]*\ban\b/},{l:"Gegenspannung", r:/gegenspannung|gegenfeld/},
+    {l:"Strom fällt", r:/(strom|i)\b[^.]*(faellt|sinkt|nimmt[^.]*ab|abfall|kleiner)|(faellt|sinkt|abfall)[^.]*strom/},
+    {l:"zweimal / zwei Stöße", r:/zweimal|zwei\w*\s+(unelastisch|stoe)|2\s*·?\s*4[,.]9/}],
+   model:"Bei kleinen Spannungen stoßen die Elektronen nur elastisch und verlieren fast keine Energie. Mehr Elektronen überwinden die Gegenspannung, der Strom steigt. Erreichen sie kurz vor dem Gitter 4,9 eV, stoßen sie unelastisch und regen Hg-Atome an. Danach haben sie zu wenig Energie für die Gegenspannung: Der Strom fällt ab. Bei größerer Spannung stoßen sie früher und werden wieder beschleunigt, der Strom steigt. Bei 4,9 V mehr stoßen sie zweimal unelastisch: zweites Minimum. <i>(76 Wörter)</i>"},
+
+  {type:"qhead", tag:"v", op:"Erläutern", q:"Erläutern Sie, inwiefern der Franck-Hertz-Versuch die Existenz diskreter Energieniveaus im Atom bestätigt.", plan:"nur bestimmte Energie (4,9 eV) wird aufgenommen → regelmäßige Abstände → dieselbe Energie als Photon (254 nm) → diskrete Niveaus, Bohr"},
+  {type:"write", id:"fw3", tag:"v", stars:2, max:70, q:"Schreibe deine Antwort (höchstens 70 Wörter).", groups:[
+    {l:"nur bestimmte Energie", r:/bestimmt|nur\s+4[,.]9|genau\s+4[,.]9|diskret/},{l:"4,9 eV", r:/4[,.]9/},
+    {l:"regelmäßige Abstände / Maxima", r:/abstand|abstaende|maxim|minim/},{l:"Photon / UV-Linie", r:/photon|uv|ultraviolett|254/},
+    {l:"Energieniveau", r:/niveau|energiezustand|zustaende|zustand/}],
+   model:"Die Hg-Atome nehmen bei Stößen nicht beliebige Energiebeträge auf, sondern nur genau 4,9 eV. Deshalb haben die Maxima der Kurve immer den gleichen Abstand von 4,9 V. Dieselbe Energie zeigt sich als Photonenenergie der UV-Linie (254 nm), wenn die Atome in den Grundzustand zurückgehen. Das Atom hat also diskrete Energieniveaus, wie im Bohr'schen Modell. <i>(55 Wörter)</i>"},
+]},
+
+/* ============================ RÖNTGEN ============================ */
+{ id:"r1", part:"r", title:"R1 · 📖 Lesetext: Die Röntgenröhre", items:[
+  {type:"read", html:`<h3>Strahlen, die durch die Hand gehen</h3>
+<p>1895 entdeckte <b>Wilhelm Conrad Röntgen</b> in Würzburg eine unsichtbare Strahlung, die Papier, Holz und sogar die Hand durchdringt. Er nannte sie X-Strahlen. Heute weiß man: <b>Röntgenstrahlung</b> ist elektromagnetische Strahlung mit sehr kleiner Wellenlänge (etwa 1 pm bis 10 nm) und damit sehr großer Photonenenergie (etwa 100 eV bis einige 100 keV). Sie liegt im Spektrum hinter dem UV-Licht.</p>
+<h4>Aufbau einer Röntgenröhre</h4>
+{{fig:xTube}}
+<ul>
+<li>Die Röhre ist ein Glaskolben mit <b>Hochvakuum</b>. So werden die Elektronen nicht durch Luftmoleküle gebremst.</li>
+<li>Eine <b>Glühkathode K</b> (geheizt mit der Heizspannung U<sub>H</sub>) sendet Elektronen aus. Ein größerer Heizstrom liefert mehr Elektronen.</li>
+<li>Ein <b>Wehnelt-Zylinder</b> (leicht negativ) bündelt die Elektronen zu einem schmalen Strahl.</li>
+<li>Zwischen Kathode und <b>Anode A</b> liegt eine <b>Hochspannung U<sub>A</sub></b>. In der Schule sind das etwa 10 bis 35 kV, in der Medizin bis etwa 150 kV. Die Elektronen erreichen die Anode mit E<sub>kin</sub> = e · U<sub>A</sub> – also mit mehreren 10 keV.</li>
+<li>Die Anode besteht aus einem Metall, z. B. <b>Wolfram</b>, <b>Kupfer</b> oder <b>Molybdän</b>. Dort werden die Elektronen abgebremst. Dabei entsteht die Röntgenstrahlung.</li>
+</ul>
+<h4>Fast alles wird Wärme</h4>
+<p>Nur etwa <b>1 %</b> der Energie der Elektronen wird zu Röntgenstrahlung. Etwa <b>99 %</b> werden zu <b>Wärme</b>. Die Anode wird deshalb sehr heiß und muss gekühlt werden – mit Wasser oder durch eine schnell <b>drehende Anode</b> (Drehanode), damit der Brennfleck nicht schmilzt.</p>
+<h4>Zwei Arten von Röntgenstrahlung</h4>
+<p>In der Anode entstehen zwei Arten von Strahlung, die du in den nächsten Texten kennenlernst: die <b>Bremsstrahlung</b> (kontinuierliches Spektrum) und die <b>charakteristische Strahlung</b> (einzelne Linien).</p>
+<p class="note">Quelle (verändert): LEIFIphysik, „Erzeugung von Röntgenstrahlung“.</p>`},
+  {type:"mc", id:"rl1", tag:"g", q:"Was ist Röntgenstrahlung?", o:["elektromagnetische Strahlung mit sehr kleiner Wellenlänge und großer Photonenenergie","ein Strahl aus schnellen Elektronen","Schallwellen mit sehr hoher Frequenz","radioaktive Alphastrahlung"]},
+  {type:"mc", id:"rl2", tag:"g", q:"Warum ist in der Röntgenröhre ein Hochvakuum?", o:["Damit die Elektronen nicht durch Luftmoleküle gebremst werden.","Damit die Röntgenstrahlung sichtbar wird.","Damit die Anode nicht heiß wird.","Damit die Kathode keine Elektronen aussendet."]},
+  {type:"mc", id:"rl3", tag:"g", q:"Welche Aufgabe hat die Glühkathode?", o:["Sie sendet Elektronen aus.","Sie erzeugt die Hochspannung.","Sie bremst die Elektronen ab.","Sie kühlt die Anode."]},
+  {type:"mc", id:"rl4", tag:"g", q:"Wo entsteht die Röntgenstrahlung?", o:["in der Anode, wenn die schnellen Elektronen dort abgebremst werden","in der Glühkathode","im Vakuum zwischen Kathode und Anode","im Wehnelt-Zylinder"]},
+  {type:"mc", id:"rl5", tag:"g", q:"Welche kinetische Energie hat ein Elektron, das mit U<sub>A</sub> = 30 kV beschleunigt wurde?", o:["30 keV","30 eV","30 J","3,0 keV"], ex:"E<sub>kin</sub> = e · U = e · 30 kV = 30 keV."},
+  {type:"mc", id:"rl6", tag:"g", q:"Warum braucht eine Röntgenröhre eine Kühlung (z. B. eine Drehanode)?", o:["Etwa 99 % der Energie der Elektronen wird in der Anode zu Wärme.","Weil die Röntgenstrahlung die Röhre kalt macht.","Weil die Kathode sonst zu wenig Elektronen aussendet.","Weil Röntgenstrahlung nur bei tiefen Temperaturen entsteht."]},
+  {type:"mc", id:"rl7", tag:"g", q:"Was bewirkt ein größerer Heizstrom an der Kathode?", o:["Es werden mehr Elektronen ausgesandt (größerer Anodenstrom).","Die Elektronen werden schneller.","Die Wellenlänge der Röntgenstrahlung wird kleiner.","Die Anode wird gekühlt."]},
+]},
+
+{ id:"r2", part:"r", title:"R2 · 📖 Lesetext: Bremsstrahlung und kurzwellige Grenze", items:[
+  {type:"read", html:`<h3>Warum entsteht beim Abbremsen Strahlung?</h3>
+<p>Jede <b>beschleunigte elektrische Ladung</b> sendet elektromagnetische Strahlung aus. „Beschleunigt“ heißt auch: <b>abgebremst</b> oder <b>abgelenkt</b>. Fliegt ein schnelles Elektron in der Anode nahe an einem Atomkern vorbei, wird es im elektrischen Feld des Kerns <b>abgelenkt und abgebremst</b>. Dabei verliert es kinetische Energie, und es entsteht ein <b>Photon</b>: die <b>Bremsstrahlung</b>.</p>
+<h4>Ein kontinuierliches Spektrum</h4>
+<p>Wie viel Energie ein Elektron bei einer Abbremsung verliert, ist zufällig: Fliegt es dicht am Kern vorbei, ist die Abbremsung stark und das Photon energiereich. Fliegt es weiter entfernt vorbei, ist das Photon energieärmer. Meistens verliert ein Elektron seine Energie in <b>vielen Schritten</b>. Deshalb entstehen Photonen <b>aller Energien</b> bis zu einem Höchstwert: Das Spektrum der Bremsstrahlung ist <b>kontinuierlich</b>.</p>
+<h4>Die kurzwellige Grenze λ<sub>min</sub></h4>
+<p>Die <b>größte</b> Photonenenergie entsteht, wenn ein Elektron seine <b>gesamte</b> kinetische Energie in <b>einem einzigen</b> Schritt abgibt:</p>
+<p class="formula">h · f<sub>max</sub> = e · U<sub>A</sub> &nbsp;&nbsp;⇒&nbsp;&nbsp; λ<sub>min</sub> = h · c / (e · U<sub>A</sub>)</p>
+<p>Photonen mit kürzerer Wellenlänge gibt es nicht. Diese <b>kurzwellige Grenze</b> λ<sub>min</sub> hängt <b>nur von der Spannung</b> ab – nicht vom Anodenmaterial und nicht vom Anodenstrom. (Gesetz von Duane und Hunt, 1915.)</p>
+<p><b>Beispiel:</b> U<sub>A</sub> = 35 kV ⇒ die größte Photonenenergie ist 35 keV und λ<sub>min</sub> = h · c / (e · 35 kV) ≈ 35,4 pm.</p>
+<p class="note">Faustformel: λ<sub>min</sub> in pm ≈ 1240 / (U<sub>A</sub> in kV).</p>
+<h4>Was ändert sich, wenn …</h4>
+<table class="tbl"><tr><th>… die Spannung größer wird?</th><td>λ<sub>min</sub> wird kleiner (Photonen mit mehr Energie möglich), und die Intensität wird größer.</td></tr>
+<tr><th>… der Anodenstrom größer wird?</th><td>Es treffen mehr Elektronen pro Sekunde auf: Die Intensität wird größer. λ<sub>min</sub> bleibt <b>gleich</b>.</td></tr>
+<tr><th>… das Anodenmaterial wechselt?</th><td>Schwere Atome (große Kernladung) bremsen stärker: mehr Bremsstrahlung. λ<sub>min</sub> bleibt <b>gleich</b>.</td></tr></table>
+<p>Die Bremsstrahlung ist die <b>Umkehrung des Photoeffekts</b>: Beim Photoeffekt gibt ein Photon seine Energie an ein Elektron ab. Hier gibt ein Elektron seine Energie an ein Photon ab.</p>
+<p class="note">Quelle (verändert): LEIFIphysik, „Bremsstrahlung“.</p>`},
+  {type:"mc", id:"rb1", tag:"g", q:"Wie entsteht Bremsstrahlung?", o:["Schnelle Elektronen werden im elektrischen Feld der Atomkerne der Anode abgebremst und abgelenkt; dabei entstehen Photonen.","Elektronen springen zwischen den Schalen der Anodenatome.","Die Anode glüht und sendet Wärmestrahlung aus.","Die Kathode sendet Photonen aus."]},
+  {type:"mc", id:"rb2", tag:"g", q:"Warum ist das Spektrum der Bremsstrahlung kontinuierlich?", o:["Die Elektronen verlieren unterschiedlich viel Energie – meist in vielen Schritten – deshalb entstehen Photonen aller Energien bis zu einem Höchstwert.","Weil alle Photonen genau die gleiche Energie haben.","Weil die Anode aus vielen verschiedenen Metallen besteht.","Weil das Vakuum alle Wellenlängen erzeugt."]},
+  {type:"mc", id:"rb3", tag:"g", q:"Wann entsteht das Photon mit der kürzesten Wellenlänge λ<sub>min</sub>?", o:["wenn ein Elektron seine gesamte kinetische Energie in einem einzigen Schritt abgibt","wenn ein Elektron gar keine Energie abgibt","wenn sehr viele Elektronen gleichzeitig ankommen","wenn die Anode besonders heiß ist"]},
+  {type:"mc", id:"rb4", tag:"g", q:"Welche Formel gilt für die kurzwellige Grenze?", o:["λ<sub>min</sub> = h · c / (e · U<sub>A</sub>)","λ<sub>min</sub> = e · U<sub>A</sub> / (h · c)","λ<sub>min</sub> = h / (m · v)","λ<sub>min</sub> = 2 d · sin θ"]},
+  {type:"mc", id:"rb5", tag:"g", q:"Wovon hängt λ<sub>min</sub> ab?", o:["nur von der Beschleunigungsspannung","vom Anodenmaterial","vom Anodenstrom","von der Temperatur der Kathode"]},
+  {type:"mc", id:"rb6", tag:"g", q:"Der Anodenstrom wird verdoppelt (gleiche Spannung). Was passiert?", o:["Die Intensität wird größer, λ<sub>min</sub> bleibt gleich.","λ<sub>min</sub> halbiert sich.","λ<sub>min</sub> verdoppelt sich.","Es passiert nichts."]},
+  {type:"mc", id:"rb7", tag:"g", q:"Warum nennt man die Bremsstrahlung die „Umkehrung des Photoeffekts“?", o:["Beim Photoeffekt gibt ein Photon Energie an ein Elektron ab, bei der Bremsstrahlung gibt ein Elektron Energie an ein Photon ab.","Weil beide nur mit UV-Licht funktionieren.","Weil bei beiden Elektronen aus der Kathode austreten.","Weil beide eine Gegenspannung brauchen."]},
+]},
+
+{ id:"r3", part:"r", title:"R3 · 📖 Lesetext: Charakteristische Strahlung", items:[
+  {type:"read", html:`<h3>Scharfe Linien auf dem Bremsberg</h3>
+<p>Misst man das Spektrum einer Röntgenröhre, sieht man nicht nur die kontinuierliche Bremsstrahlung. Ab einer bestimmten Spannung erscheinen zusätzlich <b>scharfe, sehr intensive Linien</b>. Ihre Wellenlängen hängen vom <b>Anodenmaterial</b> ab – deshalb heißen sie <b>charakteristische Strahlung</b>.</p>
+{{fig:xSpec}}
+<h4>Wie entstehen die Linien?</h4>
+{{fig:shells}}
+<ol>
+<li>Ein schnelles Elektron trifft ein Anodenatom und schlägt ein Elektron aus einer <b>inneren Schale</b> heraus – zum Beispiel aus der <b>K-Schale</b> (der innersten Schale). Es entsteht eine <b>Lücke</b>.</li>
+<li>Ein Elektron aus einer äußeren Schale „fällt“ in diese Lücke. Kommt es aus der <b>L-Schale</b>, entsteht die <b>K<sub>α</sub>-Linie</b>. Kommt es aus der <b>M-Schale</b>, entsteht die <b>K<sub>β</sub>-Linie</b>.</li>
+<li>Die Energiedifferenz wird als <b>Röntgenphoton</b> ausgesandt: E<sub>Photon</sub> = E<sub>L</sub> − E<sub>K</sub>.</li>
+</ol>
+<p>Das ist dasselbe Prinzip wie bei den Linienspektren im sichtbaren Licht – nur bei den <b>inneren</b> Elektronen. Diese sind sehr stark gebunden, deshalb sind die Energien tausendmal größer (<b>keV statt eV</b>). K<sub>β</sub> hat mehr Energie als K<sub>α</sub> (größerer Sprung), also eine <b>kleinere</b> Wellenlänge.</p>
+<h4>Wann erscheinen die Linien?</h4>
+<p>Nur wenn die Elektronen genug Energie haben, um ein K-Elektron herauszuschlagen: e · U<sub>A</sub> muss größer sein als die <b>Bindungsenergie der K-Schale</b>. Für Kupfer sind das 8,98 keV, für Molybdän 20,0 keV. Bei 15 kV zeigt eine Molybdän-Anode deshalb <b>noch keine</b> K-Linien – nur Bremsstrahlung.</p>
+<table class="tbl"><tr><th>Anode</th><th>K-Schale (Bindungsenergie)</th><th>K<sub>α</sub></th><th>K<sub>β</sub></th></tr>
+<tr><td>Kupfer (Z = 29)</td><td>8,98 keV</td><td>8,05 keV · 154 pm</td><td>8,91 keV · 139 pm</td></tr>
+<tr><td>Molybdän (Z = 42)</td><td>20,0 keV</td><td>17,5 keV · 71 pm</td><td>19,6 keV · 63 pm</td></tr></table>
+<h4>Ein Fingerabdruck der Elemente</h4>
+<p>Je größer die Kernladungszahl Z, desto stärker sind die inneren Elektronen gebunden und desto größer ist die Energie der Linien. Henry Moseley fand 1913: Die Frequenz der K<sub>α</sub>-Linie ist ungefähr proportional zu (Z − 1)². So kann man Elemente an ihren Röntgenlinien erkennen (Röntgenfluoreszenzanalyse).</p>
+<h4>Wie misst man das Spektrum?</h4>
+<p>Mit einem <b>Kristall</b> (z. B. NaCl oder LiF): Die Röntgenstrahlung wird an den Netzebenen reflektiert. Verstärkung gibt es nach der <b>Bragg-Bedingung</b> 2 d · sin θ = k · λ. Für jeden Winkel θ misst ein Zählrohr die Zählrate. So erhält man N(λ).</p>`},
+  {type:"mc", id:"rc1", tag:"g", q:"Wie sieht die charakteristische Strahlung im Spektrum aus?", o:["als scharfe, intensive Linien auf der kontinuierlichen Bremsstrahlung","als gleichmäßiger, breiter Berg","als dunkle Linien","als einzelne Linie bei λ<sub>min</sub>"]},
+  {type:"mc", id:"rc2", tag:"g", q:"Was passiert im ersten Schritt bei der Entstehung der K<sub>α</sub>-Linie?", o:["Ein schnelles Elektron schlägt ein Elektron aus der K-Schale eines Anodenatoms.","Ein Elektron wird im Feld des Kerns abgebremst.","Ein Photon wird absorbiert.","Die Anode schmilzt."]},
+  {type:"mc", id:"rc3", tag:"g", q:"Woher kommt das Elektron, das bei der K<sub>α</sub>-Linie die Lücke füllt?", o:["aus der L-Schale","aus der M-Schale","aus der Glühkathode","aus dem Atomkern"]},
+  {type:"mc", id:"rc4", tag:"g", q:"Warum heißen die Linien „charakteristisch“?", o:["Ihre Wellenlängen sind typisch für das Anodenmaterial.","Sie haben immer dieselbe Wellenlänge.","Sie hängen nur von der Spannung ab.","Sie sind besonders schön."]},
+  {type:"mc", id:"rc5", tag:"g", q:"Eine Molybdän-Anode wird mit 15 kV betrieben. Was misst man?", o:["nur Bremsstrahlung – 15 keV reichen nicht, um ein K-Elektron herauszuschlagen (20,0 keV nötig)","nur die K<sub>α</sub>-Linie","die K<sub>α</sub>- und K<sub>β</sub>-Linie","gar keine Strahlung"]},
+  {type:"mc", id:"rc6", tag:"g", q:"Warum hat die K<sub>β</sub>-Linie eine kleinere Wellenlänge als die K<sub>α</sub>-Linie?", o:["Der Übergang M → K hat eine größere Energiedifferenz als L → K.","Kβ entsteht in der Kathode.","Kβ-Photonen sind langsamer.","Kβ hat eine kleinere Energie."]},
+  {type:"mc", id:"rc7", tag:"g", q:"Warum haben Röntgenlinien keV-Energien, sichtbare Spektrallinien aber nur wenige eV?", o:["Die inneren Elektronen sind viel stärker an den Kern gebunden als die äußeren.","Röntgenlinien entstehen im Kern.","Röntgenphotonen sind schwerer.","Weil die Anode heißer ist."]},
+  {type:"mc", id:"rc8", tag:"g", q:"Womit misst man das Röntgenspektrum in der Schule?", o:["mit einem Kristall (Bragg-Reflexion) und einem Zählrohr","mit einem Prisma aus Glas","mit einem optischen Gitter","mit einem Thermometer"]},
+]},
+
+{ id:"r4", part:"r", title:"R4 · Das Röntgenspektrum: Fachbegriffe und Diagramm", items:[
+  {type:"fig", fig:"xSpec", arg:"lab"},
+  {type:"match", id:"rv1", tag:"v", q:"Ordne den Markierungen A bis D im Spektrum (Molybdän, 35 kV) die richtige Bezeichnung zu.", pairs:[
+    ["A","kurzwellige Grenze λmin"],["B","kontinuierliche Bremsstrahlung"],["C","Kβ-Linie (M → K)"],["D","Kα-Linie (L → K)"]]},
+  {type:"match", id:"rv2", tag:"v", q:"Ordne jedem Begriff die passende Bedeutung zu.", pairs:[
+    ["Bremsstrahlung","entsteht, wenn Elektronen im Feld der Kerne abgebremst werden"],
+    ["charakteristische Strahlung","Linien, die typisch für das Anodenmaterial sind"],
+    ["kurzwellige Grenze","kleinste Wellenlänge im Spektrum, λmin = h · c / (e · U)"],
+    ["K-Schale","innerste Elektronenschale"],
+    ["Kα-Linie","Photon beim Übergang L → K"],
+    ["Drehkristall","misst das Spektrum mit der Bragg-Reflexion"]]},
+  {type:"cloze", id:"rv3", tag:"v", q:"Bremsstrahlung – wähle die passenden Wörter.", text:"Bremsstrahlung entsteht, wenn schnelle Elektronen im elektrischen Feld der {{Atomkerne|Glühkathode}} abgebremst werden. Ihr Spektrum ist {{kontinuierlich|ein Linienspektrum}}. Die kleinste Wellenlänge entsteht, wenn ein Elektron seine {{gesamte|halbe}} Energie in {{einem|vielen}} Schritt abgibt. Erhöht man die Spannung, wird λ<sub>min</sub> {{kleiner|größer}}. Erhöht man den Anodenstrom, bleibt λ<sub>min</sub> {{gleich|kleiner}}."},
+  {type:"cloze", id:"rv4", tag:"v", q:"Charakteristische Strahlung – wähle die passenden Wörter.", text:"Ein schnelles Elektron schlägt ein Elektron aus der {{K-Schale|äußersten Schale}} eines Anodenatoms. Ein Elektron aus der L-Schale füllt die {{Lücke|Anode}}. Dabei wird ein {{Photon|Elektron}} mit der Energie E<sub>L</sub> − E<sub>K</sub> emittiert. Diese Linie heißt {{Kα|Kβ}}. Die Linien entstehen nur, wenn e · U größer ist als die {{Bindungsenergie der K-Schale|Austrittsarbeit}}."},
+  {type:"draw", id:"rv5", tag:"v", set:"Cu", need:[["L","K"]], q:"Zeichne im Schema von Kupfer den Elektronenübergang, bei dem die <b>K<sub>α</sub>-Linie</b> entsteht.", ex:"Ein Elektron geht von der L-Schale in die Lücke der K-Schale über: ΔE = 8,98 keV − 0,93 keV ≈ 8,05 keV."},
+  {type:"draw", id:"rv6", tag:"v", set:"Cu", need:[["M","K"]], q:"Zeichne den Übergang für die <b>K<sub>β</sub>-Linie</b>.", ex:"M → K: ΔE ≈ 8,98 keV − 0,08 keV ≈ 8,9 keV."},
+  {type:"draw", id:"rv7", tag:"v", set:"Cu", need:[["K","frei"]], q:"Zeichne den ersten Schritt: Ein Elektron wird aus der <b>K-Schale herausgeschlagen</b> (es wird frei).", ex:"Dafür braucht das stoßende Elektron mindestens 8,98 keV."},
+  {type:"mc", id:"rv8", tag:"v", q:"Eine Kupfer-Anode und eine Molybdän-Anode werden beide mit 30 kV betrieben. Was ist <b>gleich</b>?", o:["die kurzwellige Grenze λ<sub>min</sub>","die Lage der Kα-Linie","die Lage der Kβ-Linie","das ganze Spektrum"], ex:"λ<sub>min</sub> hängt nur von der Spannung ab. Die Linien hängen vom Anodenmaterial ab."},
+]},
+
+{ id:"r5", part:"r", title:"R5 · 🔬 Röntgen-Labor (Simulation)", intro:`<p>Wähle die Anode und stelle die Spannung und den Anodenstrom ein. Mit „Kurve merken“ kannst du zwei Spektren vergleichen.</p><p class="note">Vereinfachtes Modell. Die Lage von λ<sub>min</sub> und der Linien ist realistisch, die Höhen sind nur qualitativ.</p>`, items:[
+  {type:"xlab"},
+  {type:"num", id:"rs1", tag:"v", q:"Stelle U = 25 kV ein. Lies die kurzwellige Grenze λ<sub>min</sub> ab.", a:49.6, tol:0.03, unit:"pm", sol:"λ<sub>min</sub> = h · c / (e · U) = 1240 pm · kV / 25 kV ≈ 49,6 pm"},
+  {type:"num", id:"rs2", tag:"v", q:"Molybdän-Anode: Ab welcher Spannung erscheinen die K-Linien?", a:20, tol:0.03, unit:"kV", sol:"Die K-Linien erscheinen, sobald e · U größer als die Bindungsenergie der K-Schale (20,0 keV) ist: also ab U ≈ 20 kV."},
+  {type:"mc", id:"rs3", tag:"v", q:"Merke dir die Kurve bei 30 kV und 0,5 mA. Stelle dann 1,0 mA ein. Was ändert sich?", o:["Die Zählrate wird überall größer; λ<sub>min</sub> und die Lage der Linien bleiben gleich.","λ<sub>min</sub> wird kleiner.","Die Linien verschieben sich zu größeren Wellenlängen.","Es kommen neue Linien dazu."]},
+  {type:"mc", id:"rs4", tag:"v", q:"Merke dir die Kurve von Molybdän bei 35 kV. Wechsle dann zu Kupfer (35 kV). Was beobachtest du?", o:["λ<sub>min</sub> bleibt gleich; die Linien liegen bei Kupfer bei viel größeren Wellenlängen (139 pm und 154 pm).","Bei Kupfer gibt es keine Linien.","Bei Kupfer ist λ<sub>min</sub> größer.","Beide Spektren sind gleich."]},
+  {type:"num", id:"rs5", tag:"v", q:"Lies die Wellenlänge der Kα-Linie von Kupfer ab.", a:154, tol:0.02, unit:"pm"},
+  {type:"mc", id:"rs6", tag:"v", q:"Kupfer-Anode bei 8 kV: Was siehst du – und warum?", o:["Nur Bremsstrahlung: 8 keV reichen nicht, um ein K-Elektron von Kupfer (8,98 keV) herauszuschlagen.","Nur die Kα-Linie, weil 8 keV ≈ 8,05 keV.","Beide K-Linien.","Gar nichts, weil unter 10 kV keine Röntgenstrahlung entsteht."], ex:"Interessant: Die Kα-Energie (8,05 keV) wäre erreicht – aber zuerst muss eine Lücke in der K-Schale entstehen, und dafür braucht man 8,98 keV."},
+]},
+
+{ id:"r6", part:"r", title:"R6 · Rechnen mit Röntgenstrahlung", intro:`<p><b>Formeln:</b> E<sub>kin</sub> = e · U · λ<sub>min</sub> = h · c / (e · U) · E = h · c / λ · Bragg: 2 d · sin θ = k · λ<br>e = 1,602 · 10<sup>−19</sup> C · h = 6,626 · 10<sup>−34</sup> J s · c = 2,998 · 10<sup>8</sup> m/s · d(NaCl) = 282 pm · d(LiF) = 201 pm</p>`, items:[
+  {type:"num", id:"rr1", tag:"v", q:"Berechne die kinetische Energie eines Elektrons, das mit 35 kV beschleunigt wurde, in Joule.", a:5.607e-15, tol:0.01, unit:"J", sol:"E = e · U = 1,602·10⁻¹⁹ C · 35 000 V ≈ 5,61·10⁻¹⁵ J"},
+  {type:"num", id:"rr2", tag:"v", q:"Berechne die kurzwellige Grenze für U = 35 kV.", a:35.4, tol:0.015, unit:"pm", sol:"λ<sub>min</sub> = h · c / (e · U) = 6,626·10⁻³⁴ · 2,998·10⁸ / (1,602·10⁻¹⁹ · 35 000) m ≈ 3,54·10⁻¹¹ m = 35,4 pm"},
+  {type:"num", id:"rr3", tag:"v", q:"Ein Spektrum zeigt λ<sub>min</sub> = 62 pm. Mit welcher Spannung wurde die Röhre betrieben?", a:20.0, tol:0.015, unit:"kV", sol:"U = h · c / (e · λ<sub>min</sub>) = 6,626·10⁻³⁴ · 2,998·10⁸ / (1,602·10⁻¹⁹ · 6,2·10⁻¹¹) V ≈ 2,0·10⁴ V = 20 kV"},
+  {type:"num", id:"rr4", tag:"v", q:"Bestimmung von h: Bei U = 30,0 kV misst man λ<sub>min</sub> = 41,3 pm. Berechne daraus das Planck'sche Wirkungsquantum.", a:6.62e-34, tol:0.01, unit:"J s", sol:"h = e · U · λ<sub>min</sub> / c = 1,602·10⁻¹⁹ · 30 000 · 4,13·10⁻¹¹ / 2,998·10⁸ J s ≈ 6,62·10⁻³⁴ J s"},
+  {type:"num", id:"rr5", tag:"v", q:"Die Kα-Linie von Kupfer hat λ = 154 pm. Berechne die Photonenenergie in keV.", a:8.05, tol:0.015, unit:"keV", sol:"E = h · c / λ = 6,626·10⁻³⁴ · 2,998·10⁸ / 1,54·10⁻¹⁰ J ≈ 1,29·10⁻¹⁵ J = 8,05 keV"},
+  {type:"num", id:"rr6", tag:"v", q:"Unter welchem Winkel θ wird die Kα-Linie von Molybdän (λ = 71 pm) an einem NaCl-Kristall in der 1. Ordnung reflektiert?", a:7.23, tol:0.02, unit:"°", sol:"sin θ = λ / (2 d) = 71 pm / 564 pm ≈ 0,126 → θ ≈ 7,2°"},
+  {type:"num", id:"rr7", tag:"v", q:"Ein Drehkristall (LiF) zeigt die kurzwellige Grenze in der 1. Ordnung bei θ = 5,0°. Berechne λ<sub>min</sub>.", a:35.04, tol:0.015, unit:"pm", sol:"λ = 2 d · sin θ = 2 · 201 pm · sin 5,0° ≈ 35,0 pm (das passt zu U ≈ 35 kV)"},
+  {type:"mc", id:"rr8", tag:"v", q:"Eine Röhre läuft mit 30 kV und 1,0 mA. Wie viel Wärme entsteht etwa pro Sekunde in der Anode?", o:["etwa 30 J (≈ 30 W)","etwa 0,3 J","etwa 3000 J","fast keine"], ex:"P = U · I = 30 000 V · 0,001 A = 30 W. Davon werden etwa 99 % zu Wärme."},
+  {type:"num", id:"rr9", tag:"x", q:"Moseley: E(K<sub>α</sub>) ≈ 13,6 eV · (Z − 1)² · (1 − 1/4). Berechne E(K<sub>α</sub>) für Eisen (Z = 26) in keV.", a:6.375, tol:0.02, unit:"keV", sol:"E = 13,6 eV · 25² · 0,75 = 13,6 eV · 625 · 0,75 ≈ 6375 eV ≈ 6,4 keV (gemessen: 6,40 keV)"},
+]},
+
+{ id:"r7", part:"r", title:"R7 · ✍ Antworten-Trainer Röntgenstrahlung", intro:`<p>Gleiches Vorgehen wie bei Franck-Hertz: erst Schlüsselwörter, dann ordnen, dann selbst schreiben.</p>`, items:[
+  {type:"qhead", tag:"v", op:"Beschreiben", q:"Beschreiben Sie den Aufbau und die Funktionsweise einer Röntgenröhre.", plan:"Vakuum → Glühkathode sendet Elektronen aus → Hochspannung beschleunigt → Abbremsung in der Anode → Röntgenstrahlung + Wärme"},
+  {type:"write", id:"rw1", tag:"v", stars:2, max:70, q:"Schreibe deine Antwort (höchstens 70 Wörter).", groups:[
+    {l:"Vakuum", r:/vakuum/},{l:"Glühkathode", r:/kathode/},{l:"Hochspannung / beschleunigt", r:/hochspannung|beschleunig/},
+    {l:"Anode", r:/anode/},{l:"abgebremst", r:/brems|abgebremst/},{l:"Wärme", r:/waerme|heiss|kuehl/}],
+   model:"Die Röntgenröhre ist ein Glaskolben mit Hochvakuum. Eine Glühkathode sendet Elektronen aus. Eine Hochspannung von einigen 10 kV beschleunigt sie zur Anode aus Metall. Dort werden die schnellen Elektronen abgebremst. Dabei entsteht Röntgenstrahlung. Etwa 99 % der Energie werden zu Wärme, deshalb muss die Anode gekühlt werden. <i>(50 Wörter)</i>"},
+
+  {type:"qhead", tag:"v", op:"Erklären", q:"Erklären Sie die Entstehung des kontinuierlichen Röntgenspektrums und seiner kurzwelligen Grenze.", plan:"Abbremsung im Feld der Kerne → beschleunigte Ladung strahlt → beliebige Energieabgabe → kontinuierlich → maximal e·U in einem Schritt → λmin = h·c/(e·U)"},
+  {type:"kw", id:"rw2k", tag:"v", q:"① Welche Schlüsselwörter gehören in die Antwort? Wähle alle passenden – und nur diese.", good:["Abbremsung im Feld der Atomkerne","Photon","unterschiedliche Energieabgabe","kontinuierlich","gesamte Energie in einem Schritt","e · U = h · c / λmin"], bad:["K-Schale","Lücke wird aufgefüllt","Anodenmaterial bestimmt λmin","Gegenspannung","Resonanzabsorption"], ex:"K-Schale und Lücke gehören zur charakteristischen Strahlung. λ<sub>min</sub> hängt nicht vom Anodenmaterial ab."},
+  {type:"order", id:"rw2o", tag:"v", q:"② Bringe die Sätze in die richtige Reihenfolge.", lines:[
+    "Die Elektronen treffen mit der Energie e · U auf die Anode.",
+    "Im elektrischen Feld der Atomkerne werden sie abgebremst und abgelenkt.",
+    "Dabei senden sie Photonen aus, die Bremsstrahlung.",
+    "Die Elektronen geben unterschiedlich viel Energie ab, meist in mehreren Schritten: Das Spektrum ist kontinuierlich.",
+    "Die größte Photonenenergie entsteht, wenn ein Elektron seine gesamte Energie in einem Schritt abgibt: h · c / λmin = e · U.",
+    "Deshalb gibt es keine Photonen mit kleinerer Wellenlänge als λmin = h · c / (e · U)."]},
+  {type:"write", id:"rw2w", tag:"v", stars:2, max:80, q:"③ Schreibe deine eigene Antwort (höchstens 80 Wörter).", groups:[
+    {l:"abgebremst", r:/brems|abgebremst/},{l:"Atomkern / Feld", r:/kern|feld/},{l:"Photon", r:/photon/},
+    {l:"kontinuierlich", r:/kontinuierlich/},{l:"gesamte Energie / ein Schritt", r:/gesamte|ganze|vollstaendig|einem\s+(einzigen\s+)?schritt/},
+    {l:"e · U", r:/\be\s*[·*]\s*u\b|elektronenenergie|beschleunigungsspannung/},{l:"λmin", r:/λ\s*min|lambda\s*min|kurzwellig|kleinste wellen/}],
+   model:"Die Elektronen treffen mit der Energie e · U auf die Anode. Im Feld der Atomkerne werden sie abgebremst und senden dabei Photonen aus (Bremsstrahlung). Die Elektronen geben unterschiedlich viel Energie ab, meist in mehreren Schritten – das Spektrum ist kontinuierlich. Gibt ein Elektron seine gesamte Energie in einem Schritt ab, entsteht das energiereichste Photon: h · c / λmin = e · U. Kürzere Wellenlängen gibt es deshalb nicht. <i>(66 Wörter)</i>"},
+
+  {type:"qhead", tag:"v", op:"Erklären", q:"Erklären Sie die Entstehung der charakteristischen Linien im Röntgenspektrum.", plan:"Elektron schlägt K-Elektron heraus → Lücke → Elektron aus L (Kα) oder M (Kβ) füllt auf → Photon mit ΔE → typisch für Element → nur wenn e·U > Bindungsenergie"},
+  {type:"kw", id:"rw3k", tag:"v", q:"① Welche Schlüsselwörter gehören in die Antwort? Wähle alle passenden – und nur diese.", good:["K-Schale","herausgeschlagen","Lücke","Übergang aus L- oder M-Schale","Photon mit ΔE","typisch für das Anodenmaterial"], bad:["Abbremsung im Feld der Kerne","kontinuierlich","λmin","Gegenspannung","Photoeffekt an der Kathode"], ex:"Abbremsung, kontinuierlich und λ<sub>min</sub> gehören zur Bremsstrahlung."},
+  {type:"write", id:"rw3w", tag:"v", stars:2, max:80, q:"② Schreibe deine eigene Antwort (höchstens 80 Wörter).", groups:[
+    {l:"K-Schale", r:/k-schale|k schale|innere\w* schale/},{l:"herausgeschlagen / Lücke", r:/heraus|luecke|loch|frei/},
+    {l:"L- oder M-Schale", r:/l-schale|l schale|m-schale|m schale|aeussere\w* schale|hoehere\w* schale/},
+    {l:"Photon", r:/photon/},{l:"Energiedifferenz", r:/differenz|δ\s?e|delta\s?e|e_?l\s*[−-]|el\s*[−-]\s*ek/},
+    {l:"charakteristisch / Anodenmaterial", r:/charakteristisch|anodenmaterial|element|typisch/}],
+   model:"Ein schnelles Elektron schlägt ein Elektron aus der K-Schale eines Anodenatoms heraus. Es entsteht eine Lücke. Ein Elektron aus der L-Schale (Kα) oder der M-Schale (Kβ) füllt die Lücke auf. Dabei wird ein Photon mit der Energiedifferenz der beiden Schalen ausgesandt. Da die Schalenenergien für jedes Element anders sind, sind die Linien charakteristisch für das Anodenmaterial. <i>(58 Wörter)</i>"},
+]},
+
+{ id:"r8", part:"r", title:"R8 · Vergleich: Franck-Hertz und Röntgen", intro:`<p>Beide Themen haben mit <b>schnellen Elektronen</b> und <b>Energieniveaus</b> zu tun. Wer die Unterschiede kennt, versteht beide besser.</p>
+<table class="tbl"><tr><th></th><th>Franck-Hertz-Versuch</th><th>Röntgenröhre</th></tr>
+<tr><td>Spannung</td><td>einige Volt</td><td>einige 10 000 Volt</td></tr>
+<tr><td>Was trifft das Elektron?</td><td>Hg-Atome im Gas</td><td>Atome der Anode (Metall)</td></tr>
+<tr><td>Welche Elektronen im Atom?</td><td>äußere Elektronen (Anregung, eV)</td><td>innere Elektronen der K-Schale (keV)</td></tr>
+<tr><td>Strahlung</td><td>UV-Linie 254 nm</td><td>Bremsstrahlung (kontinuierlich) + charakteristische Linien</td></tr>
+<tr><td>Was zeigt es?</td><td>diskrete Energieniveaus</td><td>Photonenenergie e · U = h · c / λ<sub>min</sub>; Niveaus der inneren Schalen</td></tr></table>`, items:[
+  {type:"mc", id:"rx1", tag:"v", q:"Welche Strahlung im Röntgenspektrum ist mit dem UV-Licht beim Franck-Hertz-Versuch am ehesten vergleichbar?", o:["die charakteristische Strahlung (Übergang zwischen festen Energieniveaus)","die Bremsstrahlung","die Wärmestrahlung der Anode","keine"]},
+  {type:"mc", id:"rx2", tag:"v", q:"Beim Franck-Hertz-Versuch und bei der Röntgenröhre geben schnelle Elektronen Energie ab. Was ist der wichtigste Unterschied?", o:["Franck-Hertz: Anregung äußerer Elektronen (eV). Röntgen: Abbremsung im Kernfeld und Ionisierung innerer Schalen (keV).","Beim Franck-Hertz-Versuch gibt es keine Elektronen.","Bei der Röntgenröhre werden die Elektronen nicht beschleunigt.","Es gibt keinen Unterschied."]},
+  {type:"mc", id:"rx3", tag:"v", q:"Welches der beiden Experimente zeigt <b>diskrete</b> Energien, welches <b>kontinuierliche</b>?", o:["Franck-Hertz: diskret. Röntgen: beides (Bremsstrahlung kontinuierlich, Linien diskret).","Beide nur kontinuierlich.","Franck-Hertz: kontinuierlich. Röntgen: nur diskret.","Beide nur diskret."]},
+  {type:"mc", id:"rx4", tag:"v", q:"Bei 4,9 V im Franck-Hertz-Versuch stößt ein Elektron unelastisch. Mit welcher Formel berechnet man in beiden Versuchen die Photonenenergie aus der Spannung?", o:["e · U = h · f","U = R · I","E = m · c²","F = q · E"]},
+]},
+
+/* ============================ WIEDERHOLUNG ============================ */
+{ id:"w1", part:"w", title:"W1 · Energie, Elektronvolt und Photonen", intro:`<p><b>Formeln:</b> 1 eV = 1,602 · 10<sup>−19</sup> J · E<sub>kin</sub> = e · U = ½ · m · v² · E = h · f = h · c / λ · λ in nm ≈ 1240 / (E in eV)</p>`, items:[
+  {type:"num", id:"wa1", tag:"w", q:"Rechne 2,5 eV in Joule um.", a:4.005e-19, tol:0.01, unit:"J", sol:"2,5 · 1,602·10⁻¹⁹ J ≈ 4,0·10⁻¹⁹ J"},
+  {type:"num", id:"wa2", tag:"w", q:"Ein Photon hat λ = 500 nm. Berechne seine Energie in eV.", a:2.48, tol:0.015, unit:"eV", sol:"E = h · c / λ = 6,626·10⁻³⁴ · 2,998·10⁸ / 5·10⁻⁷ J ≈ 3,97·10⁻¹⁹ J ≈ 2,48 eV"},
+  {type:"num", id:"wa3", tag:"w", q:"Elektronen werden mit 150 V beschleunigt. Berechne ihre Geschwindigkeit.", a:7.26e6, tol:0.015, unit:"m/s", sol:"v = √(2 · e · U / m) = √(2 · 1,602·10⁻¹⁹ · 150 / 9,109·10⁻³¹) m/s ≈ 7,26·10⁶ m/s"},
+  {type:"mc", id:"wa4", tag:"w", q:"Welches Photon hat die größte Energie?", o:["Röntgenphoton mit 50 pm","UV-Photon mit 254 nm","rotes Licht mit 656 nm","Infrarot mit 1875 nm"], ex:"Kleinste Wellenlänge = größte Energie."},
+  {type:"mc", id:"wa5", tag:"w", q:"Ordne die Strahlungsarten nach steigender Photonenenergie.", o:["Infrarot – sichtbar – UV – Röntgen","Röntgen – UV – sichtbar – Infrarot","sichtbar – Infrarot – Röntgen – UV","UV – Röntgen – sichtbar – Infrarot"]},
+]},
+{ id:"w2", part:"w", title:"W2 · Atomhülle und Energieniveauschema", intro:`<p>Klicke im Schema zuerst auf das Start-, dann auf das Zielniveau. ⬆ Absorption/Anregung · ⬇ Emission.</p>`, items:[
+  {type:"mc", id:"wb1", tag:"w", q:"Was sagt das erste Bohr'sche Postulat?", o:["Elektronen können sich nur auf bestimmten erlaubten Bahnen (Zuständen) bewegen, ohne Energie abzustrahlen.","Elektronen strahlen ständig Energie ab.","Die Energie eines Atoms kann jeden Wert haben.","Elektronen befinden sich im Kern."]},
+  {type:"mc", id:"wb2", tag:"w", q:"Was sagt das zweite Bohr'sche Postulat?", o:["Beim Übergang zwischen zwei Zuständen wird ein Photon mit h · f = E<sub>m</sub> − E<sub>n</sub> emittiert oder absorbiert.","Elektronen bewegen sich auf Ellipsen.","Die Bahnradien sind beliebig.","Photonen haben keine Energie."]},
+  {type:"draw", id:"wb3", tag:"w", set:"H", need:[["3","2"]], q:"Zeichne beim Wasserstoff die Emission der roten Linie (656 nm, n = 3 → n = 2)."},
+  {type:"draw", id:"wb4", tag:"w", set:"H", need:[["1","inf"]], q:"Zeichne die Ionisierung eines Wasserstoffatoms aus dem Grundzustand."},
+  {type:"num", id:"wb5", tag:"w", q:"Berechne die Wellenlänge für den Übergang n = 4 → n = 2 beim Wasserstoff (E<sub>4</sub> = −0,85 eV, E<sub>2</sub> = −3,40 eV).", a:486, tol:0.015, unit:"nm", sol:"ΔE = 2,55 eV → λ ≈ 1240 / 2,55 nm ≈ 486 nm"},
+  {type:"mc", id:"wb6", tag:"w", q:"Ein Hg-Atom im Grundzustand trifft auf ein Elektron mit 3,0 eV. Was passiert?", o:["Nur ein elastischer Stoß – 3,0 eV reichen nicht zur Anregung.","Das Atom wird angeregt.","Das Atom wird ionisiert.","Das Elektron wird absorbiert."], ex:"Die kleinste Anregungsenergie von Hg ist 4,67 eV (in der Praxis 4,9 eV)."},
+]},
+{ id:"w3", part:"w", title:"W3 · Photoeffekt", intro:`<p><b>Einstein-Gleichung:</b> h · f = W<sub>A</sub> + E<sub>kin,max</sub> · Gegenfeldmethode: E<sub>kin,max</sub> = e · U<sub>0</sub></p>`, items:[
+  {type:"mc", id:"wc1", tag:"w", q:"Was beschreibt der äußere Photoeffekt?", o:["Licht löst Elektronen aus einer Metalloberfläche.","Elektronen erzeugen Licht in einer Anode.","Licht wird an einem Gitter gebeugt.","Atome werden durch Stöße angeregt."]},
+  {type:"mc", id:"wc2", tag:"w", q:"Was passiert, wenn man die Intensität des Lichts erhöht (gleiche Frequenz über der Grenzfrequenz)?", o:["Es werden mehr Elektronen ausgelöst; ihre maximale Energie bleibt gleich.","Die Elektronen werden schneller.","Es werden weniger Elektronen ausgelöst.","Die Grenzfrequenz sinkt."]},
+  {type:"num", id:"wc3", tag:"w", q:"Kalium hat W<sub>A</sub> = 2,25 eV. Licht mit λ = 400 nm fällt darauf. Berechne E<sub>kin,max</sub> der Photoelektronen in eV.", a:0.85, tol:0.03, unit:"eV", sol:"E<sub>Photon</sub> = 1240 / 400 eV = 3,10 eV → E<sub>kin,max</sub> = 3,10 eV − 2,25 eV = 0,85 eV"},
+  {type:"num", id:"wc4", tag:"w", q:"Berechne die Grenzfrequenz von Kalium (W<sub>A</sub> = 2,25 eV).", a:5.44e14, tol:0.015, unit:"Hz", sol:"f<sub>G</sub> = W<sub>A</sub> / h = 2,25 · 1,602·10⁻¹⁹ J / 6,626·10⁻³⁴ J s ≈ 5,44·10¹⁴ Hz"},
+  {type:"mc", id:"wc5", tag:"w", q:"Im f-E<sub>kin</sub>-Diagramm des Photoeffekts ist eine Gerade eingezeichnet. Was gibt ihre Steigung an?", o:["das Planck'sche Wirkungsquantum h","die Austrittsarbeit","die Grenzfrequenz","die Elementarladung"]},
+  {type:"mc", id:"wc6", tag:"w", q:"Wie misst man E<sub>kin,max</sub> mit der Gegenfeldmethode?", o:["Man erhöht die Gegenspannung, bis kein Photostrom mehr fließt: E<sub>kin,max</sub> = e · U<sub>0</sub>.","Man misst die Temperatur der Kathode.","Man zählt die Photonen.","Man misst die Wellenlänge der Elektronen."]},
+]},
+{ id:"w4", part:"w", title:"W4 · Quantenobjekte und Bragg-Reflexion", intro:`<p><b>Formeln:</b> λ = h / p = h / (m · v) · p = √(2 · m · e · U) · Bragg: 2 d · sin θ = k · λ</p>`, items:[
+  {type:"num", id:"wd1", tag:"w", q:"Berechne die de-Broglie-Wellenlänge von Elektronen, die mit 4,0 kV beschleunigt wurden, in pm.", a:19.4, tol:0.015, unit:"pm", sol:"p = √(2 · 9,109·10⁻³¹ · 1,602·10⁻¹⁹ · 4000) ≈ 3,42·10⁻²³ kg m/s → λ = h / p ≈ 1,94·10⁻¹¹ m = 19,4 pm"},
+  {type:"num", id:"wd2", tag:"w", q:"Diese Elektronen (λ = 19,4 pm) werden an Graphit (d = 213 pm) gebeugt. Berechne den Bragg-Winkel θ der 1. Ordnung.", a:2.61, tol:0.02, unit:"°", sol:"sin θ = λ / (2 d) = 19,4 / 426 ≈ 0,0455 → θ ≈ 2,6°"},
+  {type:"mc", id:"wd3", tag:"w", q:"Die Bragg-Reflexion nutzt man bei Elektronen (Elektronenbeugung) <b>und</b> bei Röntgenstrahlung. Was zeigt das?", o:["Beide verhalten sich wie Wellen mit Wellenlängen im pm-Bereich – vergleichbar mit dem Abstand der Netzebenen.","Elektronen und Röntgenphotonen sind dasselbe.","Beide haben eine Ladung.","Beide entstehen in einer Glühkathode."]},
+  {type:"mc", id:"wd4", tag:"w", q:"Welche Beobachtung zeigt die Teilcheneigenschaft von Elektronen?", o:["einzelne, punktförmige Treffer auf dem Schirm","das Interferenzmuster","die Ringe bei der Elektronenbeugung","die Bragg-Reflexion"]},
+  {type:"mc", id:"wd5", tag:"w", q:"Was gilt für die Vorhersage beim Doppelspalt mit einzelnen Elektronen?", o:["Für ein einzelnes Elektron kann man nur eine Wahrscheinlichkeit für den Auftreffort angeben.","Man kann den Auftreffort genau berechnen.","Jedes Elektron trifft in der Mitte auf.","Einzelne Elektronen erzeugen sofort das ganze Muster."]},
+]},
+];
+
+
+/* =====================================================================
+   ZUSTAND
+   ===================================================================== */
+const KEY = "physik12-fh-roentgen-2026";
+let S = freshState();
+const TUT = {saved:false, erased:false, loaded:false};
+function freshState(){ return {app:"physik12-fh-roe", v:1, name:"", mode:"alle", items:{}}; }
+function st(id){ return S.items[id] || (S.items[id] = {d:0, w:0}); }
+
+const ITEMS = {};
+SECTIONS.forEach(sec => sec.items.forEach(it => { if (it.id) { it.sec = sec.id; ITEMS[it.id] = it; } }));
+const starsOf = it => it.stars || 1;
+const partOf = id => SECTIONS.find(s => s.id === ITEMS[id].sec).part;
+function counted(id){ if (CLOUD_ON && ITEMS[id].type === "tutorial") return false; const p = partOf(id); return true; }
+
+function totals(secId){
+  let got=0, max=0, wrong=0;
+  for (const id in ITEMS){
+    const it = ITEMS[id];
+    if (secId ? it.sec !== secId : !counted(id)) continue;
+    max += starsOf(it);
+    const s = S.items[id];
+    if (s){ if (s.d) got += starsOf(it); wrong += s.w || 0; }
+  }
+  return {got, max, wrong};
+}
+
+function autosave(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} if (typeof Cloud !== "undefined") Cloud.changed(); }
+function award(id, srcEl){
+  const s = st(id);
+  if (!s.d){ s.d = 1; flyStar(srcEl); }
+  refreshScores(); autosave();
+}
+function miss(id){ const s = st(id); if (!s.d) s.w = (s.w||0) + 1; refreshScores(); autosave(); }
+
+/* =====================================================================
+   HILFSFUNKTIONEN
+   ===================================================================== */
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    const v = attrs[k];
+    if (k === "html") el.innerHTML = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "cls") el.className = v;
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  kids.flat().forEach(c => { if (c == null) return; el.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return el;
+}
+function seeded(str){ let x = 2166136261; for (const c of str){ x ^= c.charCodeAt(0); x = Math.imul(x, 16777619); } return () => { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; return ((x >>> 0) % 100000) / 100000; }; }
+function shuffle(arr, seed){ const r = seeded(seed), a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j = Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function norm(s){ return s.toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/\s+/g," "); }
+function parseNum(s){
+  s = String(s).trim().replace(/\s/g,"").replace(/,/g,".").replace(/[−–]/g,"-");
+  s = s.replace(/(?:\*|·|x|×)10\^?\(?(-?\d+)\)?$/i, "e$1");
+  s = s.replace(/^10\^\(?(-?\d+)\)?$/, "1e$1");
+  if (s === "") return NaN;
+  const v = Number(s); return isFinite(v) ? v : NaN;
+}
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.style.display = "block"; clearTimeout(t._t); t._t = setTimeout(() => t.style.display = "none", 2600); }
+function flyStar(el){
+  const r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : {left: innerWidth/2, top: innerHeight/2};
+  const s = h("div", {cls:"flystar"}, "⭐"); s.style.left = (r.left + 10) + "px"; s.style.top = (r.top - 10) + "px";
+  document.body.appendChild(s); setTimeout(() => s.remove(), 1100);
+}
+function starBadge(it){
+  const n = starsOf(it), got = S.items[it.id] && S.items[it.id].d;
+  return h("span", {cls:"stars" + (got ? " got" : ""), title: got ? "geschafft" : "noch offen"}, "★".repeat(n));
+}
+const TAGS = {g:"Lesen", v:"Vertiefung", w:"Wiederholung", x:"Zusatz"};
+function tagEl(it){ return TAGS[it.tag] ? h("span",{cls:"tag " + it.tag}, TAGS[it.tag]) : null; }
+function fbBox(){ return h("div",{cls:"fb"}); }
+function setFb(box, ok, msg){ box.className = "fb " + (ok ? "ok" : "no"); box.innerHTML = msg; }
+function wordCount(t){ return (t.trim().match(/\S+/g) || []).length; }
+
+/* =====================================================================
+   RENDERER
+   ===================================================================== */
+const R = {};
+
+R.info = it => h("div", {html: (CLOUD_ON && it.cloudHtml) ? it.cloudHtml : it.html});
+
+R.mode = () => {
+  const wrap = h("div", {cls:"card"});
+  wrap.appendChild(h("p", {html:"<b>Welche Prüfung schreibst du?</b>"}));
+  [["klausur","Ich schreibe nur die <b>Klausur</b> (Atomvorstellungen)."],["probe","Ich schreibe das <b>Probeabitur</b> (enthält auch den Klausur-Teil)."]].forEach(([v,l]) => {
+    const r = h("input", {type:"radio", name:"mode", value:v, onchange: () => { S.mode = v; autosave(); renderTabs(); refreshScores(); }});
+    if (S.mode === v) r.checked = true;
+    wrap.appendChild(h("label", {cls:"opts", style:"display:block;margin:6px 0"}, r, h("span",{html:" " + l})));
+  });
+  return wrap;
+};
+
+R.tutorial = it => {
+  if (CLOUD_ON) return h("div", {cls:"card", style:"border:2px solid var(--green)", html:"<h3 style=\"margin-top:0\">☁️ Du bist angemeldet</h3><p>Dein Fortschritt wird <b>automatisch online gespeichert</b>. Du musst nichts speichern oder laden. Auf einem anderen Gerät meldest du dich einfach wieder an.</p><p class=\"note\">Oben rechts siehst du, ob alles gespeichert ist (☁️ Gespeichert). Am Ende: 🚪 Abmelden.</p>"});
+  const box = h("div", {cls:"card", style:"border:2px solid var(--gold)"});
+  box.appendChild(h("h3", {style:"margin-top:0"}, "⭐ Übung: Speichern und Laden (bitte zuerst machen!)"));
+  const ol = h("ol", {cls:"steps"});
+  const cb = h("input", {type:"checkbox", id:"tutcb", onchange: e => { if (e.target.checked){ award(it.id, e.target); renderTut(); } }});
+  if (S.items[it.id] && S.items[it.id].d) cb.checked = true;
+  const s1 = h("li", null, h("label", null, cb, " Setze hier einen Haken. Du bekommst deinen ersten Stern."), " ", h("span",{cls:"done", id:"t1"}));
+  const s2 = h("li", null, "Trage oben deinen ", h("b",null,"Namen"), " ein und klicke auf ", h("b",null,"💾 Speichern"), ". Lade die Datei herunter ", h("i",null,"oder"), " kopiere den Code. ", h("span",{cls:"done", id:"t2"}));
+  const s3 = h("li", null, "Klicke oben auf ", h("b",null,"🗑 Alles löschen"), ". Dein Stern ist jetzt weg (⭐ 0). ", h("span",{cls:"done", id:"t3"}));
+  const s4 = h("li", null, "Klicke auf ", h("b",null,"📂 Laden"), " und wähle deine Datei aus (oder füge den Code ein). Jetzt muss dein Stern wieder da sein! ", h("span",{cls:"done", id:"t4"}));
+  ol.append(s1, s2, s3, s4);
+  box.appendChild(ol);
+  box.appendChild(h("p", {cls:"note", html:"<b>Hilfe:</b> Die Datei findest du meistens im Ordner <b>Downloads</b>. Ihr Name beginnt mit „Physik12-FH-Roentgen“. Am iPad: Tippe auf „Laden“, dann „Durchsuchen“ → „Downloads“. Wenn das Herunterladen nicht klappt, nimm den Code und speichere ihn z. B. in einer E-Mail an dich selbst."}));
+  box.appendChild(h("div", {id:"tutmsg"}));
+  setTimeout(renderTut, 0);
+  return box;
+};
+function renderTut(){
+  const t1 = document.getElementById("t1"); if (!t1) return;
+  const has = S.items.tut1 && S.items.tut1.d;
+  t1.textContent = has ? "✓ geschafft" : "";
+  document.getElementById("t2").textContent = TUT.saved ? "✓ gespeichert" : "";
+  document.getElementById("t3").textContent = TUT.erased ? "✓ gelöscht" : "";
+  document.getElementById("t4").textContent = TUT.loaded ? (has ? "✓ geladen – dein Stern ist wieder da! 🎉" : "geladen – aber ohne Stern. Hast du nach Schritt 1 gespeichert?") : "";
+  const cb = document.getElementById("tutcb"); if (cb) cb.checked = !!has;
+  const msg = document.getElementById("tutmsg");
+  if (TUT.saved && TUT.erased && TUT.loaded && has) msg.innerHTML = '<div class="fb ok" style="display:block">Super! Du kannst speichern und laden. Speichere ab jetzt <b>am Ende jeder Übung</b>.</div>';
+  else msg.innerHTML = "";
+}
+
+R.qhead = it => {
+  const box = h("div", {cls:"qbox"});
+  box.appendChild(h("div", null, tagEl(it), h("span",{cls:"tag op"}, it.op)));
+  box.appendChild(h("p", {style:"margin:6px 0;font-weight:bold"}, "„" + it.q + "“"));
+  if (it.diagram){ box.appendChild(drawSvg(it.diagram, [], null, false, 0.75)); }
+  if (it.plan) box.appendChild(h("p", {cls:"note", html:"<b>Bauplan:</b> " + it.plan}));
+  return box;
+};
+
+R.mc = it => {
+  const opts = shuffle(it.o.map((t,i) => ({t, ok:i===0})), it.id);
+  const fb = fbBox(), name = "mc_" + it.id;
+  const list = h("div", {cls:"opts"});
+  opts.forEach((o,i) => list.appendChild(h("label", null, h("input", {type:"radio", name, value:i}), h("span", {html:o.t}))));
+  const btn = h("button", {onclick: () => {
+    const sel = list.querySelector("input:checked");
+    if (!sel){ setFb(fb, false, "Wähle zuerst eine Antwort."); return; }
+    if (opts[+sel.value].ok){ award(it.id, btn); setFb(fb, true, "Richtig! " + (it.ex || "")); }
+    else { miss(it.id); setFb(fb, false, "Leider falsch. Versuche es noch einmal."); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [list, h("div",{cls:"row"}, btn), fb];
+};
+
+R.num = it => {
+  const inp = h("input", {cls:"num", type:"text", inputmode:"decimal", placeholder:"Ergebnis"});
+  const fb = fbBox(), sol = h("div", {cls:"sol", html:"<b>Lösungsweg:</b> " + it.sol});
+  const showBtn = h("button", {cls:"sec hide", onclick: () => sol.classList.add("show")}, "Lösungsweg zeigen");
+  const check = () => {
+    const v = parseNum(inp.value);
+    if (isNaN(v)){ setFb(fb, false, "Das ist keine Zahl. Beispiel: 3,36e-19 oder 656"); return; }
+    const tol = it.tol || 0.02;
+    if (Math.abs(v - it.a) <= tol * Math.abs(it.a)){ award(it.id, btn); setFb(fb, true, "Richtig!"); sol.classList.add("show"); }
+    else { miss(it.id); setFb(fb, false, "Noch nicht richtig. Prüfe Formel, Einheiten und Zehnerpotenzen."); if ((st(it.id).w||0) >= 2) showBtn.classList.remove("hide"); }
+    refreshItem(it.id);
+  };
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+  const btn = h("button", {onclick: check}, "Prüfen");
+  if ((S.items[it.id]||{}).d) sol.classList.add("show");
+  if (((S.items[it.id]||{}).w||0) >= 2) showBtn.classList.remove("hide");
+  return [h("div",{cls:"row"}, inp, h("span",null,it.unit||""), btn, showBtn), fb, sol];
+};
+
+R.cloze = it => {
+  const wrap = h("div", {cls:"cloze"}); const sels = [];
+  let k = 0;
+  it.text.split(/(\{\{[^}]+\}\})/).forEach(part => {
+    const m = part.match(/^\{\{(.+)\}\}$/);
+    if (!m){ wrap.appendChild(h("span", {html:part})); return; }
+    const opts = m[1].split("|"); const sh = shuffle(opts, it.id + (k++));
+    const sel = h("select", null, h("option", {value:""}, "– wählen –"), ...sh.map(o => h("option", {value:o}, o)));
+    sel._ok = opts[0]; sels.push(sel); wrap.appendChild(sel);
+  });
+  const fb = fbBox();
+  const btn = h("button", {onclick: () => {
+    let all = true;
+    sels.forEach(s => { const ok = s.value === s._ok; s.className = ok ? "good" : "bad"; if (!ok) all = false; });
+    if (all){ award(it.id, btn); setFb(fb, true, "Alles richtig!"); }
+    else { miss(it.id); setFb(fb, false, "Die rot markierten Lücken stimmen noch nicht."); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [wrap, h("div",{cls:"row"}, btn), fb];
+};
+
+R.match = it => {
+  const defs = shuffle(it.pairs.map(p => p[1]), it.id);
+  const tbl = h("table", {cls:"match"}); const sels = [];
+  it.pairs.forEach(([term, def]) => {
+    const sel = h("select", null, h("option", {value:""}, "– Bedeutung wählen –"), ...defs.map(d => h("option", {value:d}, d)));
+    sel._ok = def; sels.push(sel);
+    tbl.appendChild(h("tr", null, h("td", null, term), h("td", null, sel)));
+  });
+  const fb = fbBox();
+  const btn = h("button", {onclick: () => {
+    let all = true;
+    sels.forEach(s => { const ok = s.value === s._ok; s.className = ok ? "good" : "bad"; if (!ok) all = false; });
+    if (all){ award(it.id, btn); setFb(fb, true, "Alles richtig zugeordnet!"); }
+    else { miss(it.id); setFb(fb, false, "Die rot markierten Zuordnungen stimmen noch nicht."); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [tbl, h("div",{cls:"row"}, btn), fb];
+};
+
+R.kw = it => {
+  const all = shuffle(it.good.map(t => ({t, ok:true})).concat(it.bad.map(t => ({t, ok:false}))), it.id);
+  const chips = h("div", {cls:"chips"});
+  all.forEach(c => { const b = h("button", {cls:"chip", onclick: () => b.classList.toggle("on")}, c.t); b._ok = c.ok; chips.appendChild(b); });
+  const fb = fbBox();
+  const btn = h("button", {onclick: () => {
+    let missing = 0, extra = 0;
+    chips.querySelectorAll(".chip").forEach(b => { const on = b.classList.contains("on"); if (b._ok && !on) missing++; if (!b._ok && on) extra++; });
+    if (!missing && !extra){ award(it.id, btn); setFb(fb, true, "Genau richtig! " + (it.ex || "")); }
+    else { miss(it.id); setFb(fb, false, `Noch nicht ganz: ${missing ? missing + " wichtige(s) Wort/Wörter fehlt/fehlen" : ""}${missing && extra ? ", " : ""}${extra ? extra + " Wort/Wörter gehört/gehören nicht hinein" : ""}.`); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [chips, h("div",{cls:"row"}, btn), fb];
+};
+
+R.order = it => {
+  let cur = shuffle(it.lines.map((t,i) => ({t,i})), it.id);
+  if (cur.every((c,i) => c.i === i)) cur.reverse();
+  const ul = h("ul", {cls:"ord"});
+  const draw = () => {
+    ul.innerHTML = "";
+    cur.forEach((c, idx) => {
+      const up = h("button", {cls:"sec", title:"nach oben", onclick: () => { if (idx>0){ [cur[idx-1],cur[idx]]=[cur[idx],cur[idx-1]]; draw(); } }}, "▲");
+      const dn = h("button", {cls:"sec", title:"nach unten", onclick: () => { if (idx<cur.length-1){ [cur[idx+1],cur[idx]]=[cur[idx],cur[idx+1]]; draw(); } }}, "▼");
+      ul.appendChild(h("li", null, h("b",null,(idx+1)+"."), h("span",{cls:"t"}, c.t), up, dn));
+    });
+  };
+  draw();
+  const fb = fbBox();
+  const btn = h("button", {onclick: () => {
+    const ok = cur.every((c,i) => c.i === i);
+    if (ok){ award(it.id, btn); setFb(fb, true, "Richtige Reihenfolge! So liest sich eine gute Antwort."); ul.querySelectorAll("li").forEach(l => l.classList.add("good")); }
+    else { const right = cur.filter((c,i) => c.i === i).length; miss(it.id); setFb(fb, false, `${right} von ${cur.length} Sätzen stehen schon an der richtigen Stelle.`); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [ul, h("div",{cls:"row"}, btn), fb];
+};
+
+R.shorten = it => {
+  const box = h("div", {cls:"shorten"});
+  const ps = it.s.map(([t, need]) => { const p = h("p", {onclick: () => p.classList.toggle("cut")}, t); p._need = need; box.appendChild(p); return p; });
+  const fb = fbBox(), res = h("div", {cls:"sol"});
+  const btn = h("button", {onclick: () => {
+    const ok = ps.every(p => (p._need === 1) !== p.classList.contains("cut"));
+    if (ok){ award(it.id, btn); setFb(fb, true, "Richtig gekürzt! Die kurze Antwort enthält alles Wichtige:"); res.innerHTML = ps.filter(p => p._need).map(p => p.textContent).join(" "); res.classList.add("show"); }
+    else { const wrong = ps.filter(p => (p._need === 1) === p.classList.contains("cut")).length; miss(it.id); setFb(fb, false, `${wrong} Satz/Sätze sind noch falsch markiert. Gestrichen werden: Einleitungen, Meinungen, Alltagssprache und Dinge, nach denen nicht gefragt ist.`); }
+    refreshItem(it.id);
+  }}, "Prüfen");
+  return [box, h("div",{cls:"row"}, btn), fb, res];
+};
+
+R.write = it => {
+  const ta = h("textarea", {placeholder:"Schreibe hier deine Antwort in ganzen, kurzen Sätzen …"});
+  const saved = S.items[it.id] && S.items[it.id].t; if (saved) ta.value = saved;
+  const wc = h("span", {cls:"wc"});
+  const upd = () => { const n = wordCount(ta.value); wc.textContent = `${n} / ${it.max} Wörter`; wc.style.color = n > it.max ? "var(--red)" : ""; };
+  ta.addEventListener("input", () => { upd(); st(it.id).t = ta.value; autosave(); }); upd();
+  const kw = h("div", {cls:"kwlist"}), fb = fbBox();
+  const model = h("div", {cls:"sol", html:"<b>Musterantwort:</b> " + it.model});
+  const showBtn = h("button", {cls:"sec hide", onclick: () => model.classList.add("show")}, "Musterantwort zeigen");
+  const btn = h("button", {onclick: () => {
+    const t = norm(ta.value), n = wordCount(ta.value);
+    if (n < 8){ setFb(fb, false, "Schreibe zuerst eine Antwort in ganzen Sätzen."); return; }
+    kw.innerHTML = ""; let found = 0;
+    it.groups.forEach(g => { const ok = g.r.test(t); if (ok) found++; kw.appendChild(h("span", {cls: ok ? "y" : "n"}, (ok ? "✓ " : "✗ ") + g.l)); });
+    const allKw = found === it.groups.length, short = n <= it.max;
+    if (allKw && short){ award(it.id, btn); setFb(fb, true, `Sehr gut! Alle ${found} Fachbegriffe sind drin und die Antwort ist kurz genug. Vergleiche trotzdem mit der Musterantwort.`); model.classList.add("show"); }
+    else {
+      miss(it.id);
+      let m = [];
+      if (!allKw) m.push(`Es fehlen noch ${it.groups.length - found} Fachbegriff(e) (rot markiert).`);
+      if (!short) m.push(`Deine Antwort ist zu lang (${n} Wörter). Kürze auf höchstens ${it.max} Wörter: Streiche Einleitungen und Wiederholungen.`);
+      setFb(fb, false, m.join(" "));
+      showBtn.classList.remove("hide");
+    }
+    refreshItem(it.id);
+  }}, "Antwort prüfen");
+  if ((S.items[it.id]||{}).d) model.classList.add("show");
+  return [ta, h("div",{cls:"row"}, btn, wc, showBtn), kw, fb, model,
+    h("p",{cls:"note"}, "Hinweis: Das Programm prüft nur, ob die Fachbegriffe vorkommen – nicht, ob deine Sätze inhaltlich stimmen. Vergleiche deshalb immer mit der Musterantwort.")];
+};
+
+/* ---------- Energieniveauschema ---------- */
+function drawSvg(set, arrows, onPick, interactive, scale){
+  const L = LEVELS[set], W = 440, H = 420, NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("class", "ts");
+  svg.setAttribute("width", W * (scale||1)); svg.setAttribute("height", H * (scale||1));
+  const mk = (tag, at, txt) => { const e = document.createElementNS(NS, tag); for (const k in at) if (at[k] != null) e.setAttribute(k, at[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
+  const defs = mk("defs", {});
+  ["#222","#1e7b3a","#b3261e"].forEach((c,i) => {
+    const m = document.createElementNS(NS, "marker");
+    m.setAttribute("id", "ah"+i+"_"+set); m.setAttribute("markerWidth","10"); m.setAttribute("markerHeight","10"); m.setAttribute("refX","8"); m.setAttribute("refY","5"); m.setAttribute("orient","auto");
+    const p = document.createElementNS(NS, "path"); p.setAttribute("d","M0,0 L10,5 L0,10 z"); p.setAttribute("fill", c); m.appendChild(p); defs.appendChild(m);
+  });
+  mk("text", {x:10, y:18, "font-weight":"bold"}, "E ↑");
+  mk("line", {x1:24, y1:400, x2:24, y2:28, stroke:"#555", "stroke-width":1.2});
+  const y = {};
+  L.levels.forEach(l => {
+    y[l.k] = l.y;
+    mk("text", {x:112, y:l.y + 4, "text-anchor":"end"}, l.E);
+    mk("line", {x1:120, y1:l.y, x2:320, y2:l.y, class:"lvl", "data-k":l.k, "stroke-dasharray": (l.k === "inf" || l.k === "ion") ? "6 4" : null});
+    if (l.n) mk("text", {x:328, y:l.y + 4}, l.n);
+    if (interactive){ const r = mk("rect", {x:115, y:l.y - 9, width:210, height:18, class:"hit"}); r.addEventListener("click", () => onPick(l.k)); }
+  });
+  if (set === "H"){ mk("text", {x:220, y:325, "text-anchor":"middle", fill:"#999"}, "⋮"); }
+  arrows.forEach((a, i) => {
+    const x = 140 + i * 26, y1 = y[a[0]], y2 = y[a[1]];
+    const col = a[2] === "ok" ? 1 : a[2] === "bad" ? 2 : 0;
+    const dir = y2 < y1 ? -1 : 1;
+    mk("line", {x1:x, y1:y1, x2:x, y2:y2 - dir * 2, stroke:["#222","#1e7b3a","#b3261e"][col], "stroke-width":2.5, "marker-end":`url(#ah${col}_${set})`});
+  });
+  return svg;
+}
+
+R.draw = it => {
+  let arrows = [], sel = null;
+  const holder = h("div");
+  const fb = fbBox();
+  const info = h("div", {cls:"note"});
+  const redraw = () => {
+    holder.innerHTML = "";
+    const svg = drawSvg(it.set, arrows, pick, true);
+    if (sel) svg.querySelectorAll(`.lvl[data-k="${sel}"]`).forEach(l => l.classList.add("sel"));
+    holder.appendChild(svg);
+    info.textContent = sel ? "Startniveau gewählt – jetzt auf das Zielniveau klicken." : "Klicke auf das Startniveau.";
+  };
+  function pick(k){
+    if (sel === null){ sel = k; }
+    else if (sel === k){ sel = null; }
+    else { arrows.push([sel, k]); sel = null; arrows = arrows.map(a => [a[0], a[1]]); }
+    redraw();
+  }
+  const ylev = k => LEVELS[it.set].levels.find(l => l.k === k).y;
+  const btn = h("button", {onclick: () => {
+    if (!arrows.length){ setFb(fb, false, "Zeichne zuerst einen Pfeil."); return; }
+    let ok = false, msg = "";
+    if (it.mode === "updown"){
+      const ups = arrows.filter(a => ylev(a[1]) < ylev(a[0])).length, downs = arrows.length - ups;
+      ok = arrows.length === 2 && ups === 1 && downs === 1;
+      arrows = arrows.map(a => [a[0], a[1], ok ? "ok" : "bad"]);
+      msg = ok ? "Richtig! " + (it.ex||"") : "Gefordert sind genau zwei Pfeile: einer für die Absorption und einer für die Emission. Überlege, in welche Richtung jeder zeigt.";
+    } else {
+      const want = it.need.map(a => a.join(">")).sort(), have = arrows.map(a => a[0] + ">" + a[1]);
+      ok = have.length === want.length && have.slice().sort().every((v,i) => v === want[i]);
+      arrows = arrows.map(a => [a[0], a[1], want.includes(a[0]+">"+a[1]) ? "ok" : "bad"]);
+      if (ok) msg = "Richtig! " + (it.ex||"");
+      else {
+        const rev = arrows.some(a => want.includes(a[1]+">"+a[0]));
+        msg = rev ? "Mindestens ein Pfeil zeigt in die falsche Richtung. Absorption ↑, Emission ↓." : (have.length !== want.length ? `Die Anzahl der Pfeile stimmt nicht. Grüne Pfeile sind richtig, rote falsch.` : "Grüne Pfeile sind richtig, rote falsch. Prüfe Start- und Zielniveau.");
+      }
+    }
+    if (ok) award(it.id, btn); else miss(it.id);
+    setFb(fb, ok, msg); redraw(); refreshItem(it.id);
+  }}, "Prüfen");
+  const undo = h("button", {cls:"sec", onclick: () => { arrows.pop(); arrows = arrows.map(a => [a[0],a[1]]); sel = null; redraw(); }}, "↶ Letzten Pfeil löschen");
+  const clr = h("button", {cls:"sec", onclick: () => { arrows = []; sel = null; redraw(); }}, "Alle Pfeile löschen");
+  redraw();
+  return [h("div",{cls:"drawwrap"}, holder), info, h("div",{cls:"row"}, btn, undo, clr), fb];
+};
+
+/* =====================================================================
+   MODELLE UND ABBILDUNGEN (Franck-Hertz-Kurve, Röntgenspektrum)
+   ===================================================================== */
+const GAS = {
+  Hg: {name:"Quecksilber (Hg)", E1:4.9, Uc:2.75, Ug:1.5, w1:0.55, w2:0.15, Umax:30, col:"#7b3fe4", glow:"UV-Strahlung (unsichtbar)", lam:253.7, temp:"ca. 180 °C"},
+  Ne: {name:"Neon (Ne)", E1:18.7, Uc:1.0, Ug:5, w1:2.0, w2:0.6, Umax:80, col:"#ff7a1a", glow:"orange-rotes Leuchten", lam:66.3, temp:"Zimmertemperatur"}
+};
+/* Auffängerstrom (beliebige Einheit 0…1) – vereinfachtes, glattes Modell:
+   Nach n unelastischen Stößen hat ein Elektron am Gitter die Restenergie t = e·U − n·E1.
+   Es erreicht den Auffänger, wenn t größer als e·U_G ist (Anstieg) – sobald t wieder E1 erreicht, stößt es noch einmal (Abfall). */
+const FH_MAX = [7.07, 11.94, 16.82, 21.71, 26.61];   // Lage der Maxima im Modell (Hg)
+const sig = z => 1 / (1 + Math.exp(-z));
+function fhCurrent(g, U){
+  const G = GAS[g], x = U - G.Uc; if (x <= 0) return 0;
+  let p = 0;
+  for (let n = 0; n <= Math.floor(x / G.E1) + 1; n++){ const t = x - n * G.E1; p += sig((t - G.Ug) / G.w1) * (1 - sig((t - G.E1) / G.w2)); }
+  const env = 0.25 + 0.75 * x / G.Umax;
+  return env * (0.14 + 0.86 * Math.min(1, p));
+}
+const ANODE = {
+  Cu: {name:"Kupfer (Cu)", Z:29, UK:8.98, ka:154.1, kb:139.2},
+  Mo: {name:"Molybdän (Mo)", Z:42, UK:20.0, ka:70.9, kb:63.2}
+};
+const LMIN = U => 1239.84 / U;                    // pm, U in kV
+/* Zählrate N(λ) in beliebigen Einheiten: Bremsstrahlung (Kramers) + Kα/Kβ-Linien */
+function xSpec(an, U, I, lam){
+  const A = ANODE[an], lm = LMIN(U); let n = 0;
+  if (lam > lm){ const t = lam / lm; n += 0.55 * I * A.Z / 29 * (t - 1) / (t*t*t) * Math.exp(-Math.pow(lam / 230, 3)) * (U / 35) * 3.2; }
+  if (U > A.UK){
+    const s = Math.pow(U / A.UK - 1, 1.5) * I * 1.15, wd = 1.1;
+    n += s * Math.exp(-0.5 * ((lam - A.ka) / wd)**2) + 0.22 * s * Math.exp(-0.5 * ((lam - A.kb) / wd)**2);
+  }
+  return n;
+}
+/* einfaches SVG-Diagramm */
+function plotSvg(o){
+  const W = o.W || 560, H = o.H || 300, L = 56, Rr = 16, T = 16, B = 44, NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("class", "ts plot");
+  const mk = (tag, at, txt, par) => { const e = document.createElementNS(NS, tag); for (const k in at) if (at[k] != null) e.setAttribute(k, at[k]); if (txt != null) e.textContent = txt; (par || svg).appendChild(e); return e; };
+  const X = v => L + (v - o.x0) / (o.x1 - o.x0) * (W - L - Rr), Y = v => H - B - (v - o.y0) / (o.y1 - o.y0) * (H - B - T);
+  for (let v = o.x0; v <= o.x1 + 1e-9; v += o.dx){ mk("line", {x1:X(v), y1:T, x2:X(v), y2:H-B, stroke:"#eef0f4"}); mk("text", {x:X(v), y:H-B+16, "text-anchor":"middle", "font-size":12}, String(Math.round(v*100)/100).replace(".", ",")); }
+  mk("line", {x1:L, y1:H-B, x2:W-Rr, y2:H-B, stroke:"#333", "stroke-width":1.3}); mk("line", {x1:L, y1:T, x2:L, y2:H-B, stroke:"#333", "stroke-width":1.3});
+  mk("text", {x:(L+W-Rr)/2, y:H-8, "text-anchor":"middle", "font-weight":"bold"}, o.xl);
+  mk("text", {x:14, y:(T+H-B)/2, "text-anchor":"middle", "font-weight":"bold", transform:`rotate(-90 14 ${(T+H-B)/2})`}, o.yl);
+  const g = mk("g", {});
+  const api = { svg, X, Y, mk, g,
+    line(pts, at){ return mk("polyline", Object.assign({points: pts.map(p => X(p[0]).toFixed(1) + "," + Y(p[1]).toFixed(1)).join(" "), fill:"none", stroke:"#1f4e9a", "stroke-width":2.2}, at || {}), null, g); },
+    clear(){ while (g.firstChild) g.removeChild(g.firstChild); } };
+  return api;
+}
+const sample = (f, a, b, n) => { const p = []; for (let i = 0; i <= n; i++){ const x = a + (b - a) * i / n; p.push([x, f(x)]); } return p; };
+
+/* ---------- statische Abbildungen für die Lesetexte ---------- */
+const FIG = {};
+FIG.fhTube = () => `<svg viewBox="0 0 560 250" class="ts fig" role="img" aria-label="Aufbau der Franck-Hertz-Röhre">
+ <rect x="40" y="30" width="400" height="120" rx="55" fill="#f4f6fb" stroke="#555" stroke-width="2"/>
+ <text x="240" y="52" text-anchor="middle" fill="#7b3fe4">Quecksilberdampf (Röhre im Ofen, ca. 180 °C)</text>
+ <path d="M80 70 l6 8 l-6 8 l6 8 l-6 8 l6 8" fill="none" stroke="#c0392b" stroke-width="3"/><text x="62" y="140" font-weight="bold">K</text>
+ <line x1="330" y1="62" x2="330" y2="138" stroke="#333" stroke-width="3" stroke-dasharray="5 4"/><text x="322" y="140" font-weight="bold">G</text>
+ <line x1="400" y1="62" x2="400" y2="138" stroke="#333" stroke-width="5"/><text x="408" y="140" font-weight="bold">A</text>
+ <line x1="100" y1="100" x2="320" y2="100" stroke="#1f4e9a" stroke-width="2" marker-end="url(#fa)"/><text x="210" y="93" text-anchor="middle" fill="#1f4e9a">Elektronen</text>
+ <defs><marker id="fa" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e9a"/></marker></defs>
+ <path d="M83 150 V200 H330 V150" fill="none" stroke="#333"/><rect x="180" y="188" width="70" height="24" fill="#fff" stroke="#333"/><text x="215" y="205" text-anchor="middle">U<tspan baseline-shift="sub" font-size="10">B</tspan> 0…30 V</text>
+ <text x="300" y="183" font-size="12">+</text><text x="95" y="183" font-size="12">−</text>
+ <path d="M330 200 V230 H400 V150" fill="none" stroke="#333"/><rect x="335" y="218" width="58" height="24" fill="#fff" stroke="#333"/><text x="364" y="235" text-anchor="middle">U<tspan baseline-shift="sub" font-size="10">G</tspan> ≈ 1,5 V</text>
+ <path d="M400 30 V12 H500 V200" fill="none" stroke="#333"/><circle cx="500" cy="110" r="20" fill="#fff" stroke="#333"/><text x="500" y="116" text-anchor="middle" font-weight="bold">I</text><text x="470" y="215" font-size="12">Messverstärker</text>
+ <text x="12" y="20" font-size="12">K = Glühkathode · G = Gitter · A = Auffänger (Anode)</text></svg>`;
+FIG.fhCurve = () => {
+  const P = plotSvg({x0:0, x1:30, dx:5, y0:0, y1:1.05, xl:"Beschleunigungsspannung in V", yl:"Auffängerstrom I", H:280});
+  P.line(sample(U => fhCurrent("Hg", U), 0, 30, 300));
+  const mx = []; for (let n = 1; n <= 5; n++) mx.push(FH_MAX[n-1]);
+  for (let i = 0; i < 4; i++){ const a = mx[i], b = mx[i+1], y = P.Y(fhCurrent("Hg", b)) - 18 - i * 0; P.mk("line", {x1:P.X(a), y1:y, x2:P.X(b), y2:y, stroke:"#b3261e", "stroke-width":1.5, "marker-end":"url(#arr)", "marker-start":"url(#arr2)"}); P.mk("text", {x:(P.X(a)+P.X(b))/2, y:y-5, "text-anchor":"middle", fill:"#b3261e", "font-size":12}, "4,9 V"); }
+  const d = P.mk("defs", {}); d.innerHTML = '<marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b3261e"/></marker><marker id="arr2" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto"><path d="M8,0 L0,4 L8,8 z" fill="#b3261e"/></marker>';
+  return P.svg.outerHTML;
+};
+FIG.xTube = () => `<svg viewBox="0 0 560 250" class="ts fig" role="img" aria-label="Aufbau einer Röntgenröhre">
+ <ellipse cx="270" cy="105" rx="230" ry="70" fill="#f4f6fb" stroke="#555" stroke-width="2"/>
+ <text x="270" y="55" text-anchor="middle" fill="#555">Hochvakuum</text>
+ <path d="M70 90 l6 8 l-6 8 l6 8" fill="none" stroke="#c0392b" stroke-width="3"/><text x="52" y="140" font-weight="bold">K</text><text x="40" y="160" font-size="12">Glühkathode</text>
+ <path d="M60 80 h40 v12 M60 132 h40 v-12" fill="none" stroke="#333" stroke-width="2"/><text x="96" y="74" font-size="11">Wehnelt-Zylinder</text>
+ <polygon points="420,70 470,70 470,140 400,140" fill="#b07d2b" stroke="#333"/><text x="440" y="160" font-weight="bold">A</text><text x="420" y="178" font-size="12">Anode (z. B. Cu, Mo, W)</text>
+ <line x1="100" y1="105" x2="405" y2="105" stroke="#1f4e9a" stroke-width="2.5" marker-end="url(#xa)"/><text x="250" y="98" text-anchor="middle" fill="#1f4e9a">schnelle Elektronen</text>
+ <defs><marker id="xa" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f4e9a"/></marker><marker id="xr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7b3fe4"/></marker></defs>
+ <g stroke="#7b3fe4" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#xr)"><line x1="412" y1="112" x2="372" y2="230"/><line x1="412" y1="112" x2="400" y2="232"/><line x1="412" y1="112" x2="345" y2="225"/></g>
+ <text x="250" y="232" fill="#7b3fe4" font-weight="bold">Röntgenstrahlung</text>
+ <path d="M66 140 V200 H120" fill="none" stroke="#333"/><rect x="120" y="188" width="80" height="24" fill="#fff" stroke="#333"/><text x="160" y="205" text-anchor="middle">U<tspan baseline-shift="sub" font-size="10">H</tspan> (Heizung)</text>
+ <path d="M60 30 V12 H470 V70" fill="none" stroke="#333"/><rect x="215" y="2" width="130" height="22" fill="#fff" stroke="#333"/><text x="280" y="18" text-anchor="middle">U<tspan baseline-shift="sub" font-size="10">A</tspan> = 10 … 40 kV</text>
+ <text x="56" y="28" font-size="12">−</text><text x="474" y="64" font-size="12">+</text></svg>`;
+FIG.xSpec = (labels) => {
+  const P = plotSvg({x0:20, x1:180, dx:20, y0:0, y1:1.35, xl:"Wellenlänge λ in pm", yl:"Zählrate N", H:290});
+  P.line(sample(l => xSpec("Mo", 35, 1, l), 20, 180, 640));
+  if (labels){
+    const lab = (x, y, t) => { P.mk("circle", {cx:P.X(x), cy:P.Y(y), r:12, fill:"#fff", stroke:"#b3261e", "stroke-width":2}); P.mk("text", {x:P.X(x), y:P.Y(y)+5, "text-anchor":"middle", "font-weight":"bold", fill:"#b3261e"}, t); };
+    lab(LMIN(35) - 1, 0.12, "A"); lab(105, xSpec("Mo", 35, 1, 105) + 0.12, "B"); lab(63.2 - 7, 0.6, "C"); lab(70.9 + 8, 1.0, "D");
+  } else {
+    P.mk("text", {x:P.X(70.9)+6, y:P.Y(1.0), fill:"#b3261e", "font-weight":"bold"}, "Kα"); P.mk("text", {x:P.X(63.2)-26, y:P.Y(0.5), fill:"#b3261e", "font-weight":"bold"}, "Kβ");
+    P.mk("text", {x:P.X(LMIN(35))-4, y:P.Y(0.07), "text-anchor":"end", fill:"#1e7b3a", "font-weight":"bold"}, "λmin");
+    P.mk("text", {x:P.X(115), y:P.Y(0.36), fill:"#1f4e9a"}, "Bremsstrahlung (kontinuierlich)");
+  }
+  P.mk("text", {x:P.X(150), y:P.Y(1.2), "text-anchor":"middle", "font-size":12, fill:"#666"}, "Molybdän-Anode, U = 35 kV");
+  return P.svg.outerHTML;
+};
+FIG.shells = () => `<svg viewBox="0 0 560 230" class="ts fig" role="img" aria-label="Entstehung der charakteristischen Strahlung">
+ <circle cx="130" cy="115" r="10" fill="#c0392b"/><text x="130" y="119" text-anchor="middle" fill="#fff" font-size="10">Kern</text>
+ <circle cx="130" cy="115" r="40" fill="none" stroke="#999"/><circle cx="130" cy="115" r="70" fill="none" stroke="#999"/><circle cx="130" cy="115" r="98" fill="none" stroke="#999"/>
+ <text x="166" y="88" font-size="12">K</text><text x="190" y="62" font-size="12">L</text><text x="208" y="38" font-size="12">M</text>
+ <circle cx="90" cy="115" r="6" fill="none" stroke="#1f4e9a" stroke-width="2" stroke-dasharray="3 2"/><text x="62" y="142" font-size="11" fill="#1f4e9a">Lücke</text>
+ <circle cx="130" cy="45" r="6" fill="#1f4e9a"/><path d="M128 52 Q 95 70 92 108" fill="none" stroke="#1e7b3a" stroke-width="2" marker-end="url(#sa)"/>
+ <defs><marker id="sa" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1e7b3a"/></marker><marker id="sb" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7b3fe4"/></marker></defs>
+ <path d="M84 108 q -2 -9 -10 -8 t -10 -8 t -10 -8 t -10 -8" fill="none" stroke="#7b3fe4" stroke-width="2" marker-end="url(#sb)"/><text x="14" y="62" font-size="11" fill="#7b3fe4">Röntgen-</text><text x="14" y="75" font-size="11" fill="#7b3fe4">photon</text>
+ <text x="300" y="40" font-weight="bold">So entsteht die Kα-Linie:</text>
+ <text x="300" y="68">① Ein schnelles Elektron schlägt</text><text x="318" y="86">ein Elektron aus der K-Schale.</text>
+ <text x="300" y="114">② Ein Elektron aus der L-Schale</text><text x="318" y="132">füllt die Lücke (grüner Pfeil).</text>
+ <text x="300" y="160">③ Dabei wird ein Röntgenphoton</text><text x="318" y="178">mit E = E<tspan baseline-shift="sub" font-size="10">L</tspan> − E<tspan baseline-shift="sub" font-size="10">K</tspan> ausgesandt.</text>
+ <text x="300" y="204" fill="#666" font-size="12">Kommt das Elektron aus der</text><text x="300" y="219" fill="#666" font-size="12">M-Schale: Kβ-Linie.</text></svg>`;
+
+/* =====================================================================
+   NEUE AUFGABENTYPEN: Lesetext, Abbildung, Franck-Hertz-Labor, Röntgen-Labor
+   ===================================================================== */
+R.read = it => h("div", {cls:"readtext", html: it.html.replace(/\{\{fig:(\w+)(?::(\w+))?\}\}/g, (m, f, a) => FIG[f](a))});
+R.fig = it => h("div", {html: FIG[it.fig](it.arg)});
+
+R.fhlab = () => {
+  let gas = "Hg", U = 0, pts = [], auto = null;
+  const box = h("div", {cls:"lab"});
+  const gasSel = h("select", null, h("option", {value:"Hg"}, "Quecksilber (Hg)"), h("option", {value:"Ne"}, "Neon (Ne)"));
+  const sl = h("input", {type:"range", min:0, max:30, step:0.1, value:0, cls:"slider"});
+  const uOut = h("b"), iOut = h("b");
+  const btnRec = h("button", null, "📍 Messwert aufnehmen"), btnAuto = h("button", {cls:"sec"}, "▶ Kurve automatisch messen"), btnClr = h("button", {cls:"sec"}, "🗑 Messwerte löschen");
+  const tubeHost = h("div"), plotHost = h("div"), info = h("div", {cls:"note"});
+  box.append(
+    h("div", {cls:"row"}, h("label", null, "Gas: ", gasSel), h("span", {cls:"note", id:"fhInfo"})),
+    h("div", {cls:"row"}, h("span", null, "Beschleunigungsspannung U", h("sub", null, "B"), " = "), uOut, sl),
+    h("div", {cls:"row"}, h("span", null, "Auffängerstrom I = "), iOut, btnRec, btnAuto, btnClr),
+    h("div", {cls:"labgrid"}, tubeHost, plotHost), info);
+  const NS = "http://www.w3.org/2000/svg";
+  function drawTube(){
+    const G = GAS[gas], x = Math.max(0, U - G.Uc), W = 520, Hh = 250;
+    const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${Hh}`); svg.setAttribute("class", "ts");
+    const mk = (t, a, txt) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; svg.appendChild(e); return e; };
+    const x0 = 50, x1 = 400; // Kathode … Gitter
+    mk("rect", {x:20, y:14, width:480, height:92, rx:40, fill:"#f4f6fb", stroke:"#555", "stroke-width":2});
+    const n = Math.floor(x / G.E1);
+    for (let k = 1; k <= n; k++){ const s = k * G.E1 / x, cx = x0 + s * (x1 - x0);
+      mk("rect", {x:cx - 9, y:22, width:18, height:76, rx:8, fill:G.col, opacity:gas === "Ne" ? 0.75 : 0.28}); }
+    mk("path", {d:"M50 40 l6 8 l-6 8 l6 8 l-6 8 l6 8", fill:"none", stroke:"#c0392b", "stroke-width":3}); mk("text", {x:36, y:100, "font-weight":"bold"}, "K");
+    mk("line", {x1:x1, y1:26, x2:x1, y2:94, stroke:"#333", "stroke-width":3, "stroke-dasharray":"5 4"}); mk("text", {x:x1 - 4, y:104, "font-weight":"bold", "font-size":12}, "G");
+    mk("line", {x1:470, y1:26, x2:470, y2:94, stroke:"#333", "stroke-width":5}); mk("text", {x:478, y:100, "font-weight":"bold"}, "A");
+    if (n) mk("text", {x:(x0 + x1)/2, y:12, "text-anchor":"middle", fill:G.col, "font-size":12, "font-weight":"bold"}, `${n} Zone${n > 1 ? "n" : ""} mit unelastischen Stößen → ${G.glow}`);
+    // Energie der Elektronen auf dem Weg K → G
+    const top = 130, bot = 232, Emax = Math.max(G.E1 * 1.25, 1), Y = E => bot - E / Emax * (bot - top);
+    mk("line", {x1:x0, y1:bot, x2:x1 + 70, y2:bot, stroke:"#333"}); mk("line", {x1:x0, y1:top - 6, x2:x0, y2:bot, stroke:"#333"});
+    mk("text", {x:x0 + 4, y:top - 8, "font-size":12, "font-weight":"bold"}, "Energie eines Elektrons");
+    mk("text", {x:x1 + 8, y:bot + 14, "font-size":12}, "Weg K → G → A");
+    mk("line", {x1:x0, y1:Y(G.E1), x2:x1, y2:Y(G.E1), stroke:"#b3261e", "stroke-dasharray":"5 4"}); mk("text", {x:x0 - 4, y:Y(G.E1) + 4, "text-anchor":"end", "font-size":11, fill:"#b3261e"}, G.E1.toString().replace(".", ",") + " eV");
+    const p = []; const N = 220;
+    for (let i = 0; i <= N; i++){ const s = i / N, E = x * s, r = E - G.E1 * Math.floor(E / G.E1 + 1e-9); p.push([x0 + s * (x1 - x0), Y(E >= G.E1 && Math.abs(r) < 1e-9 ? 0 : r)]); }
+    const rEnd = x - G.E1 * Math.floor(x / G.E1);
+    p.push([x1 + 70, Y(Math.max(0, rEnd - G.Ug))]);
+    mk("polyline", {points:p.map(q => q[0].toFixed(1) + "," + q[1].toFixed(1)).join(" "), fill:"none", stroke:"#1f4e9a", "stroke-width":2.2});
+    mk("text", {x:x1 + 6, y:top + 6, "font-size":11, fill:"#666"}, "Gegenfeld:");
+    mk("text", {x:x1 + 6, y:top + 20, "font-size":11, fill:"#666"}, "−" + String(G.Ug).replace(".", ",") + " eV");
+    tubeHost.innerHTML = ""; tubeHost.appendChild(svg);
+  }
+  let P = null;
+  function drawPlot(){
+    const G = GAS[gas];
+    P = plotSvg({x0:0, x1:G.Umax, dx:gas === "Hg" ? 5 : 10, y0:0, y1:1.05, xl:"Beschleunigungsspannung in V", yl:"Auffängerstrom I", W:520, H:270});
+    P.mk("circle", {cx:P.X(U), cy:P.Y(fhCurrent(gas, U)), r:6, fill:"#e5a50a", stroke:"#333"}, null, P.g);
+    pts.forEach(q => P.mk("circle", {cx:P.X(q[0]), cy:P.Y(q[1]), r:3.2, fill:"#1f4e9a"}, null, P.g));
+    plotHost.innerHTML = ""; plotHost.appendChild(P.svg);
+  }
+  function upd(){
+    const G = GAS[gas], I = fhCurrent(gas, U);
+    uOut.textContent = U.toFixed(1).replace(".", ",") + " V"; iOut.textContent = (I * 100).toFixed(1).replace(".", ",") + " nA";
+    info.innerHTML = `<b>${G.name}</b>: Röhrentemperatur ${G.temp}, Gegenspannung U<sub>G</sub> = ${String(G.Ug).replace(".", ",")} V. Unten siehst du, wie sich die Energie eines Elektrons auf dem Weg ändert: Sie steigt im Feld an. Erreicht sie ${String(G.E1).replace(".", ",")} eV, stößt das Elektron unelastisch und gibt diese Energie an ein Atom ab.`;
+    drawTube(); drawPlot();
+  }
+  sl.addEventListener("input", () => { U = +sl.value; upd(); });
+  gasSel.addEventListener("change", () => { gas = gasSel.value; pts = []; U = 0; sl.max = GAS[gas].Umax; sl.value = 0; stopAuto(); upd(); });
+  btnRec.addEventListener("click", () => { pts.push([U, fhCurrent(gas, U)]); drawPlot(); });
+  btnClr.addEventListener("click", () => { pts = []; stopAuto(); drawPlot(); });
+  function stopAuto(){ if (auto){ clearInterval(auto); auto = null; btnAuto.textContent = "▶ Kurve automatisch messen"; } }
+  btnAuto.addEventListener("click", () => {
+    if (auto) return stopAuto();
+    pts = []; U = 0; btnAuto.textContent = "⏸ Stopp";
+    const st = GAS[gas].Umax / 150;
+    auto = setInterval(() => { U = Math.min(GAS[gas].Umax, U + st); sl.value = U; pts.push([U, fhCurrent(gas, U)]); upd(); if (U >= GAS[gas].Umax) stopAuto(); }, 40);
+  });
+  upd();
+  return box;
+};
+
+R.xlab = () => {
+  let an = "Mo", U = 25, I = 1, ghost = null;
+  const box = h("div", {cls:"lab"});
+  const anSel = h("select", null, h("option", {value:"Mo"}, "Molybdän (Mo, Z = 42)"), h("option", {value:"Cu"}, "Kupfer (Cu, Z = 29)"));
+  const slU = h("input", {type:"range", min:5, max:40, step:0.5, value:U, cls:"slider"});
+  const slI = h("input", {type:"range", min:0.2, max:1, step:0.1, value:I, cls:"slider"});
+  const uOut = h("b"), iOut = h("b"), lmOut = h("div", {cls:"note"});
+  const btnKeep = h("button", {cls:"sec"}, "📌 Kurve merken (zum Vergleichen)");
+  const plotHost = h("div");
+  box.append(h("div", {cls:"row"}, h("label", null, "Anode: ", anSel)),
+    h("div", {cls:"row"}, h("span", null, "Beschleunigungsspannung U = "), uOut, slU),
+    h("div", {cls:"row"}, h("span", null, "Anodenstrom I = "), iOut, slI, btnKeep), plotHost, lmOut);
+  const curve = (a, u, i) => sample(l => xSpec(a, u, i, l), 20, 200, 720);
+  function upd(){
+    uOut.textContent = String(U).replace(".", ",") + " kV"; iOut.textContent = I.toFixed(1).replace(".", ",") + " mA";
+    const cur = curve(an, U, I), top = Math.max(1, ...cur.map(q => q[1]), ...(ghost ? ghost.pts.map(q => q[1]) : [0])) * 1.12;
+    const P = plotSvg({x0:20, x1:200, dx:20, y0:0, y1:top, xl:"Wellenlänge λ in pm", yl:"Zählrate N", W:600, H:300});
+    if (ghost) P.line(ghost.pts, {stroke:"#aaa", "stroke-dasharray":"5 4", "stroke-width":1.6});
+    P.line(cur);
+    const lm = LMIN(U);
+    if (lm >= 20){ P.mk("line", {x1:P.X(lm), y1:P.Y(0), x2:P.X(lm), y2:P.Y(top * 0.2), stroke:"#1e7b3a", "stroke-width":2}, null, P.g); P.mk("text", {x:P.X(lm) + 4, y:P.Y(top * 0.22), fill:"#1e7b3a", "font-weight":"bold", "font-size":12}, "λmin", P.g); }
+    if (ghost) P.mk("text", {x:P.X(196), y:P.Y(top * 0.95), "text-anchor":"end", fill:"#888", "font-size":12}, "gestrichelt: gemerkte Kurve (" + ghost.txt + ")", P.g);
+    plotHost.innerHTML = ""; plotHost.appendChild(P.svg);
+    const A = ANODE[an];
+    lmOut.innerHTML = `Kurzwellige Grenze: <b>λ<sub>min</sub> ≈ ${lm.toFixed(1).replace(".", ",")} pm</b> &nbsp;·&nbsp; ` + (U > A.UK ? `K-Linien von ${A.name} sind sichtbar.` : `Keine K-Linien: Die Elektronenenergie (${String(U).replace(".", ",")} keV) reicht nicht, um ein Elektron aus der K-Schale von ${A.name} zu schlagen.`);
+  }
+  slU.addEventListener("input", () => { U = +slU.value; upd(); });
+  slI.addEventListener("input", () => { I = +slI.value; upd(); });
+  anSel.addEventListener("change", () => { an = anSel.value; upd(); });
+  btnKeep.addEventListener("click", () => { ghost = {pts:curve(an, U, I), txt:`${an}, ${String(U).replace(".", ",")} kV, ${I.toFixed(1).replace(".", ",")} mA`}; upd(); });
+  upd();
+  return box;
+};
+
+/* =====================================================================
+   SEITENAUFBAU
+   ===================================================================== */
+let TAB = "start";
+const TABS = [["start","Start"],["f","Franck-Hertz"],["r","Röntgenstrahlung"],["w","Wiederholung"],["stat","Mein Fortschritt"]];
+function renderTabs(){
+  const nav = document.getElementById("tabs"); nav.innerHTML = "";
+  TABS.forEach(([id,l]) => {
+    if (id === "p" && S.mode !== "probe") return;
+    nav.appendChild(h("button", {cls: TAB === id ? "on" : "", onclick: () => { TAB = id; renderTabs(); render(); scrollTo(0,0); }}, l));
+  });
+  if (TAB === "p" && S.mode !== "probe"){ TAB = "start"; render(); }
+}
+function itemEl(it){
+  if (!it.id) return h("div", {cls:"item"}, R[it.type](it));
+  const body = R[it.type](it);
+  return h("div", {cls:"item", id:"it_" + it.id},
+    h("div", {cls:"ihead"}, h("div", {cls:"q"}, tagEl(it), h("span", {html: it.q || ""})), starBadge(it)),
+    body);
+}
+function refreshItem(id){
+  const el = document.getElementById("it_" + id); if (!el) return;
+  const old = el.querySelector(".stars"); if (old) old.replaceWith(starBadge(ITEMS[id]));
+  const sec = ITEMS[id].sec, p = document.getElementById("prog_" + sec);
+  if (p){ const t = totals(sec); p.textContent = `⭐ ${t.got}/${t.max} · ✗ ${t.wrong}`; }
+}
+function render(){
+  const app = document.getElementById("app"); app.innerHTML = "";
+  if (TAB === "stat"){ app.appendChild(statView()); return; }
+  if (TAB === "f") app.appendChild(h("div",{cls:"card", html:"<b>Der Franck-Hertz-Versuch</b> – Energieaufnahme von Atomen durch Stöße. Beginne mit den <b>Lesetexten 📖 (F1–F3)</b>. Dann vertiefst du: Fachbegriffe, Simulation, Rechnen, Antworten schreiben. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
+  if (TAB === "r") app.appendChild(h("div",{cls:"card", html:"<b>Röntgenstrahlung</b> – Erzeugung, Bremsstrahlung und charakteristische Strahlung. Beginne mit den <b>Lesetexten 📖 (R1–R3)</b>. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
+  if (TAB === "w") app.appendChild(h("div",{cls:"card", html:"<b>Wiederholung</b> – Themen aus dem Halbjahr, die du für Franck-Hertz und Röntgen brauchst: Elektronvolt und Photonen, Energieniveaus, Photoeffekt, Quantenobjekte und Bragg-Reflexion."}));
+  SECTIONS.filter(s => s.part === TAB).forEach((sec, i) => {
+    if (sec.part === "start"){ sec.items.forEach(it => app.appendChild(it.id ? R[it.type](it) : (it.type === "info" ? h("div",{cls:"card"}, R.info(it)) : R[it.type](it)))); return; }
+    const t = totals(sec.id);
+    const det = h("details", {cls:"sec"},
+      h("summary", null, h("span", null, sec.title), h("span", {cls:"prog", id:"prog_" + sec.id}, `⭐ ${t.got}/${t.max} · ✗ ${t.wrong}`)),
+      h("div", {cls:"secbody"}, sec.intro ? h("div", {cls:"intro", html: sec.intro}) : null, ...sec.items.map(itemEl)));
+    app.appendChild(det);
+  });
+}
+function statView(){
+  const card = h("div", {cls:"card"});
+  card.appendChild(h("h2", {style:"margin-top:0;color:var(--blue)"}, "Mein Fortschritt" + (S.name ? " – " + S.name : "")));
+  const tbl = h("table", {cls:"tbl"}, h("tr", null, h("th",null,"Bereich"), h("th",null,"Sterne"), h("th",null,"Fehlversuche")));
+  SECTIONS.filter(s => s.part !== "start").forEach(sec => {
+    const t = totals(sec.id);
+    tbl.appendChild(h("tr", null, h("td",null,sec.title), h("td",null,`⭐ ${t.got} / ${t.max}`), h("td",null,`✗ ${t.wrong}`)));
+  });
+  const T = totals();
+  tbl.appendChild(h("tr", null, h("th",null,"Gesamt"), h("th",null,`⭐ ${T.got} / ${T.max}`), h("th",null,`✗ ${T.wrong}`)));
+  card.appendChild(tbl);
+  card.appendChild(h("p", {cls:"note"}, "Fehlversuche zählen nur, solange eine Aufgabe noch nicht gelöst ist. Du kannst deine Speicherdatei auch deiner Lehrkraft schicken."));
+  return card;
+}
+function refreshScores(){
+  const T = totals();
+  document.getElementById("sNum").textContent = T.got;
+  document.getElementById("sMax").textContent = T.max;
+  document.getElementById("wNum").textContent = T.wrong;
+  renderTut();
+}
+
+/* =====================================================================
+   SPEICHERN / LADEN / LÖSCHEN
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+function openM(id){ $(id).classList.add("show"); }
+function closeM(id){ $(id).classList.remove("show"); }
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => closeM(b.dataset.close)));
+function makeCode(){ S.saved = new Date().toISOString(); return "PT-" + btoa(unescape(encodeURIComponent(JSON.stringify(S)))); }
+function fileName(){ const n = (S.name || "Name").trim().replace(/[^\wäöüÄÖÜß-]+/g, "_"); const d = new Date(); const ds = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); return `Physik12-FH-Roentgen_${n}_${ds}.json`; }
+
+$("name").addEventListener("input", e => { S.name = e.target.value; autosave(); });
+$("btnSave").addEventListener("click", () => {
+  if (!S.name.trim()){ toast("Bitte trage zuerst oben deinen Namen ein."); $("name").focus(); return; }
+  $("codeOut").value = makeCode(); $("dlInfo").textContent = ""; $("cpInfo").textContent = ""; openM("mSave");
+});
+$("doDownload").addEventListener("click", () => {
+  try {
+    const blob = new Blob([JSON.stringify(S, null, 1)], {type:"application/json"});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fileName();
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    $("dlInfo").innerHTML = "✓ Datei <b>" + fileName() + "</b> wurde erstellt. Schau im Ordner Downloads nach. Falls keine Datei kam: nimm Weg 2 (Code).";
+    TUT.saved = true; renderTut();
+  } catch(e){ $("dlInfo").textContent = "Herunterladen nicht möglich – bitte den Code (Weg 2) verwenden."; }
+});
+$("doCopy").addEventListener("click", async () => {
+  const ta = $("codeOut");
+  try { await navigator.clipboard.writeText(ta.value); $("cpInfo").textContent = "✓ Code kopiert. Füge ihn jetzt irgendwo ein, wo du ihn wiederfindest."; }
+  catch(e){ ta.focus(); ta.select(); try { document.execCommand("copy"); $("cpInfo").textContent = "✓ Code kopiert."; } catch(e2){ $("cpInfo").textContent = "Bitte den markierten Code mit Strg+C (Mac: ⌘+C) kopieren."; } }
+  TUT.saved = true; renderTut();
+});
+$("btnLoad").addEventListener("click", () => { $("ldInfo").textContent = ""; $("codeIn").value = ""; $("fileIn").value = ""; openM("mLoad"); });
+function applyLoaded(obj){
+  if (!obj || obj.app !== "physik12-fh-roe" || typeof obj.items !== "object") throw new Error("format");
+  S = Object.assign(freshState(), obj);
+  $("name").value = S.name || "";
+  TUT.loaded = true; autosave(); renderTabs(); render(); refreshScores(); closeM("mLoad");
+  const T = totals(); toast(`✓ Geladen: ⭐ ${T.got} Sterne, ✗ ${T.wrong} Fehlversuche`);
+}
+$("fileIn").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { try { const txt = String(r.result).trim(); applyLoaded(txt.startsWith("PT-") ? decodeCode(txt) : JSON.parse(txt)); } catch(err){ $("ldInfo").textContent = "Diese Datei ist keine gültige Speicherdatei dieses Trainings."; } };
+  r.readAsText(f);
+});
+function decodeCode(c){ return JSON.parse(decodeURIComponent(escape(atob(c.trim().replace(/^PT-/, "").replace(/\s/g,""))))); }
+$("doLoadCode").addEventListener("click", () => {
+  try { applyLoaded(decodeCode($("codeIn").value)); } catch(e){ $("ldInfo").textContent = "Der Code ist ungültig. Hast du ihn vollständig kopiert (beginnt mit PT-)?"; }
+});
+$("btnErase").addEventListener("click", () => openM("mErase"));
+$("doErase").addEventListener("click", () => {
+  const mode = S.mode, name = S.name;
+  S = freshState(); S.mode = mode; S.name = name;
+  try { localStorage.removeItem(KEY); } catch(e){}
+  TUT.erased = true; TUT.loaded = false;
+  closeM("mErase"); renderTabs(); render(); refreshScores(); toast("Alles gelöscht.");
+});
+
+
+/* =====================================================================
+   ☁️ ONLINE SPEICHERN (Google Sheets) – nur wenn der Link ?s=… enthält
+   ===================================================================== */
+const Cloud=(function(){
+  const STANDARD_ID='';           // optional: ID aus der Web-App-URL …/macros/s/<ID>/exec
+  const LOGIN_KEY='fs-login';
+  const TXT={ok:'☁️ Gespeichert',busy:'⏳ Speichert …',foto:'⏳ Foto wird hochgeladen …',off:'⚠️ Offline – wird später gespeichert',lokal:'💾 Nur auf diesem Gerät'};
+  const ERR={login:'Benutzername oder PIN ist falsch. Versuche es noch einmal.',
+    gesperrt:'Zu viele falsche Versuche. Warte 10 Minuten oder frag deine Lehrerin / deinen Lehrer.',
+    klasse:'Diese Seite ist für deine Klasse nicht freigeschaltet. Frag deine Lehrerin / deinen Lehrer.',
+    netz:'Keine Verbindung zum Internet. Prüfe das WLAN und versuche es noch einmal.',
+    server:'Der Server antwortet nicht richtig. Versuche es gleich noch einmal.'};
+  let C=null,login=null,server='',dirty=false,timer=null,sending=null,lastSent='',lastSendAt=0,suppress=false,status='',photoRun=null,photoFail=0;
+  const qs=new URLSearchParams(location.search);
+  const idOk=s=>/^[A-Za-z0-9_-]{20,}$/.test(s||'');
+  const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}};
+  const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+  const metaKey=()=>'fs-meta-'+C.app;
+  const meta=()=>lsGet(metaKey())||{};
+  const pageLink=()=>location.origin+location.pathname;
+  const photoList=()=>C.photos?C.photos().filter(p=>p.ph):[];
+  const photosPending=()=>photoList().some(p=>p.ph.src&&!p.ph.fid);
+
+  function setStatus(k){status=k;['cloudStatus','cloudStatus2'].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent=TXT[k]||'';e.className='cstat'+(id==='cloudStatus2'?' big ':' ')+k;}});}
+  function idle(){setStatus(dirty?'busy':photosPending()?(status==='off'?'off':'foto'):'ok');}
+  async function call(s,body,keep){
+    const txt=JSON.stringify(body);
+    const r=await fetch('https://script.google.com/macros/s/'+s+'/exec',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:txt,keepalive:!!keep&&txt.length<60000,redirect:'follow'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  }
+  const base=()=>({u:login.u,p:login.p,app:C.app,titel:C.titel,link:pageLink()});
+
+  /* ---- Anmelde-Fenster ---- */
+  function showLogin(s,u,msg){
+    let ov=document.getElementById('fsLogin');if(ov)ov.remove();
+    ov=document.createElement('div');ov.id='fsLogin';ov.className='fs-ov';
+    ov.innerHTML=`<form class="fs-box" autocomplete="on"><h2>👋 Anmelden</h2>
+      <div class="fs-sub">${C.titel}</div>
+      <label for="fsU">Benutzername <span class="fs-sub">(user name)</span></label>
+      <input id="fsU" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" placeholder="z. B. 8b-07">
+      <label for="fsP">PIN <span class="fs-sub">(secret number)</span></label>
+      <input id="fsP" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••">
+      <button class="go" type="submit">Los geht's ▶</button><div class="fs-msg" id="fsMsg"></div></form>`;
+    document.body.appendChild(ov);
+    const uI=ov.querySelector('#fsU'),pI=ov.querySelector('#fsP'),m=ov.querySelector('#fsMsg'),b=ov.querySelector('.go');
+    const say=(cls,t)=>{m.className='fs-msg '+cls;m.textContent=t;};
+    if(u)uI.value=u;if(msg)say('bad',msg);
+    setTimeout(()=>(u?pI:uI).focus(),50);
+    ov.querySelector('form').onsubmit=async e=>{e.preventDefault();
+      const cu=uI.value.trim().toLowerCase(),cp=pI.value.trim();
+      if(!cu||!cp){say('bad','Bitte Benutzername und PIN eingeben.');return;}
+      b.disabled=true;say('info','⏳ Einen Moment …');
+      try{const r=await call(s,{action:'login',u:cu,p:cp,app:C.app,titel:C.titel,link:pageLink()});
+        if(!r.ok){say('bad',ERR[r.err]||ERR.server);b.disabled=false;pI.value='';pI.focus();return;}
+        login={u:cu,p:cp,s,name:r.name||'',voll:r.voll||r.name||'',klasse:r.klasse||''};lsSet(LOGIN_KEY,login);
+        ov.remove();applyServer(r.data);C.onLogin(login);
+      }catch(err){say('bad',ERR.netz);b.disabled=false;}
+    };
+  }
+
+  /* ---- Abgleich Gerät ↔ Server: der neuere Stand gewinnt ---- */
+  function applyServer(d){
+    const m=meta();
+    let localT=m.t||0;
+    if(m.owner&&m.owner!==login.u){suppress=true;C.setState(null);suppress=false;localT=0;}  // Stand eines anderen Kindes vom Gerät entfernen
+    const serverT=(d&&d.state)?(d.t||0):-1;
+    if(serverT>localT||(serverT>=0&&serverT===localT&&!hasLocal())){
+      suppress=true;C.setState(d.state);suppress=false;
+      lsSet(metaKey(),{owner:login.u,t:serverT});lastSent=JSON.stringify(C.getState());dirty=false;
+    }else if(serverT>=0&&serverT===localT){
+      lsSet(metaKey(),{owner:login.u,t:localT});lastSent=JSON.stringify(C.getState());dirty=false;   // schon gleich
+    }else{
+      lsSet(metaKey(),{owner:login.u,t:localT});
+      if(localT>0||(!m.owner&&hasLocal())){dirty=true;send();}
+    }
+    idle();syncPhotos();
+  }
+  const hasLocal=()=>C.hasProgress?!!C.hasProgress():true;
+
+  function changed(){
+    if(suppress||!login)return;
+    syncPhotos();
+    const js=JSON.stringify(C.getState());if(js===lastSent)return;
+    lsSet(metaKey(),{owner:login.u,t:Date.now()});dirty=true;
+    if(status!=='off')setStatus('busy');schedule();
+  }
+  function schedule(){if(timer)return;const wait=Math.max(3000,8000-(Date.now()-lastSendAt));timer=setTimeout(()=>{timer=null;send();},wait);}
+  function send(keep){
+    if(!login||!dirty)return Promise.resolve(true);
+    if(sending)return sending;
+    const st=C.getState(),js=JSON.stringify(st);
+    if(js===lastSent){dirty=false;idle();return Promise.resolve(true);}
+    setStatus('busy');
+    sending=call(login.s,Object.assign(base(),{action:'save',t:meta().t||Date.now(),state:st,sum:C.getSummary()}),keep)
+      .then(r=>{if(r.ok){lastSent=js;dirty=JSON.stringify(C.getState())!==js;idle();return !dirty;}
+        if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt'){forceLogout(ERR[r.err]);return false;}
+        setStatus('off');return false;})
+      .catch(()=>{setStatus('off');return false;})
+      .finally(()=>{sending=null;lastSendAt=Date.now();if(dirty&&login)schedule();});
+    return sending;
+  }
+
+  /* ---- Fotos: hochladen (Google Drive) und auf neuem Gerät wieder holen ---- */
+  function syncPhotos(){
+    if(!login||!C.photos||photoRun)return photoRun||Promise.resolve();
+    photoRun=(async()=>{
+      for(let loop=0;loop<20;loop++){
+        const up=photoList().find(p=>p.ph.src&&!p.ph.fid);
+        const down=photoList().find(p=>p.ph.fid&&!p.ph.src&&!p.ph.missing);
+        const job=up||down;if(!job||!login)break;
+        const ph=job.ph,src=ph.src;
+        if(up)setStatus('foto');
+        try{
+          const r=await call(login.s,Object.assign(base(),up?{action:'photo',key:job.key,data:src,sum:C.getSummary()}:{action:'photoGet',id:ph.fid}));
+          if(!r.ok){
+            if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt'){forceLogout(ERR[r.err]);break;}
+            if(down)ph.missing=true;   // Foto nicht mehr auf dem Server
+            else{photoFail++;setStatus('off');break;}
+          }else if(up){if(ph.src===src){ph.fid=r.id;photoFail=0;}}
+          else ph.src=r.data;
+          C.onPhotos&&C.onPhotos();
+          if(up)changed();
+        }catch(e){photoFail++;setStatus('off');break;}
+      }
+    })().finally(()=>{photoRun=null;if(status!=='off')idle();});
+    return photoRun;
+  }
+
+  function flush(){if(dirty&&login){clearTimeout(timer);timer=null;send(true);}}
+  function forceLogout(msg){const s=login.s,u=login.u;login=null;lsSet(LOGIN_KEY,null);setStatus('');showLogin(s,u,msg);}
+
+  return {
+    init(opts){C=opts;
+      window.addEventListener('online',()=>{if(dirty)send();syncPhotos();});
+      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush();});
+      window.addEventListener('pagehide',flush);
+      setInterval(()=>{if(dirty&&!sending)send();if(photosPending())syncPhotos();},30000);
+      const sP=qs.get('s'),uP=(qs.get('u')||'').trim().toLowerCase();
+      login=lsGet(LOGIN_KEY);
+      const s=idOk(sP)?sP:(login&&idOk(login.s)?login.s:(idOk(STANDARD_ID)?STANDARD_ID:''));
+      if(!s){login=null;setStatus('lokal');return;}
+      server=s;
+      if(login&&(login.s!==s||(uP&&uP!==login.u))){login=null;lsSet(LOGIN_KEY,null);}
+      if(!login){showLogin(s,uP);return;}
+      C.onLogin(login);setStatus('busy');
+      call(s,Object.assign(base(),{action:'load'}))
+        .then(r=>{if(r.ok)applyServer(r.data);else if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt')forceLogout(ERR[r.err]);else setStatus('off');})
+        .catch(()=>{setStatus('off');});
+    },
+    changed,
+    async now(){if(!login)return false;if(dirty||lastSent==='')dirty=true;await send();await syncPhotos();return !dirty&&!photosPending();},
+    active:()=>!!login,
+    configured:()=>!!server,
+    user:()=>login,
+    /* Abmelden. Liefert false, wenn noch nicht alles gespeichert ist (dann force=true zum Erzwingen). */
+    async logout(force){
+      if(!login)return true;
+      if(dirty||photosPending()){await send();await syncPhotos();if((dirty||photosPending())&&!force)return false;}
+      const s=login.s;login=null;lsSet(LOGIN_KEY,null);lsSet(metaKey(),null);lastSent='';dirty=false;setStatus('');
+      suppress=true;C.setState(null);suppress=false;showLogin(s,'');return true;
+    }
+  };
+})();
+
+function cloudSummary(){
+  const tasks = {};
+  SECTIONS.forEach(sec => {
+    const ids = sec.items.filter(it => it.id && !(CLOUD_ON && it.type === "tutorial")).map(it => it.id);
+    if (!ids.length) return;
+    const t = totals(sec.id), done = ids.filter(id => (S.items[id]||{}).d).length;
+    tasks[sec.id] = [t.got, t.max, t.wrong, done, ids.length, sec.title.split(" · ")[0], sec.title];
+  });
+  const T = totals();
+  const all = Object.keys(ITEMS).filter(id => counted(id)), done = all.filter(id => (S.items[id]||{}).d).length;
+  const extra = {};
+
+  return {stars:T.got, max:T.max, err:T.wrong, done, n:all.length, tasks, extra};
+}
+let logoutArm = 0;
+function cloudStart(){
+  Cloud.init({
+    app: APP_ID, titel: APP_TITEL,
+    getState: () => ({mode:S.mode, items:S.items, name:S.name}),
+    hasProgress: () => Object.keys(S.items).length > 0,
+    setState: st => {
+      const nm = S.name;
+      S = st ? Object.assign(freshState(), st) : freshState();
+      if (Cloud.user()) S.name = nm;
+      try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+      renderTabs(); render(); refreshScores();
+    },
+    getSummary: cloudSummary,
+    onLogin: info => { S.name = info.voll || info.name || info.u; $("who").textContent = "👤 " + S.name; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  });
+  $("btnLogout").addEventListener("click", async () => {
+    const force = Date.now() - logoutArm < 8000;
+    toast("⏳ Speichert …");
+    const ok = await Cloud.logout(force);
+    if (!ok){ logoutArm = Date.now(); toast("⚠️ Noch nicht gespeichert (kein Internet?). Tippe noch einmal auf Abmelden, um trotzdem abzumelden."); }
+    else { logoutArm = 0; $("who").textContent = ""; }
+  });
+}
+
+/* =====================================================================
+   START
+   ===================================================================== */
+(function init(){
+  try { const raw = localStorage.getItem(KEY); if (raw){ const o = JSON.parse(raw); if (o && o.app === "physik12-fh-roe") S = Object.assign(freshState(), o); } } catch(e){}
+  $("name").value = S.name || "";
+  renderTabs(); render(); refreshScores();
+  cloudStart();
+})();
+</script>
+</body>
+</html>
