@@ -124,6 +124,12 @@ html:not(.cloud) .cstat{display:none}
 .fs-msg{margin-top:12px;font-weight:bold;border-radius:8px;padding:8px 10px;display:none}
 .fs-msg.bad{display:block;background:var(--red2);color:var(--red)}
 .fs-msg.info{display:block;background:var(--blue2);color:var(--blue)}
+/* Uhr, Zeit-Hinweis, Tipps */
+.headr{display:flex;gap:8px;align-items:center;white-space:nowrap}
+.clockp{font-size:12px;font-weight:bold;color:#5b6577;background:#eef1f6;border-radius:12px;padding:2px 9px}
+.clockp.warn{background:#fff3cd;color:#8a5a00}.clockp.over{background:#fde2e2;color:#b3261e}.clockp.fin{opacity:.7}
+.timenote{display:none;margin:6px 0;background:#fff3cd;border-left:4px solid var(--gold);border-radius:6px;padding:6px 10px;font-size:14px}
+.tipline{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(179,38,30,.35);color:#5a2a00;font-weight:normal}
 </style>
 </head>
 <body>
@@ -616,10 +622,10 @@ function totals(secId){
 function autosave(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} if (typeof Cloud !== "undefined") Cloud.changed(); }
 function award(id, srcEl){
   const s = st(id);
-  if (!s.d){ s.d = 1; flyStar(srcEl); }
+  if (!s.d){ if (typeof QT !== "undefined") QT.stop(id); s.d = 1; flyStar(srcEl); }
   refreshScores(); autosave();
 }
-function miss(id){ const s = st(id); if (!s.d) s.w = (s.w||0) + 1; refreshScores(); autosave(); }
+function miss(id){ const s = st(id); if (!s.d) s.w = (s.w||0) + 1; LASTMISS = id; refreshScores(); autosave(); }
 
 /* =====================================================================
    HILFSFUNKTIONEN
@@ -659,8 +665,230 @@ function starBadge(it){
 const TAGS = {g:"Lesen", v:"Vertiefung", w:"Wiederholung", x:"Zusatz"};
 function tagEl(it){ return TAGS[it.tag] ? h("span",{cls:"tag " + it.tag}, TAGS[it.tag]) : null; }
 function fbBox(){ return h("div",{cls:"fb"}); }
-function setFb(box, ok, msg){ box.className = "fb " + (ok ? "ok" : "no"); box.innerHTML = msg; }
+function setFb(box, ok, msg){ box.className = "fb " + (ok ? "ok" : "no"); box.innerHTML = msg + (!ok && LASTMISS ? hintHtml(LASTMISS) : ""); LASTMISS = null; }
 function wordCount(t){ return (t.trim().match(/\S+/g) || []).length; }
+/* =====================================================================
+   TIPPS bei falschen Antworten (werden nach einem Fehlversuch angezeigt)
+   ===================================================================== */
+const HINTS = {
+  fl1:'Lies den ersten Absatz von F1: Licht kennst du schon aus den Spektren – hier geht es um eine andere Art, Energie zu bekommen.',
+  fl2:'Schau im Aufbau: Welche Spannung liegt zwischen Kathode und Gitter?',
+  fl3:'Gegen-Spannung = sie bremst. Welche Elektronen kommen trotzdem durch?',
+  fl4:'Quecksilber ist bei Zimmertemperatur flüssig. Die Elektronen brauchen aber Atome im Gas als Stoßpartner.',
+  fl5:'Man verändert U<sub>B</sub> und misst dabei I. Was kommt auf die x-Achse, was auf die y-Achse?',
+  fl6:'Schau auf die roten Pfeile in der Franck-Hertz-Kurve.',
+  fl7:'Das UV-Licht entsteht nur, wenn Atome angeregt werden. Ab welcher Energie geht das?',
+  fd1:'Elastisch = keine Anregung. Was bedeutet das für das Atom und für die Energie des Elektrons?',
+  fd2:'Denke an den Tischtennisball und die Bowlingkugel.',
+  fd3:'Was passiert kurz vor dem Gitter bei 4,9 eV – und schafft das Elektron danach noch das Gegenfeld?',
+  fd4:'Bei etwas größerer Spannung erreicht das Elektron 4,9 eV schon früher. Was passiert auf dem Rest des Weges?',
+  fd5:'Bei 2 · 4,9 V hat das Elektron genug Energie für mehr als einen unelastischen Stoß.',
+  fd6:'Ein angeregtes Atom bleibt nur 10⁻⁸ s angeregt. Was passiert dann?',
+  fd7:'Lies „Was beweist der Versuch?“ in F2: Welche Energien nimmt das Atom auf?',
+  fg1:'Lies F3: Ihre Deutung war falsch. Was dachten sie zuerst?',
+  fg2:'Wer hat 1913 das Atommodell mit Energieniveaus aufgestellt?',
+  fg3:'Lies F3: Welche Linie fanden sie bei 4,9 eV?',
+  fg4:'Franck und Hertz untersuchten Stöße zwischen Elektronen und Atomen.',
+  fv4:'Die Einbrüche entstehen nur, weil genau 4,9 eV abgegeben werden. Was wäre ohne diese feste Portion?',
+  fv5:'Lies in F1: Warum liegt das erste Maximum nicht genau bei 4,9 V?',
+  fv6:'Berechne die Wellenlänge: λ ≈ 1240 / 4,9 nm. Ist das sichtbar?',
+  fv7:'Ein Photon mit 19 eV hätte λ ≈ 65 nm (UV). Das sichtbare Licht muss also aus einem kleineren Energiesprung kommen.',
+  fs1:'Drücke „Kurve automatisch messen“. Zähle die Maxima von links. Stelle dann den Regler genau auf das dritte Maximum.',
+  fs2:'Nimm das erste und das letzte Maximum und teile die Differenz durch die Anzahl der Abstände.',
+  fs3:'Ziehe zuerst die Kontaktspannung (≈ 2,7 V) ab. Teile dann durch 4,9 V und runde ab.',
+  fs4:'Schau auf die blaue Linie im Energie-Diagramm zwischen zwei Sprüngen nach unten.',
+  fs5:'Zähle die orangen Zonen in der Röhre – oder rechne (60 V − 1 V) / 18,7 V und runde ab.',
+  fs6:'Bewege den Regler langsam nach rechts und beobachte die Zonen.',
+  fr1:'Nimm (letztes Maximum − erstes Maximum) und teile durch die Anzahl der Abstände (nicht der Maxima!).',
+  fr2:'E = e · ΔU mit e = 1,602·10⁻¹⁹ C. Achtung: Ergebnis in Joule (Zehnerpotenz!).',
+  fr3:'λ = h · c / E. Nimm E in Joule aus der Aufgabe davor. Gib das Ergebnis in nm an (1 nm = 10⁻⁹ m).',
+  fr4:'f = E / h  oder  f = c / λ.',
+  fr5:'E = ½ · m · v²  ⇒  v = √(2 · E / m). E in Joule einsetzen!',
+  fr6:'λ in nm ≈ 1240 / (E in eV).',
+  fr7:'Rechne 4 · m<sub>e</sub> / m<sub>Hg</sub>. Das Ergebnis ist eine sehr kleine Zahl (Zehnerpotenz!).',
+  fr10:'Lies den Tipp zur Aufgabe: Nicht jedes Niveau wird beim Stoß gleich oft angeregt.',
+  rl1:'Lies den ersten Absatz von R1: Röntgenstrahlung liegt im Spektrum hinter dem UV-Licht.',
+  rl2:'Was würde passieren, wenn Luft in der Röhre wäre?',
+  rl3:'Glüh-Kathode: Was sendet ein heißer Draht aus?',
+  rl4:'Wo werden die schnellen Elektronen abgebremst?',
+  rl5:'E<sub>kin</sub> = e · U. Ein Elektron mit 1 V hat 1 eV.',
+  rl6:'Wie viel Prozent der Energie wird zu Röntgenstrahlung – und der Rest?',
+  rl7:'Heißere Kathode → mehr … ?',
+  rb1:'Lies R2: Wo werden die Elektronen abgebremst – und was sendet eine abgebremste Ladung aus?',
+  rb2:'Wie viel Energie verliert ein Elektron bei einer Abbremsung? Immer gleich viel?',
+  rb3:'Die größte Photonenenergie = die kleinste Wellenlänge. Wann bekommt das Photon die meiste Energie?',
+  rb4:'h · f<sub>max</sub> = e · U und f = c / λ. Stelle nach λ um.',
+  rb5:'Schau in die Formel λ<sub>min</sub> = h · c / (e · U<sub>A</sub>): Welche Größe darin kannst du verändern?',
+  rb6:'Mehr Strom = mehr Elektronen pro Sekunde. Ändert sich die Energie eines einzelnen Elektrons?',
+  rb7:'Vergleiche: Wer gibt beim Photoeffekt Energie an wen ab – und bei der Bremsstrahlung?',
+  rc1:'Schau auf das Spektrum in R3: Was liegt auf dem breiten Berg?',
+  rc2:'Zuerst muss eine Lücke entstehen. Wo?',
+  rc3:'Kα = Übergang aus der nächsten Schale nach außen.',
+  rc4:'Charakteristisch = typisch. Typisch wofür?',
+  rc5:'Vergleiche die Elektronenenergie (15 keV) mit der Bindungsenergie der K-Schale von Molybdän (20,0 keV).',
+  rc6:'Größerer Energiesprung = größere Photonenenergie = kleinere / größere Wellenlänge?',
+  rc7:'Innere Elektronen sind näher am Kern. Wie stark sind sie gebunden?',
+  rc8:'Lies „Wie misst man das Spektrum?“ in R3: Bragg-Reflexion.',
+  rv8:'Was hängt nur von der Spannung ab – und was vom Anodenmaterial?',
+  rs1:'Stelle den Regler genau auf 25 kV. Die Zahl steht unter dem Diagramm. Oder: λ<sub>min</sub> in pm ≈ 1240 / (U in kV).',
+  rs2:'Die K-Linien erscheinen, wenn e · U größer ist als die Bindungsenergie der K-Schale von Molybdän.',
+  rs3:'Probiere es in der Simulation mit „Kurve merken“. Wo liegen λ<sub>min</sub> und die Linien?',
+  rs4:'Vergleiche die gestrichelte und die neue Kurve: λ<sub>min</sub> und die Lage der Linien.',
+  rs5:'Kupfer-Anode wählen, Spannung über 9 kV. Kα ist die größere Linie (größere Wellenlänge).',
+  rs6:'Vergleiche 8 keV mit der Bindungsenergie der K-Schale von Kupfer (8,98 keV).',
+  rr1:'E = e · U. U in Volt einsetzen (35 kV = 35 000 V)!',
+  rr2:'λ<sub>min</sub> = h · c / (e · U). U in Volt, Ergebnis in pm (1 pm = 10⁻¹² m).',
+  rr3:'Stelle λ<sub>min</sub> = h · c / (e · U) nach U um. λ in Meter einsetzen (62 pm = 6,2·10⁻¹¹ m).',
+  rr4:'Stelle λ<sub>min</sub> = h · c / (e · U) nach h um: h = e · U · λ<sub>min</sub> / c.',
+  rr5:'E = h · c / λ (λ in m). Dann durch e teilen für eV und durch 1000 für keV.',
+  rr6:'2 d · sin θ = λ ⇒ sin θ = λ / (2 d) mit d(NaCl) = 282 pm. Taschenrechner auf DEG!',
+  rr7:'λ = 2 d · sin θ mit d(LiF) = 201 pm. Taschenrechner auf DEG!',
+  rr8:'Leistung P = U · I. Davon werden etwa 99 % zu Wärme.',
+  rr9:'Rechne Schritt für Schritt: (Z − 1)², dann · 13,6 eV · 0,75. Ergebnis in keV (durch 1000).',
+  rx1:'Beim Franck-Hertz-Versuch entsteht eine einzelne Linie. Welche Röntgenstrahlung hat auch Linien?',
+  rx2:'Vergleiche die Spannungen (Volt gegen Kilovolt) und welche Elektronen im Atom beteiligt sind.',
+  rx3:'Franck-Hertz: nur 4,9 eV. Röntgen: Berg und Linien.',
+  rx4:'Elektronenenergie = Photonenenergie.',
+  wa1:'1 eV = 1,602·10⁻¹⁹ J. Multipliziere.',
+  wa2:'λ in nm ≈ 1240 / (E in eV) – stelle nach E um.',
+  wa3:'e · U = ½ · m · v²  ⇒  v = √(2 · e · U / m).',
+  wa4:'Kleinere Wellenlänge = größere Energie.',
+  wa5:'Infrarot hat die größte Wellenlänge, Röntgen die kleinste.',
+  wb1:'Das erste Postulat sagt etwas über die erlaubten Zustände – das zweite über die Übergänge.',
+  wb2:'Was passiert beim Sprung zwischen zwei Zuständen?',
+  wb5:'ΔE = E₄ − E₂ (positiv rechnen). Dann λ in nm ≈ 1240 / ΔE.',
+  wb6:'Die kleinste Anregungsenergie von Hg ist 4,67 eV. Reichen 3,0 eV?',
+  wc1:'Photo-Effekt: Licht trifft auf ein Metall – was wird frei?',
+  wc2:'Mehr Intensität = mehr Photonen. Ändert sich die Energie eines Photons?',
+  wc3:'E<sub>Photon</sub> = 1240 / λ (in eV). Dann E<sub>kin,max</sub> = E<sub>Photon</sub> − W<sub>A</sub>.',
+  wc4:'f<sub>G</sub> = W<sub>A</sub> / h. W<sub>A</sub> zuerst in Joule umrechnen!',
+  wc5:'Einstein-Gleichung: E<sub>kin</sub> = h · f − W<sub>A</sub>. Das ist eine Gerade y = m · x + b.',
+  wc6:'Gegen-Feld: Man bremst die Elektronen, bis keines mehr ankommt.',
+  wd1:'Erst p = √(2 · m · e · U), dann λ = h / p. U in Volt (4,0 kV = 4000 V), Ergebnis in pm.',
+  wd2:'sin θ = λ / (2 d). Taschenrechner auf DEG!',
+  wd3:'Bragg-Reflexion ist eine Interferenz. Was braucht man für Interferenz?',
+  wd4:'Teilchen = an einem Ort. Welle = Muster.',
+  wd5:'Quantenobjekte: Man kennt nur die Wahrscheinlichkeit, nicht den einzelnen Ort.',
+  fd8:'Beginne mit der Beschleunigung an der Kathode und ende mit dem Strom am Auffänger.',
+  fv1:'Öffne oben das Glossar.',
+  fv2:'Unter 4,9 eV: elastisch. Ab 4,9 eV: unelastisch.',
+  fv3:'Lies „Was beweist der Versuch?“ in F2.',
+  fv8:'Elastische Stöße und Ionisierung erklären den Abfall nicht.',
+  fw2k:'Denke an den Ablauf: Anstieg, Abfall, Wiederanstieg, zweites Minimum.',
+  fw2o:'Gehe von kleinen zu großen Spannungen.',
+  rv1:'A liegt ganz links (kleinste Wellenlänge). Kβ hat eine kleinere Wellenlänge als Kα.',
+  rv2:'Lies R2 und R3 noch einmal.',
+  rv3:'Lies R2: λ<sub>min</sub> hängt nur von der Spannung ab.',
+  rv4:'Lies R3: Zuerst entsteht eine Lücke in der innersten Schale.',
+  rw2k:'K-Schale und Lücke gehören zur charakteristischen Strahlung – nicht zur Bremsstrahlung.',
+  rw2o:'Beginne mit der Ankunft der Elektronen an der Anode.',
+  rw3k:'Abbremsung und „kontinuierlich“ gehören zur Bremsstrahlung.'
+};
+
+/* =====================================================================
+   ZEIT pro Aufgabe · SEITE VERLASSEN · TIPPS bei Fehlern
+   ===================================================================== */
+const mmss = s => { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+/* geschätzte Zeit (Sekunden) pro Aufgabe */
+function estOf(it){
+  if (it.est) return it.est;
+  switch (it.type){
+    case "mc": return 45;
+    case "num": return 150;
+    case "cloze": return Math.max(60, 25 * ((it.text.match(/\{\{/g) || []).length));
+    case "match": return Math.max(60, 20 * it.pairs.length);
+    case "kw": return 75;
+    case "order": return 90;
+    case "shorten": return 90;
+    case "write": return Math.max(240, 5 * (it.max || 60));
+    case "draw": return 60;
+    case "tutorial": return 0;
+  }
+  return 60;
+}
+/* Zahl-Tipp: typische Fehler (Zehnerpotenz, Vorzeichen, doppelt/halb) */
+function numTip(v, a){
+  if (!isFinite(v) || !isFinite(a) || !a || !v) return "";
+  const r = v / a, near = x => Math.abs(r / x - 1) < 0.05;
+  if (near(-1)) return "Prüfe das <b>Vorzeichen</b>.";
+  const k = Math.round(Math.log10(Math.abs(r)));
+  if (k !== 0 && Math.abs(Math.abs(r) / Math.pow(10, k) - 1) < 0.05) return `Dein Ergebnis ist <b>10${k > 0 ? "" : "⁻"}${String(Math.abs(k)).replace(/\d/g, d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d])}-mal zu ${r > 0 && Math.abs(r) > 1 ? "groß" : "klein"}</b>. Prüfe die <b>Einheiten</b> (kV → V, pm → m, keV → eV …) und die <b>Zehnerpotenzen</b>.`;
+  if (near(2)) return "Dein Ergebnis ist <b>doppelt</b> so groß wie richtig. Fehlt ein Faktor ½ – oder eine Wurzel?";
+  if (near(0.5)) return "Dein Ergebnis ist nur <b>halb</b> so groß wie richtig. Fehlt ein Faktor 2?";
+  if (Math.abs(r - 1) < 0.15) return "Du bist <b>nah dran</b>. Rechne genauer (Konstanten mit 4 Stellen, erst am Ende runden).";
+  return "";
+}
+/* Tipp an die rote Rückmeldung anhängen */
+let LASTMISS = null;
+function hintHtml(id){ const t = HINTS[id]; return t ? `<div class="tipline">💡 ${t}</div>` : ""; }
+
+/* ---------- Uhr pro Aufgabe ---------- */
+const QT = (() => {
+  const acc = {}, noted = {};
+  let cur = null, t0 = 0, last = Date.now();
+  const sec = id => (acc[id] || 0) + (id === cur && t0 ? (Date.now() - t0) / 1000 : 0);
+  function pause(){ if (cur && t0){ acc[cur] = sec(cur); t0 = 0; } }
+  const done = id => { const s = S.items[id]; return !!(s && (s.d || s.q)); };
+  function touch(id){
+    last = Date.now();
+    if (!ITEMS[id] || done(id) || !estOf(ITEMS[id]) || document.visibilityState === "hidden") return;
+    if (cur !== id){ pause(); cur = id; }
+    if (!t0) t0 = Date.now();
+    paint(id);
+  }
+  function paint(id){
+    const el = document.getElementById("it_" + id); if (!el) return;
+    const p = el.querySelector(".clockp"); if (!p) return;
+    const it = ITEMS[id], est = estOf(it), rec = S.items[id] && S.items[id].q;
+    const s = rec ? rec[0] : sec(id);
+    if (!est || s <= 0){ p.style.display = "none"; return; }
+    const q = s / est;
+    p.style.display = ""; p.textContent = `⏱ ${mmss(s)} / ca. ${mmss(est)}`;
+    p.className = "clockp" + (q > 1.5 ? " over" : q > 1.2 ? " warn" : "") + (rec ? " fin" : "");
+    const n = el.querySelector(".timenote");
+    if (n && !rec && q > 1.5){
+      noted[id] = true;
+      n.innerHTML = it.type === "write"
+        ? "⏰ Du schreibst schon <b>lange</b>. Schau dir den <b>Bauplan</b> oben an und schreibe kurze Sätze."
+        : "⏰ Diese Aufgabe dauert schon <b>lange</b>. Lies den passenden <b>Lesetext</b> oder die <b>Formeln</b> oben noch einmal. <span class=\"note\">(taking longer than planned)</span>";
+      n.style.display = "block";
+    } else if (n) n.style.display = "none";
+  }
+  /* Aufgabe gelöst → Zeit speichern: items[id].q = [Sekunden, 0 ok | 1 > 120 % | 2 > 150 %] */
+  function stop(id){
+    const s0 = sec(id); if (cur === id){ t0 = 0; cur = null; } delete acc[id];
+    if (s0 <= 0 || !ITEMS[id]) return;
+    const s = Math.max(1, Math.round(s0)), q = s / estOf(ITEMS[id]);
+    st(id).q = [s, q > 1.5 ? 2 : q > 1.2 ? 1 : 0];
+    setTimeout(() => paint(id), 0);
+  }
+  setInterval(() => { if (!cur || !t0) return; if (Date.now() - last > 180000){ pause(); return; } paint(cur); }, 1000);
+  ["pointerdown", "keydown", "input"].forEach(ev => window.addEventListener(ev, () => { last = Date.now(); if (cur && !t0 && document.visibilityState !== "hidden") t0 = Date.now(); }, {passive:true, capture:true}));
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") pause(); });
+  return {touch, stop, pause, paint};
+})();
+document.addEventListener("pointerdown", e => { const it = e.target.closest && e.target.closest(".item[id^='it_']"); if (it) QT.touch(it.id.slice(3)); }, true);
+document.addEventListener("focusin", e => { const it = e.target.closest && e.target.closest(".item[id^='it_']"); if (it) QT.touch(it.id.slice(3)); }, true);
+
+/* ---------- Seite verlassen (anderer Tab / andere App) ---------- */
+let AWAY_IGNORE = false, AWAY_T0 = 0, AWAY_HID = false, AWAY_WHERE = "";
+function awayStart(hidden){ if (hidden) AWAY_HID = true; if (AWAY_T0) return; AWAY_T0 = Date.now(); AWAY_WHERE = TAB; QT.pause(); }
+function awayEnd(){
+  if (!AWAY_T0 || document.visibilityState === "hidden" || !document.hasFocus()) return;
+  const sec = (Date.now() - AWAY_T0) / 1000, hid = AWAY_HID; AWAY_T0 = 0; AWAY_HID = false;
+  if (AWAY_IGNORE){ AWAY_IGNORE = false; return; }
+  if (sec < (hid ? 1 : 3)) return;
+  const A = S.away = S.away || {n:0, sec:0, log:[]};
+  A.n++; A.sec = Math.round(A.sec + sec);
+  A.log.push([new Date().toISOString().slice(0, 16), Math.round(sec), AWAY_WHERE]); if (A.log.length > 20) A.log = A.log.slice(-20);
+  autosave();
+  toast(`👀 Du hast die Seite verlassen (${mmss(sec)} min). Das wird gespeichert – bitte bleib bei der Übung.`);
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") awayStart(true); else setTimeout(awayEnd, 300); });
+window.addEventListener("blur", () => awayStart(false));
+window.addEventListener("focus", () => setTimeout(awayEnd, 300));
+document.addEventListener("click", e => { if (e.target.closest && e.target.closest("input[type=file]")){ AWAY_IGNORE = true; setTimeout(() => { if (!AWAY_T0) AWAY_IGNORE = false; }, 60000); } }, true);
+
 
 /* =====================================================================
    RENDERER
@@ -729,7 +957,7 @@ R.mc = it => {
     const sel = list.querySelector("input:checked");
     if (!sel){ setFb(fb, false, "Wähle zuerst eine Antwort."); return; }
     if (opts[+sel.value].ok){ award(it.id, btn); setFb(fb, true, "Richtig! " + (it.ex || "")); }
-    else { miss(it.id); setFb(fb, false, "Leider falsch. Versuche es noch einmal."); }
+    else { miss(it.id); setFb(fb, false, "Leider falsch. Lies den Tipp und versuche es noch einmal."); }
     refreshItem(it.id);
   }}, "Prüfen");
   return [list, h("div",{cls:"row"}, btn), fb];
@@ -744,7 +972,7 @@ R.num = it => {
     if (isNaN(v)){ setFb(fb, false, "Das ist keine Zahl. Beispiel: 3,36e-19 oder 656"); return; }
     const tol = it.tol || 0.02;
     if (Math.abs(v - it.a) <= tol * Math.abs(it.a)){ award(it.id, btn); setFb(fb, true, "Richtig!"); sol.classList.add("show"); }
-    else { miss(it.id); setFb(fb, false, "Noch nicht richtig. Prüfe Formel, Einheiten und Zehnerpotenzen."); if ((st(it.id).w||0) >= 2) showBtn.classList.remove("hide"); }
+    else { miss(it.id); setFb(fb, false, numTip(v, it.a) || "Noch nicht richtig. Prüfe Formel, Einheiten und Zehnerpotenzen."); if ((st(it.id).w||0) >= 2) showBtn.classList.remove("hide"); }
     refreshItem(it.id);
   };
   inp.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
@@ -1199,8 +1427,8 @@ function itemEl(it){
   if (!it.id) return h("div", {cls:"item"}, R[it.type](it));
   const body = R[it.type](it);
   return h("div", {cls:"item", id:"it_" + it.id},
-    h("div", {cls:"ihead"}, h("div", {cls:"q"}, tagEl(it), h("span", {html: it.q || ""})), starBadge(it)),
-    body);
+    h("div", {cls:"ihead"}, h("div", {cls:"q"}, tagEl(it), h("span", {html: it.q || ""})), h("span", {cls:"headr"}, h("span", {cls:"clockp", style:"display:none"}), starBadge(it))),
+    h("div", {cls:"timenote"}), body);
 }
 function refreshItem(id){
   const el = document.getElementById("it_" + id); if (!el) return;
@@ -1210,6 +1438,7 @@ function refreshItem(id){
 }
 function render(){
   const app = document.getElementById("app"); app.innerHTML = "";
+  setTimeout(() => Object.keys(ITEMS).forEach(QT.paint), 0);
   if (TAB === "stat"){ app.appendChild(statView()); return; }
   if (TAB === "f") app.appendChild(h("div",{cls:"card", html:"<b>Der Franck-Hertz-Versuch</b> – Energieaufnahme von Atomen durch Stöße. Beginne mit den <b>Lesetexten 📖 (F1–F3)</b>. Dann vertiefst du: Fachbegriffe, Simulation, Rechnen, Antworten schreiben. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
   if (TAB === "r") app.appendChild(h("div",{cls:"card", html:"<b>Röntgenstrahlung</b> – Erzeugung, Bremsstrahlung und charakteristische Strahlung. Beginne mit den <b>Lesetexten 📖 (R1–R3)</b>. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
@@ -1314,14 +1543,21 @@ const Cloud=(function(){
     gesperrt:'Zu viele falsche Versuche. Warte 10 Minuten oder frag deine Lehrerin / deinen Lehrer.',
     klasse:'Diese Seite ist für deine Klasse nicht freigeschaltet. Frag deine Lehrerin / deinen Lehrer.',
     netz:'Keine Verbindung zum Internet. Prüfe das WLAN und versuche es noch einmal.',
-    server:'Der Server antwortet nicht richtig. Versuche es gleich noch einmal.'};
-  let C=null,login=null,server='',dirty=false,timer=null,sending=null,lastSent='',lastSendAt=0,suppress=false,status='',photoRun=null,photoFail=0;
+    server:'Der Server antwortet nicht richtig. Versuche es gleich noch einmal.',
+    plogin:'Benutzername oder PIN vom Partner ist falsch.',pgesperrt:'Zu viele falsche Versuche mit diesem Benutzernamen. Wartet 10 Minuten.',
+    pklasse:'Diese Seite ist für die Klasse vom Partner nicht freigeschaltet.',pselbst:'Das bist du selbst. Gib den Benutzernamen von deinem Partner ein.',
+    pschon:'Dieser Partner ist schon in eurer Gruppe.',pandere:'Dieser Partner ist schon in einer anderen Gruppe. Er muss dort zuerst „Gruppe verlassen“.',
+    pvoll:'Die Gruppe ist voll (höchstens 4 Personen).',pnicht:'Diese Person ist nicht in der Gruppe.',
+    aktion:'Der Server kennt Partnerarbeit noch nicht. Die Lehrkraft muss die neue Code.gs bereitstellen.'};
+  let C=null,login=null,server='',gruppe=null,grpKnown=false,ready=false,early=false,dirty=false,timer=null,sending=null,lastSent='',lastSendAt=0,suppress=false,status='',photoRun=null,photoFail=0;
   const qs=new URLSearchParams(location.search);
   const idOk=s=>/^[A-Za-z0-9_-]{20,}$/.test(s||'');
   const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}};
   const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
   const metaKey=()=>'fs-meta-'+C.app;
   const meta=()=>lsGet(metaKey())||{};
+  const grpU=()=>gruppe&&gruppe.leiter?gruppe.leiter.u:(login?login.u:'');   // wem gehört der gemeinsame Stand?
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const pageLink=()=>location.origin+location.pathname;
   const photoList=()=>C.photos?C.photos().filter(p=>p.ph):[];
   const photosPending=()=>photoList().some(p=>p.ph.src&&!p.ph.fid);
@@ -1359,7 +1595,7 @@ const Cloud=(function(){
       try{const r=await call(s,{action:'login',u:cu,p:cp,app:C.app,titel:C.titel,link:pageLink()});
         if(!r.ok){say('bad',ERR[r.err]||ERR.server);b.disabled=false;pI.value='';pI.focus();return;}
         login={u:cu,p:cp,s,name:r.name||'',voll:r.voll||r.name||'',klasse:r.klasse||''};lsSet(LOGIN_KEY,login);
-        ov.remove();applyServer(r.data);C.onLogin(login);
+        ov.remove();setGroup(r.gruppe);applyServer(r.data);C.onLogin(login);
       }catch(err){say('bad',ERR.netz);b.disabled=false;}
     };
   }
@@ -1368,26 +1604,29 @@ const Cloud=(function(){
   function applyServer(d){
     const m=meta();
     let localT=m.t||0;
-    if(m.owner&&m.owner!==login.u){suppress=true;C.setState(null);suppress=false;localT=0;}  // Stand eines anderen Kindes vom Gerät entfernen
+    if((m.owner&&m.owner!==login.u)||(m.owner&&(m.grp||m.owner)!==grpU())){suppress=true;C.setState(null);suppress=false;localT=0;}  // Stand eines anderen Kindes / einer anderen Gruppe vom Gerät entfernen
     const serverT=(d&&d.state)?(d.t||0):-1;
     if(serverT>localT||(serverT>=0&&serverT===localT&&!hasLocal())){
       suppress=true;C.setState(d.state);suppress=false;
-      lsSet(metaKey(),{owner:login.u,t:serverT});lastSent=JSON.stringify(C.getState());dirty=false;
+      lsSet(metaKey(),{owner:login.u,grp:grpU(),t:serverT});lastSent=JSON.stringify(C.getState());dirty=false;
     }else if(serverT>=0&&serverT===localT){
-      lsSet(metaKey(),{owner:login.u,t:localT});lastSent=JSON.stringify(C.getState());dirty=false;   // schon gleich
+      lsSet(metaKey(),{owner:login.u,grp:grpU(),t:localT});lastSent=JSON.stringify(C.getState());dirty=false;   // schon gleich
+      if(early){lastSent='';lsSet(metaKey(),{owner:login.u,grp:grpU(),t:Date.now()});dirty=true;send();}   // Änderungen vor dem Laden (z. B. offline)
     }else{
-      lsSet(metaKey(),{owner:login.u,t:localT});
+      lsSet(metaKey(),{owner:login.u,grp:grpU(),t:localT});
       if(localT>0||(!m.owner&&hasLocal())){dirty=true;send();}
     }
-    idle();syncPhotos();
+    ready=true;early=false;idle();syncPhotos();
+    setTimeout(changed,0);   // Änderungen seit dem Öffnen (z. B. Name) jetzt melden
   }
   const hasLocal=()=>C.hasProgress?!!C.hasProgress():true;
 
   function changed(){
     if(suppress||!login)return;
+    if(!ready){early=true;return;}   // erst nach dem Abgleich mit dem Server – sonst überschreibt ein altes iPad neuere Arbeit
     syncPhotos();
     const js=JSON.stringify(C.getState());if(js===lastSent)return;
-    lsSet(metaKey(),{owner:login.u,t:Date.now()});dirty=true;
+    lsSet(metaKey(),{owner:login.u,grp:grpKnown?grpU():(meta().grp||login.u),t:Date.now()});dirty=true;   // Gruppe erst nach dem Laden sicher bekannt
     if(status!=='off')setStatus('busy');schedule();
   }
   function schedule(){if(timer)return;const wait=Math.max(3000,8000-(Date.now()-lastSendAt));timer=setTimeout(()=>{timer=null;send();},wait);}
@@ -1398,7 +1637,7 @@ const Cloud=(function(){
     if(js===lastSent){dirty=false;idle();return Promise.resolve(true);}
     setStatus('busy');
     sending=call(login.s,Object.assign(base(),{action:'save',t:meta().t||Date.now(),state:st,sum:C.getSummary()}),keep)
-      .then(r=>{if(r.ok){lastSent=js;dirty=JSON.stringify(C.getState())!==js;idle();return !dirty;}
+      .then(r=>{if(r.ok){if('gruppe' in r&&JSON.stringify(r.gruppe)!==JSON.stringify(gruppe)){setGroup(r.gruppe);}lastSent=js;dirty=JSON.stringify(C.getState())!==js;idle();return !dirty;}
         if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt'){forceLogout(ERR[r.err]);return false;}
         setStatus('off');return false;})
       .catch(()=>{setStatus('off');return false;})
@@ -1432,12 +1671,78 @@ const Cloud=(function(){
     return photoRun;
   }
 
+  /* ---- Partnerarbeit ---- */
+  let grpEl=null;
+  function setGroup(g){gruppe=g||null;grpKnown=true;if(grpEl)renderGroup(grpEl);if(C.onGroup){const sp=suppress;suppress=true;try{C.onGroup(gruppe,login);}finally{suppress=sp;}}}   // ohne „geändert“ (sonst würde der alte Stand hochgeladen)
+  function others(){if(!gruppe||!login)return [];return [gruppe.leiter].concat(gruppe.partner).filter(m=>m.u!==login.u);}
+  function renderGroup(el){
+    grpEl=el;if(!el)return;
+    if(!login){el.innerHTML='';return;}
+    const me=login.u,mem=gruppe?[gruppe.leiter].concat(gruppe.partner):[{u:me,name:login.voll||me}];
+    el.innerHTML=`<div class="grp"><div class="grp-h">👥 Wer arbeitet zusammen? <span class="fs-sub">(group)</span></div>
+      <ul class="grp-l">${mem.map(m=>`<li><span>👤 <b>${esc(m.name)}</b> <span class="fs-sub">${esc(m.u)}</span>${m.u===me?' <span class="grp-du">du</span>':''}</span>
+        ${gruppe&&m.u!==gruppe.leiter.u?`<button class="grp-x" data-u="${esc(m.u)}">${m.u===me?'🚪 Gruppe verlassen':'✖ entfernen'}</button>`:''}</li>`).join('')}</ul>
+      ${mem.length<4?'<button class="btn sec grp-add" type="button">➕ Partner hinzufügen</button>':''}
+      <p class="grp-tip">Dein Partner gibt hier <b>seinen eigenen</b> Benutzernamen und seine PIN ein. Dann wird eure Arbeit für <b>alle in der Gruppe</b> gespeichert.
+      Arbeitet zusammen an <b>einem</b> iPad. <span class="en">(your partner logs in here – the work is saved for everybody)</span></p></div>`;
+    const add=el.querySelector('.grp-add');if(add)add.onclick=()=>addDialog();
+    el.querySelectorAll('.grp-x').forEach(b=>{let arm=false;b.onclick=async()=>{
+      const self=b.dataset.u===me;
+      if(!arm){arm=true;b.classList.add('arm');b.textContent=self?'⚠️ Wirklich verlassen? Du behältst eine Kopie. Nochmal tippen!':'⚠️ Wirklich entfernen? Nochmal tippen!';setTimeout(()=>{arm=false;renderGroup(el);},5000);return;}
+      b.disabled=true;b.textContent='⏳ …';
+      try{await send();const r=await call(login.s,Object.assign(base(),{action:'partnerWeg',pu:b.dataset.u}));
+        if(!r.ok){alertBox(ERR[r.err]||ERR.server);if(r.gruppe!==undefined)setGroup(r.gruppe);renderGroup(el);return;}
+        if(self){lsSet(metaKey(),null);lastSent='';suppress=true;C.setState(null);suppress=false;location.reload();return;}
+        setGroup(r.gruppe);dirty=true;lastSent='';send();
+      }catch(e){alertBox(ERR.netz);renderGroup(el);}};});
+  }
+  function alertBox(t){const ov=document.createElement('div');ov.className='fs-ov';ov.innerHTML=`<div class="fs-box"><p style="font-size:18px">${esc(t)}</p><button class="go" type="button">OK</button></div>`;ov.querySelector('.go').onclick=()=>ov.remove();document.body.appendChild(ov);}
+  function addDialog(){
+    const ov=document.createElement('div');ov.className='fs-ov';
+    ov.innerHTML=`<form class="fs-box" autocomplete="off"><h2>👥 Partner hinzufügen</h2>
+      <div class="fs-sub">Gib das iPad deinem Partner. Er tippt <b>seine eigenen</b> Daten ein. <span class="en">(partner types his/her own login)</span></div>
+      <label for="gpU">Benutzername vom Partner <span class="fs-sub">(user name)</span></label>
+      <input id="gpU" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off" placeholder="z. B. 8b-12">
+      <label for="gpP">PIN vom Partner <span class="fs-sub">(secret number)</span></label>
+      <input id="gpP" type="password" inputmode="numeric" autocomplete="new-password" placeholder="••••">
+      <button class="go" type="submit">Verbinden 🤝</button><button class="go grp-cancel" type="button">Abbrechen</button><div class="fs-msg" id="gpMsg"></div></form>`;
+    document.body.appendChild(ov);
+    const uI=ov.querySelector('#gpU'),pI=ov.querySelector('#gpP'),m=ov.querySelector('#gpMsg'),b=ov.querySelector('.go');
+    const say=(cls,t)=>{m.className='fs-msg '+cls;m.innerHTML=t;};
+    ov.querySelector('.grp-cancel').onclick=()=>ov.remove();
+    setTimeout(()=>uI.focus(),50);
+    let force=false;
+    ov.querySelector('form').onsubmit=async e=>{e.preventDefault();
+      const pu=uI.value.trim().toLowerCase(),pp=pI.value.trim();
+      if(!pu||!pp){say('bad','Bitte Benutzername und PIN eingeben.');return;}
+      b.disabled=true;say('info','⏳ Einen Moment …');
+      try{await send();
+        const r=await call(login.s,Object.assign(base(),{action:'partnerAdd',pu,pp,force}));
+        if(!r.ok){
+          if(r.err==='peigen'){force=true;b.disabled=false;b.textContent='Trotzdem verbinden 🤝';
+            say('bad',`⚠️ ${esc(r.name||pu)} hat an dieser Seite schon <b>allein</b> gearbeitet. Wenn ihr verbindet, arbeitet ${esc(r.name||pu)} ab jetzt mit <b>eurer</b> Arbeit weiter. (Die eigene Arbeit wird für die Lehrkraft gesichert.)`);return;}
+          if(r.gruppe!==undefined)setGroup(r.gruppe);
+          say('bad',ERR[r.err]||ERR.server);b.disabled=false;pI.value='';return;}
+        ov.remove();setGroup(r.gruppe);dirty=true;lastSent='';send();
+      }catch(err){say('bad',ERR.netz);b.disabled=false;}
+    };
+  }
+
+  let loading=false;
+  function loadNow(){   // ersten Stand vom Server holen; ohne Internet: später nochmal versuchen
+    if(!login||ready||loading)return;loading=true;
+    call(login.s,Object.assign(base(),{action:'load'}))
+      .then(r=>{if(r.ok){setGroup(r.gruppe);applyServer(r.data);}else if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt')forceLogout(ERR[r.err]);else{setStatus('off');setTimeout(loadNow,15000);}})
+      .catch(()=>{setStatus('off');setTimeout(loadNow,15000);})
+      .finally(()=>{loading=false;});
+  }
+
   function flush(){if(dirty&&login){clearTimeout(timer);timer=null;send(true);}}
-  function forceLogout(msg){const s=login.s,u=login.u;login=null;lsSet(LOGIN_KEY,null);setStatus('');showLogin(s,u,msg);}
+  function forceLogout(msg){const s=login.s,u=login.u;login=null;gruppe=null;grpKnown=false;ready=false;lsSet(LOGIN_KEY,null);setStatus('');showLogin(s,u,msg);}
 
   return {
     init(opts){C=opts;
-      window.addEventListener('online',()=>{if(dirty)send();syncPhotos();});
+      window.addEventListener('online',()=>{if(login&&!ready){loadNow();return;}if(dirty)send();syncPhotos();});
       document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush();});
       window.addEventListener('pagehide',flush);
       setInterval(()=>{if(dirty&&!sending)send();if(photosPending())syncPhotos();},30000);
@@ -1449,20 +1754,21 @@ const Cloud=(function(){
       if(login&&(login.s!==s||(uP&&uP!==login.u))){login=null;lsSet(LOGIN_KEY,null);}
       if(!login){showLogin(s,uP);return;}
       C.onLogin(login);setStatus('busy');
-      call(s,Object.assign(base(),{action:'load'}))
-        .then(r=>{if(r.ok)applyServer(r.data);else if(r.err==='login'||r.err==='klasse'||r.err==='gesperrt')forceLogout(ERR[r.err]);else setStatus('off');})
-        .catch(()=>{setStatus('off');});
+      loadNow();
     },
     changed,
     async now(){if(!login)return false;if(dirty||lastSent==='')dirty=true;await send();await syncPhotos();return !dirty&&!photosPending();},
     active:()=>!!login,
     configured:()=>!!server,
     user:()=>login,
+    gruppe:()=>gruppe,
+    partnerNamen:()=>others().map(m=>m.name),
+    renderGroup,
     /* Abmelden. Liefert false, wenn noch nicht alles gespeichert ist (dann force=true zum Erzwingen). */
     async logout(force){
       if(!login)return true;
       if(dirty||photosPending()){await send();await syncPhotos();if((dirty||photosPending())&&!force)return false;}
-      const s=login.s;login=null;lsSet(LOGIN_KEY,null);lsSet(metaKey(),null);lastSent='';dirty=false;setStatus('');
+      const s=login.s;login=null;gruppe=null;grpKnown=false;ready=false;lsSet(LOGIN_KEY,null);lsSet(metaKey(),null);lastSent='';dirty=false;setStatus('');
       suppress=true;C.setState(null);suppress=false;showLogin(s,'');return true;
     }
   };
@@ -1478,7 +1784,11 @@ function cloudSummary(){
   });
   const T = totals();
   const all = Object.keys(ITEMS).filter(id => counted(id)), done = all.filter(id => (S.items[id]||{}).d).length;
-  const extra = {};
+  const A = S.away || {n:0, sec:0}, Q = Object.keys(S.items).map(k => S.items[k].q).filter(Boolean);
+  const extra = {
+    away: ['🚪 Seite verlassen', A.n ? A.n + '× · ' + mmss(A.sec) : '–'],
+    slow: ['⏰ zu langsam', Q.length ? Q.filter(q => q[1] === 2).length + ' von ' + Q.length + ' · Σ ' + mmss(Q.reduce((a, q) => a + q[0], 0)) : '–']
+  };
 
   return {stars:T.got, max:T.max, err:T.wrong, done, n:all.length, tasks, extra};
 }
@@ -1486,7 +1796,7 @@ let logoutArm = 0;
 function cloudStart(){
   Cloud.init({
     app: APP_ID, titel: APP_TITEL,
-    getState: () => ({mode:S.mode, items:S.items, name:S.name}),
+    getState: () => ({mode:S.mode, items:S.items, name:S.name, away:S.away}),
     hasProgress: () => Object.keys(S.items).length > 0,
     setState: st => {
       const nm = S.name;
