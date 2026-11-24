@@ -130,6 +130,17 @@ html:not(.cloud) .cstat{display:none}
 .clockp.warn{background:#fff3cd;color:#8a5a00}.clockp.over{background:#fde2e2;color:#b3261e}.clockp.fin{opacity:.7}
 .timenote{display:none;margin:6px 0;background:#fff3cd;border-left:4px solid var(--gold);border-radius:6px;padding:6px 10px;font-size:14px}
 .tipline{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(179,38,30,.35);color:#5a2a00;font-weight:normal}
+/* Tests */
+details.testsec>summary{background:#fff8e1}
+.fb.saved{display:block;background:#e8f0fe;color:#1d4ed8}
+.opts label.tright{background:#dcfce7;border-radius:6px}.opts label.twrong{background:#fee2e2;border-radius:6px}
+input.num.tok{border-color:#16a34a;background:#dcfce7}input.num.tbad{border-color:#dc2626;background:#fee2e2}
+.thead ul{margin:6px 0 10px}
+.awaynote{background:#fff1dc;border:1px solid #f59e0b;border-radius:10px;padding:8px 12px;margin:8px 0}
+.trev .rv{border:1px solid #dde3ee;border-left:5px solid #9aa6b8;border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
+.trev .rv.ok{border-left-color:#16a34a}.trev .rv.bad{border-left-color:#dc2626}
+.trev .rvh{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;margin-bottom:3px}
+.trev .rvt{margin-left:auto;font-size:12px;color:#5b6577}.trev .rvt.warn{color:#b45309}.trev .rvt.over{color:#b91c1c}
 </style>
 </head>
 <body>
@@ -389,6 +400,27 @@ const SECTIONS = [
 ]},
 
 /* ============================ RÖNTGEN ============================ */
+/* ============================ 📝 TEST FRANCK-HERTZ ============================ */
+{ id:"f8", part:"f", title:"F8 · 📝 Test: Franck-Hertz", test:"TF", intro:`<p><b>8 Fragen</b> zum Franck-Hertz-Versuch. Du siehst das Ergebnis erst <b>am Ende</b> – dann mit einer Übersicht und Tipps.</p>`, items:[
+  {type:"testhead", test:"TF"},
+  {type:"tmc", id:"tf1", est:45, q:"Was zeigt der Franck-Hertz-Versuch?", o:["Atome nehmen auch bei Stößen nur bestimmte Energiebeträge auf – es gibt diskrete Energieniveaus.","Elektronen verhalten sich wie Wellen.","Licht besteht aus Photonen mit der Energie h · f.","Quecksilberdampf leitet den Strom besser als Luft."],
+    why:["","Die Wellennatur der Elektronen zeigt die Elektronenbeugung, nicht der Franck-Hertz-Versuch.","Das zeigt der Photoeffekt. Beim Franck-Hertz-Versuch bekommen die Atome Energie durch <b>Stöße</b>.","Es geht nicht um die Leitfähigkeit, sondern um die Energieaufnahme der Atome (Lesetext F1)."]},
+  {type:"tmc", id:"tf2", est:60, q:"Warum sinkt der Auffängerstrom bei U<sub>B</sub> ≈ 4,9 V plötzlich?", o:["Viele Elektronen stoßen unelastisch mit Hg-Atomen, geben 4,9 eV ab und kommen danach nicht mehr gegen die Gegenspannung an.","Die Elektronen werden so schnell, dass sie durch den Auffänger fliegen.","Bei 4,9 V verdampft das Quecksilber vollständig.","Bei 4,9 V wird die Gegenspannung automatisch größer."],
+    why:["","Schnellere Elektronen würden den Strom vergrößern. Denk an die Gegenspannung U<sub>G</sub>.","Die Temperatur bleibt gleich (Ofen). Es geht um Stöße der Elektronen mit den Atomen.","Die Gegenspannung bleibt konstant (ca. 1,5 V). Die Elektronen verlieren Energie."]},
+  {type:"tmc", id:"tf3", est:45, q:"Ein Elektron hat 3 eV und stößt mit einem Hg-Atom. Was passiert?", o:["Der Stoß ist elastisch: Das Elektron ändert die Richtung, verliert aber fast keine Energie.","Das Hg-Atom wird angeregt und nimmt 3 eV auf.","Das Elektron wird vom Hg-Atom eingefangen.","Das Hg-Atom sendet ein Photon mit 3 eV aus."],
+    why:["","3 eV sind <b>kleiner</b> als die kleinste Anregungsenergie (4,9 eV). Das Atom kann diese Energie nicht aufnehmen.","Davon steht nichts im Modell. Unter 4,9 eV sind die Stöße elastisch.","Ohne Anregung gibt es keine Emission. 3 eV reichen nicht für eine Anregung."]},
+  {type:"tnum", id:"tf4", est:120, q:"Bei einer Messung liegen die Maxima bei 5,2 V, 10,1 V, 15,0 V und 19,9 V. Bestimme den mittleren Abstand der Maxima.", a:4.9, tol:0.01, unit:"V",
+    hint:"Nimm den Abstand vom ersten zum letzten Maximum und teile durch die Anzahl der Abstände: (19,9 V − 5,2 V) : 3."},
+  {type:"tnum", id:"tf5", est:120, q:"Ein anderes Gas zeigt Maxima im Abstand von 2,1 V. Berechne die Wellenlänge des Lichts, das die angeregten Atome aussenden.", a:590.4, tol:0.015, unit:"nm",
+    hint:"ΔE = e · 2,1 V = 2,1 eV. Dann λ = h · c / ΔE oder kurz: λ in nm ≈ 1240 / ΔE in eV."},
+  {type:"tnum", id:"tf6", est:90, q:"Neon wird durch Stöße mit 18,7 eV angeregt. Gib diese Energie in Joule an.", a:2.996e-18, tol:0.01, unit:"J",
+    hint:"1 eV = 1,602 · 10<sup>−19</sup> J. Also E = 18,7 · 1,602 · 10<sup>−19</sup> J."},
+  {type:"tmc", id:"tf7", est:45, q:"Was passiert mit den angeregten Hg-Atomen nach dem Stoß?", o:["Sie fallen sehr schnell in den Grundzustand zurück und senden UV-Strahlung (λ ≈ 254 nm) aus.","Sie senden sichtbares grünes Licht aus.","Sie bleiben dauerhaft im angeregten Zustand.","Sie werden ionisiert und verlieren ein Elektron."],
+    why:["","Die Photonenenergie ist 4,9 eV. Das ergibt λ ≈ 254 nm – das ist ultraviolett, nicht sichtbar.","Ein angeregter Zustand lebt nur sehr kurz (ca. 10<sup>−8</sup> s).","Für die Ionisierung braucht Hg 10,4 eV. Beim Stoß mit 4,9 eV wird es nur angeregt."]},
+  {type:"tmc", id:"tf8", est:60, q:"Warum gibt es in der Kurve <b>mehrere</b> Maxima im Abstand von etwa 4,9 V?", o:["Bei größerer Spannung kann ein Elektron auf dem Weg zum Gitter zwei- oder dreimal unelastisch stoßen.","Quecksilber hat Energieniveaus bei 4,9 eV, 9,8 eV, 14,7 eV …","Die Beschleunigungsspannung schwankt periodisch.","Die Elektronen werden am Gitter reflektiert."],
+    why:["","Typischer Fehler: Hg hat <b>kein</b> Niveau bei 9,8 eV. Das Elektron stößt zweimal und gibt jedes Mal 4,9 eV ab.","Die Spannung wird langsam und gleichmäßig erhöht.","Reflexion am Gitter erklärt die regelmäßigen Abstände nicht. Denk an mehrere Stöße."]}
+]},
+
 { id:"r1", part:"r", title:"R1 · 📖 Lesetext: Die Röntgenröhre", items:[
   {type:"read", html:`<h3>Strahlen, die durch die Hand gehen</h3>
 <p>1895 entdeckte <b>Wilhelm Conrad Röntgen</b> in Würzburg eine unsichtbare Strahlung, die Papier, Holz und sogar die Hand durchdringt. Er nannte sie X-Strahlen. Heute weiß man: <b>Röntgenstrahlung</b> ist elektromagnetische Strahlung mit sehr kleiner Wellenlänge (etwa 1 pm bis 10 nm) und damit sehr großer Photonenenergie (etwa 100 eV bis einige 100 keV). Sie liegt im Spektrum hinter dem UV-Licht.</p>
@@ -559,6 +591,27 @@ const SECTIONS = [
 ]},
 
 /* ============================ WIEDERHOLUNG ============================ */
+/* ============================ 📝 TEST RÖNTGEN ============================ */
+{ id:"r9", part:"r", title:"R9 · 📝 Test: Röntgenstrahlung", test:"TR", intro:`<p><b>8 Fragen</b> zur Röntgenstrahlung. Du siehst das Ergebnis erst <b>am Ende</b> – dann mit einer Übersicht und Tipps. Konstanten: h = 6,626 · 10<sup>−34</sup> J s · c = 2,998 · 10<sup>8</sup> m/s · e = 1,602 · 10<sup>−19</sup> C.</p>`, items:[
+  {type:"testhead", test:"TR"},
+  {type:"tmc", id:"tr1", est:45, q:"Wie entsteht die <b>Bremsstrahlung</b>?", o:["Schnelle Elektronen werden in der Anode im elektrischen Feld der Atomkerne abgebremst und senden dabei Photonen aus.","Elektronen springen in den Atomen der Anode von der L-Schale in die K-Schale.","Die heiße Anode glüht und sendet Wärmestrahlung aus.","Die Glühkathode sendet die Röntgenstrahlung aus."],
+    why:["","Das ist die Entstehung der <b>charakteristischen</b> Strahlung (Lesetext R3).","Wärmestrahlung hat viel zu wenig Energie für Röntgenphotonen.","Die Kathode sendet nur Elektronen aus. Die Strahlung entsteht in der Anode."]},
+  {type:"tnum", id:"tr2", est:120, q:"Eine Röntgenröhre wird mit U = 25 kV betrieben. Berechne die kurzwellige Grenze λ<sub>min</sub>.", a:49.6, tol:0.015, unit:"pm",
+    hint:"λ<sub>min</sub> = h · c / (e · U). Achtung: 25 kV = 25 000 V. Kurz: λ<sub>min</sub> in pm ≈ 1240 / U in kV."},
+  {type:"tnum", id:"tr3", est:120, q:"Im Spektrum misst man λ<sub>min</sub> = 31 pm. Mit welcher Spannung wurde die Röhre betrieben?", a:40.0, tol:0.015, unit:"kV",
+    hint:"U = h · c / (e · λ<sub>min</sub>). Achtung: 31 pm = 31 · 10<sup>−12</sup> m. Kurz: U in kV ≈ 1240 / λ<sub>min</sub> in pm."},
+  {type:"tmc", id:"tr4", est:45, q:"Die Spannung an der Röhre wird <b>verdoppelt</b>. Was passiert mit λ<sub>min</sub>?", o:["λ<sub>min</sub> wird halb so groß.","λ<sub>min</sub> wird doppelt so groß.","λ<sub>min</sub> bleibt gleich.","λ<sub>min</sub> wird ein Viertel so groß."],
+    why:["","Mehr Spannung → mehr Energie → <b>kürzere</b> Wellenlänge. λ<sub>min</sub> = h · c / (e · U).","λ<sub>min</sub> hängt von U ab: λ<sub>min</sub> = h · c / (e · U).","λ<sub>min</sub> ist proportional zu 1/U, nicht zu 1/U²."]},
+  {type:"tmc", id:"tr5", est:45, q:"Die Spannung wird erhöht (über der Anregungsgrenze). Was passiert mit der <b>Wellenlänge der K<sub>α</sub>-Linie</b>?", o:["Sie bleibt gleich – sie hängt nur vom Anodenmaterial ab.","Sie wird kürzer.","Sie wird länger.","Die Linie verschwindet."],
+    why:["","Nur λ<sub>min</sub> wird kürzer. Die Linien entstehen durch Übergänge zwischen festen Schalen der Anodenatome.","Die Energieniveaus der Anodenatome ändern sich nicht.","Mit mehr Spannung können noch mehr K-Elektronen herausgeschlagen werden – die Linie bleibt."]},
+  {type:"tmc", id:"tr6", est:45, q:"Der <b>Anodenstrom</b> wird erhöht, die Spannung bleibt gleich. Was ändert sich am Spektrum?", o:["Die Intensität wird größer; λ<sub>min</sub> und die Lage der Linien bleiben gleich.","λ<sub>min</sub> wird kleiner.","Die Linien verschieben sich zu kürzeren Wellenlängen.","Nichts ändert sich."],
+    why:["","λ<sub>min</sub> hängt nur von der <b>Spannung</b> ab, nicht vom Strom.","Die Lage der Linien hängt nur vom Anodenmaterial ab.","Mehr Elektronen pro Sekunde → mehr Photonen pro Sekunde → größere Intensität."]},
+  {type:"tnum", id:"tr7", est:90, q:"Kupfer: K-Schale E<sub>K</sub> = −8,98 keV, L-Schale E<sub>L</sub> = −0,93 keV. Berechne die Energie eines K<sub>α</sub>-Photons.", a:8.05, tol:0.01, unit:"keV",
+    hint:"K<sub>α</sub>: Ein Elektron springt von L nach K. E = E<sub>L</sub> − E<sub>K</sub> = −0,93 keV − (−8,98 keV)."},
+  {type:"tmc", id:"tr8", est:45, q:"Was passiert bei der kurzwelligen Grenze λ<sub>min</sub>?", o:["Ein Elektron gibt seine gesamte kinetische Energie e · U an ein einziges Photon ab.","Die Intensität der Strahlung ist dort am größten.","Ein Elektron springt von der M-Schale in die K-Schale.","λ<sub>min</sub> ist für jedes Anodenmaterial anders."],
+    why:["","Bei λ<sub>min</sub> ist die Intensität <b>null</b> – das Maximum liegt bei größeren Wellenlängen.","Das ist die K<sub>β</sub>-Linie, nicht die Grenze der Bremsstrahlung.","λ<sub>min</sub> hängt nur von der Spannung ab, nicht vom Anodenmaterial (Duane-Hunt)."]}
+]},
+
 { id:"w1", part:"w", title:"W1 · Energie, Elektronvolt und Photonen", intro:`<p><b>Formeln:</b> 1 eV = 1,602 · 10<sup>−19</sup> J · E<sub>kin</sub> = e · U = ½ · m · v² · E = h · f = h · c / λ · λ in nm ≈ 1240 / (E in eV)</p>`, items:[
   {type:"num", id:"wa1", tag:"w", q:"Rechne 2,5 eV in Joule um.", a:4.005e-19, tol:0.01, unit:"J", sol:"2,5 · 1,602·10⁻¹⁹ J ≈ 4,0·10⁻¹⁹ J"},
   {type:"num", id:"wa2", tag:"w", q:"Ein Photon hat λ = 500 nm. Berechne seine Energie in eV.", a:2.48, tol:0.015, unit:"eV", sol:"E = h · c / λ = 6,626·10⁻³⁴ · 2,998·10⁸ / 5·10⁻⁷ J ≈ 3,97·10⁻¹⁹ J ≈ 2,48 eV"},
@@ -598,7 +651,7 @@ const SECTIONS = [
 const KEY = "physik12-fh-roentgen-2026";
 let S = freshState();
 const TUT = {saved:false, erased:false, loaded:false};
-function freshState(){ return {app:"physik12-fh-roe", v:1, name:"", mode:"alle", items:{}}; }
+function freshState(){ return {app:"physik12-fh-roe", v:1, name:"", mode:"alle", items:{}, tests:{}, tans:{}}; }
 function st(id){ return S.items[id] || (S.items[id] = {d:0, w:0}); }
 
 const ITEMS = {};
@@ -803,6 +856,8 @@ function estOf(it){
     case "write": return Math.max(240, 5 * (it.max || 60));
     case "draw": return 60;
     case "tutorial": return 0;
+    case "tmc": return 45;
+    case "tnum": return 120;
   }
   return 60;
 }
@@ -841,9 +896,9 @@ const QT = (() => {
     const p = el.querySelector(".clockp"); if (!p) return;
     const it = ITEMS[id], est = estOf(it), rec = S.items[id] && S.items[id].q;
     const s = rec ? rec[0] : sec(id);
-    if (!est || s <= 0){ p.style.display = "none"; return; }
+    if (!est || s <= 0){ p.style.visibility = "hidden"; return; }
     const q = s / est;
-    p.style.display = ""; p.textContent = `⏱ ${mmss(s)} / ca. ${mmss(est)}`;
+    p.style.visibility = ""; p.textContent = `⏱ ${mmss(s)} / ca. ${mmss(est)}`;
     p.className = "clockp" + (q > 1.5 ? " over" : q > 1.2 ? " warn" : "") + (rec ? " fin" : "");
     const n = el.querySelector(".timenote");
     if (n && !rec && q > 1.5){
@@ -872,28 +927,193 @@ document.addEventListener("focusin", e => { const it = e.target.closest && e.tar
 
 /* ---------- Seite verlassen (anderer Tab / andere App) ---------- */
 let AWAY_IGNORE = false, AWAY_T0 = 0, AWAY_HID = false, AWAY_WHERE = "";
-function awayStart(hidden){ if (hidden) AWAY_HID = true; if (AWAY_T0) return; AWAY_T0 = Date.now(); AWAY_WHERE = TAB; QT.pause(); }
+/* ---------- Kamera / Dateiauswahl: zählt NICHT als „Seite verlassen“ ----------
+   Solange die Kamera (oder die Dateiauswahl) offen ist, wird das Verlassen nicht gezählt.
+   Ende: wenn das Foto zurückkommt („change“) oder abgebrochen wird („cancel“) – plus 3 s; spätestens nach 5 Minuten. */
+let CAM_UNTIL = 0;
+function camOpen(inp) {
+  CAM_UNTIL = Date.now() + 300000;
+  if (inp && !inp._camHook) { inp._camHook = 1; const end = () => { CAM_UNTIL = Date.now() + 3000; }; inp.addEventListener('change', end); inp.addEventListener('cancel', end); }
+}
+const camActive = () => Date.now() < CAM_UNTIL;
+(function () {
+  const orig = HTMLInputElement.prototype.click;
+  HTMLInputElement.prototype.click = function () { if (this.type === 'file') camOpen(this); return orig.apply(this, arguments); };
+  const hit = e => { const t = e.target; if (!t || !t.closest) return; const i = t.closest('input[type=file]') || (t.closest('label') && t.closest('label').querySelector('input[type=file]')); if (i) camOpen(i); };
+  document.addEventListener('pointerdown', hit, true); document.addEventListener('click', hit, true);
+})();
+
+/* ---------- Pop-up nach dem Zurückkommen: 👀 – wird gemeldet ---------- */
+function awayAlarm(sec, inTest) {
+  if (!document.getElementById('awayCss')) {
+    const st = document.createElement('style'); st.id = 'awayCss';
+    st.textContent = `#awayOv{position:fixed;inset:0;z-index:99999;background:rgba(60,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+#awayBox{background:#fff;border:6px solid #d62828;border-radius:22px;max-width:460px;width:100%;padding:22px 22px 18px;text-align:center;font-family:inherit;color:#222;animation:awayBlink .8s ease-in-out 6;box-shadow:0 0 0 0 rgba(214,40,40,.7)}
+#awayBox .eyes{font-size:64px;line-height:1;margin-bottom:8px;animation:awayEyes 1.2s ease-in-out infinite}
+#awayBox h2{margin:4px 0 8px;color:#b00020;font-size:1.45rem}
+#awayBox p{margin:6px 0;font-size:1.05rem}
+#awayBox .en{color:#777;font-size:.9rem}
+#awayBox button{margin-top:12px;background:#d62828;color:#fff;border:0;border-radius:12px;padding:12px 20px;font-size:1.05rem;font-weight:700;cursor:pointer}
+@keyframes awayBlink{0%,100%{border-color:#d62828;background:#fff;box-shadow:0 0 0 0 rgba(214,40,40,.7)}50%{border-color:#ff8a8a;background:#ffe3e3;box-shadow:0 0 0 14px rgba(214,40,40,0)}}
+@keyframes awayEyes{0%,100%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+@media (prefers-reduced-motion:reduce){#awayBox,#awayBox .eyes{animation:none}}`;
+    document.head.appendChild(st);
+  }
+  const old = document.getElementById('awayOv'); if (old) old.remove();
+  const s = Math.max(0, Math.round(sec || 0)), t = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  const ov = document.createElement('div'); ov.id = 'awayOv';
+  ov.innerHTML = `<div id="awayBox" role="alertdialog" aria-modal="true"><div class="eyes">👀👀</div>
+    <h2>Du hast die Seite verlassen!</h2>
+    <p>Du warst <b>${t} min</b> ${inTest ? '<b>während des Tests</b> ' : ''}in einem anderen Tab oder in einer anderen App.</p>
+    <p><b>Das wird deiner Lehrkraft gemeldet.</b></p>
+    <p class="en">You left this page${inTest ? ' during the test' : ''}. This will be reported to your teacher.</p>
+    <button type="button">OK – ich bleibe auf dieser Seite</button></div>`;
+  ov.querySelector('button').onclick = () => ov.remove();
+  document.body.appendChild(ov);
+  try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) { }
+}
+
+function awayStart(hidden){ if (camActive()) return; if (hidden) AWAY_HID = true; if (AWAY_T0) return; AWAY_T0 = Date.now(); AWAY_WHERE = activeTest() || TAB; QT.pause(); }
 function awayEnd(){
   if (!AWAY_T0 || document.visibilityState === "hidden" || !document.hasFocus()) return;
   const sec = (Date.now() - AWAY_T0) / 1000, hid = AWAY_HID; AWAY_T0 = 0; AWAY_HID = false;
-  if (AWAY_IGNORE){ AWAY_IGNORE = false; return; }
+  if (AWAY_IGNORE || camActive()) { AWAY_IGNORE = false; return; }
   if (sec < (hid ? 1 : 3)) return;
   const A = S.away = S.away || {n:0, sec:0, log:[]};
   A.n++; A.sec = Math.round(A.sec + sec);
   A.log.push([new Date().toISOString().slice(0, 16), Math.round(sec), AWAY_WHERE]); if (A.log.length > 20) A.log = A.log.slice(-20);
+  const tt = TESTDEF[AWAY_WHERE] ? AWAY_WHERE : null;
+  if (tt && S.tests && S.tests[tt]){ const o = S.tests[tt]; o.away = (o.away || 0) + 1; o.awaySec = Math.round((o.awaySec || 0) + sec); testHeadRefresh(tt); }
   autosave();
-  toast(`👀 Du hast die Seite verlassen (${mmss(sec)} min). Das wird gespeichert – bitte bleib bei der Übung.`);
+  awayAlarm(sec, !!tt);
 }
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") awayStart(true); else setTimeout(awayEnd, 300); });
 window.addEventListener("blur", () => awayStart(false));
 window.addEventListener("focus", () => setTimeout(awayEnd, 300));
-document.addEventListener("click", e => { if (e.target.closest && e.target.closest("input[type=file]")){ AWAY_IGNORE = true; setTimeout(() => { if (!AWAY_T0) AWAY_IGNORE = false; }, 60000); } }, true);
 
 
 /* =====================================================================
    RENDERER
    ===================================================================== */
 const R = {};
+/* =====================================================================
+   📝 TESTS: Antworten speichern – Ergebnis erst am Ende (mit Übersicht und Tipps)
+   S.tests[tid] = {start, end, sec, score, away, awaySec} · S.tans[id] = {ok, a (Text), r (Wahl / Zahl)}
+   ===================================================================== */
+const TESTDEF = {TF:{title:"Test: Franck-Hertz"}, TR:{title:"Test: Röntgenstrahlung"}};
+const tSec = tid => SECTIONS.find(s => s.test === tid);
+const tItems = tid => tSec(tid).items.filter(i => i.id);
+const tSt = tid => ((S.tests = S.tests || {})[tid]) || {};
+const tAns = () => (S.tans = S.tans || {});
+const testStarted = tid => !!tSt(tid).start, testDone = tid => !!tSt(tid).end;
+const testOfItem = it => SECTIONS.find(s => s.id === it.sec).test;
+function activeTest(){ return Object.keys(TESTDEF).find(t => testStarted(t) && !testDone(t)); }
+const plainH = s => { const d = document.createElement("div"); d.innerHTML = String(s == null ? "" : s); return (d.textContent || "").replace(/\s+/g, " ").trim(); };
+function sci(v){ if (!isFinite(v)) return "–"; const a = Math.abs(v); if (a !== 0 && (a < 1e-3 || a >= 1e5)){ const [m, e] = v.toExponential(3).split("e"); return String(+m).replace(".", ",") + " · 10" + String(+e).replace("-", "⁻").replace(/\d/g, d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d]); } return String(+v.toPrecision(4)).replace(".", ","); }
+const tRight = it => it.type === "tmc" ? plainH(it.o[0]) : sci(it.a) + " " + it.unit;
+const testScore = tid => tItems(tid).filter(it => (tAns()[it.id] || {}).ok).length;
+function showItem(sec, it){ return !sec.test || it.type === "testhead" || testStarted(sec.test); }
+
+function testSave(it, a){
+  const tid = testOfItem(it);
+  if (tAns()[it.id] || testDone(tid)) return;
+  tAns()[it.id] = a; QT.stop(it.id); autosave();
+  const el = document.getElementById("it_" + it.id); if (el) el.replaceWith(itemEl(it));
+  if (tItems(tid).every(x => tAns()[x.id])) testFinish(tid); else testHeadRefresh(tid);
+}
+function testFinish(tid){
+  const o = S.tests[tid]; if (!o || o.end) return;
+  o.end = new Date().toISOString();
+  o.sec = tItems(tid).reduce((s, it) => s + (((S.items[it.id] || {}).q || [0])[0]), 0);
+  o.score = testScore(tid);
+  tItems(tid).forEach(it => { const s = st(it.id); if (tAns()[it.id].ok) s.d = 1; else s.w = (s.w || 0) + 1; });
+  autosave(); refreshScores(); render();
+  setTimeout(() => { const d = document.querySelector(`details[data-test="${tid}"]`); if (d){ d.open = true; const hd = document.getElementById("th_" + tid); if (hd) hd.scrollIntoView({behavior:"smooth", block:"start"}); } }, 60);
+}
+function testHeadRefresh(tid){ const hd = document.getElementById("th_" + tid); if (hd) hd.replaceWith(R.testhead({test:tid})); }
+
+R.testhead = it => {
+  const tid = it.test, o = tSt(tid), items = tItems(tid), box = h("div", {cls:"card thead", id:"th_" + tid});
+  if (!testStarted(tid)){
+    const min = Math.round(items.reduce((s, x) => s + estOf(x), 0) / 60);
+    box.innerHTML = `<h3 style="margin-top:0">So geht der Test</h3><ul>
+      <li><b>${items.length} Fragen</b>, ca. ${min} Minuten.</li>
+      <li>Nach jeder Frage tippst du auf <b>„💾 Antwort speichern“</b>. Danach kannst du die Antwort <b>nicht mehr ändern</b>.</li>
+      <li>Ob du richtig liegst, siehst du erst <b>am Ende</b>. Dann bekommst du eine Übersicht mit Tipps.</li>
+      <li>Rechne auf Papier oder mit deinem Taschenrechner (kein Handy, keine andere App).</li>
+      <li>👀 <b>Bleib auf dieser Seite!</b> Jedes Verlassen wird gespeichert und deiner Lehrkraft gemeldet.</li></ul>
+      <p class="note">Tipp: Bearbeite zuerst die Lesetexte und Übungen dieses Themas.</p>`;
+    box.appendChild(h("button", {onclick: () => {
+      S.tests = S.tests || {}; S.tests[tid] = {start:new Date().toISOString(), away:0, awaySec:0}; autosave();
+      const sec = tSec(tid), det = document.querySelector(`details[data-test="${tid}"]`);
+      if (det){ const body = det.querySelector(".secbody"); box.replaceWith(R.testhead({test:tid})); sec.items.filter(x => x.id).forEach(x => body.appendChild(itemEl(x))); setTimeout(() => sec.items.forEach(x => x.id && QT.paint(x.id)), 0); }
+      else render();
+    }}, "▶ Test starten"));
+    return box;
+  }
+  if (!testDone(tid)){
+    const n = items.filter(x => tAns()[x.id]).length;
+    box.innerHTML = `<b>Beantwortet: ${n} von ${items.length}</b> · Das Ergebnis kommt nach der letzten Antwort.` +
+      (o.away ? `<div class="awaynote">👀 Du hast die Seite während des Tests <b>${o.away}-mal</b> verlassen (${mmss(o.awaySec)} min). Das wird gemeldet.</div>` : "");
+    return box;
+  }
+  const sc = o.score != null ? o.score : testScore(tid), N = items.length;
+  box.innerHTML = `<h3 style="margin-top:0">🎯 Ergebnis: ${sc} von ${N} richtig ${sc >= N - 1 ? "🏆" : sc >= Math.ceil(N * 0.6) ? "🎉" : "💪"}</h3>
+    <p>Zeit: <b>${mmss(o.sec)} min</b>${o.away ? ` · 👀 Seite verlassen: <b>${o.away}-mal</b> (${mmss(o.awaySec)} min)` : ""}</p>
+    <div class="trev"><h4>📋 Deine Antworten <span class="note">(your answers)</span></h4>` + items.map((x, k) => {
+      const a = tAns()[x.id] || {}, ok = !!a.ok, q = (S.items[x.id] || {}).q;
+      const tip = ok ? "" : (x.type === "tmc" ? ((x.why && x.why[a.r]) || "") : [numTip(a.r, x.a), x.hint].filter(Boolean).join(" "));
+      const qq = plainH(x.q);
+      return `<div class="rv ${ok ? "ok" : "bad"}"><div class="rvh"><b>${ok ? "✅" : "❌"} Frage ${k + 1}</b> <span>${qq.length > 110 ? qq.slice(0, 109) + "…" : qq}</span>
+        ${q ? `<span class="rvt ${q[1] === 2 ? "over" : q[1] === 1 ? "warn" : ""}">⏱ ${mmss(q[0])} / ca. ${mmss(estOf(x))}</span>` : ""}</div>
+        <div>Deine Antwort: <b>${a.a || "–"}</b>${ok ? "" : ` &nbsp;·&nbsp; Richtig: <b>${tRight(x)}</b>`}</div>
+        ${ok ? "" : `<div class="tipline">💡 ${tip}</div>`}</div>`;
+    }).join("") + "</div>";
+  return box;
+};
+
+R.tmc = it => {
+  const tid = testOfItem(it), a = tAns()[it.id], done = testDone(tid);
+  const opts = shuffle(it.o.map((t, i) => ({t, i})), it.id);
+  const list = h("div", {cls:"opts"});
+  opts.forEach(o => {
+    const inp = h("input", {type:"radio", name:"t_" + it.id, value:o.i});
+    if (a && a.r === o.i) inp.checked = true;
+    if (a) inp.disabled = true;
+    list.appendChild(h("label", {cls: done ? (o.i === 0 ? "tright" : (a && a.r === o.i ? "twrong" : "")) : ""}, inp, h("span", {html:o.t})));
+  });
+  const fb = fbBox();
+  const btn = h("button", {onclick: () => {
+    const sel = list.querySelector("input:checked");
+    if (!sel){ fb.className = "fb no"; fb.textContent = "Wähle zuerst eine Antwort."; return; }
+    const r = +sel.value; testSave(it, {ok: r === 0, a: plainH(it.o[r]), r});
+  }}, "💾 Antwort speichern");
+  tStatus(it, a, done, fb, btn);
+  return [list, h("div", {cls:"row"}, btn), fb];
+};
+R.tnum = it => {
+  const tid = testOfItem(it), a = tAns()[it.id], done = testDone(tid);
+  const inp = h("input", {cls:"num", type:"text", inputmode:"decimal", placeholder:"Ergebnis"});
+  const fb = fbBox();
+  const save = () => {
+    const v = parseNum(inp.value);
+    if (isNaN(v)){ fb.className = "fb no"; fb.textContent = "Das ist keine Zahl. Beispiel: 3,36e-19 oder 656"; return; }
+    testSave(it, {ok: Math.abs(v - it.a) <= (it.tol || 0.02) * Math.abs(it.a), a: inp.value.trim() + " " + it.unit, r: v});
+  };
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") save(); });
+  const btn = h("button", {onclick: save}, "💾 Antwort speichern");
+  if (a){ inp.value = a.a.replace(new RegExp("\\s*" + it.unit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"), ""); inp.disabled = true; if (done) inp.classList.add(a.ok ? "tok" : "tbad"); }
+  tStatus(it, a, done, fb, btn);
+  return [h("div", {cls:"row"}, inp, h("span", null, " " + it.unit + " "), btn), fb];
+};
+function tStatus(it, a, done, fb, btn){
+  if (!a) return;
+  btn.style.display = "none";
+  if (!done){ fb.className = "fb saved"; fb.innerHTML = "💾 Gespeichert. Das Ergebnis siehst du am Ende. <span class=\"note\">(saved – result at the end)</span>"; }
+  else if (a.ok){ fb.className = "fb ok"; fb.innerHTML = "✅ Richtig!"; }
+  else { fb.className = "fb no"; fb.innerHTML = `❌ Falsch. Richtig: <b>${tRight(it)}</b>`; }
+}
+
 
 R.info = it => h("div", {html: (CLOUD_ON && it.cloudHtml) ? it.cloudHtml : it.html});
 
@@ -1427,7 +1647,7 @@ function itemEl(it){
   if (!it.id) return h("div", {cls:"item"}, R[it.type](it));
   const body = R[it.type](it);
   return h("div", {cls:"item", id:"it_" + it.id},
-    h("div", {cls:"ihead"}, h("div", {cls:"q"}, tagEl(it), h("span", {html: it.q || ""})), h("span", {cls:"headr"}, h("span", {cls:"clockp", style:"display:none"}), starBadge(it))),
+    h("div", {cls:"ihead"}, h("div", {cls:"q"}, tagEl(it), h("span", {html: it.q || ""})), h("span", {cls:"headr"}, h("span", {cls:"clockp", style:"visibility:hidden"}), starBadge(it))),
     h("div", {cls:"timenote"}), body);
 }
 function refreshItem(id){
@@ -1440,15 +1660,16 @@ function render(){
   const app = document.getElementById("app"); app.innerHTML = "";
   setTimeout(() => Object.keys(ITEMS).forEach(QT.paint), 0);
   if (TAB === "stat"){ app.appendChild(statView()); return; }
-  if (TAB === "f") app.appendChild(h("div",{cls:"card", html:"<b>Der Franck-Hertz-Versuch</b> – Energieaufnahme von Atomen durch Stöße. Beginne mit den <b>Lesetexten 📖 (F1–F3)</b>. Dann vertiefst du: Fachbegriffe, Simulation, Rechnen, Antworten schreiben. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
-  if (TAB === "r") app.appendChild(h("div",{cls:"card", html:"<b>Röntgenstrahlung</b> – Erzeugung, Bremsstrahlung und charakteristische Strahlung. Beginne mit den <b>Lesetexten 📖 (R1–R3)</b>. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
+  if (TAB === "f") app.appendChild(h("div",{cls:"card", html:"<b>Der Franck-Hertz-Versuch</b> – Energieaufnahme von Atomen durch Stöße. Beginne mit den <b>Lesetexten 📖 (F1–F3)</b>. Dann vertiefst du: Fachbegriffe, Simulation, Rechnen, Antworten schreiben. Am Ende: <b>📝 Test (F8)</b>. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
+  if (TAB === "r") app.appendChild(h("div",{cls:"card", html:"<b>Röntgenstrahlung</b> – Erzeugung, Bremsstrahlung und charakteristische Strahlung. Beginne mit den <b>Lesetexten 📖 (R1–R3)</b>. Am Ende: <b>📝 Test (R9)</b>. <span class='tag g'>Lesen</span> = Fragen zum Text · <span class='tag v'>Vertiefung</span> · <span class='tag x'>Zusatz</span> = für Profis."}));
   if (TAB === "w") app.appendChild(h("div",{cls:"card", html:"<b>Wiederholung</b> – Themen aus dem Halbjahr, die du für Franck-Hertz und Röntgen brauchst: Elektronvolt und Photonen, Energieniveaus, Photoeffekt, Quantenobjekte und Bragg-Reflexion."}));
   SECTIONS.filter(s => s.part === TAB).forEach((sec, i) => {
     if (sec.part === "start"){ sec.items.forEach(it => app.appendChild(it.id ? R[it.type](it) : (it.type === "info" ? h("div",{cls:"card"}, R.info(it)) : R[it.type](it)))); return; }
     const t = totals(sec.id);
     const det = h("details", {cls:"sec"},
       h("summary", null, h("span", null, sec.title), h("span", {cls:"prog", id:"prog_" + sec.id}, `⭐ ${t.got}/${t.max} · ✗ ${t.wrong}`)),
-      h("div", {cls:"secbody"}, sec.intro ? h("div", {cls:"intro", html: sec.intro}) : null, ...sec.items.map(itemEl)));
+      h("div", {cls:"secbody"}, sec.intro ? h("div", {cls:"intro", html: sec.intro}) : null, ...sec.items.filter(it => showItem(sec, it)).map(itemEl)));
+    if (sec.test){ det.dataset.test = sec.test; if (testStarted(sec.test)) det.open = true; det.classList.add("testsec"); }
     app.appendChild(det);
   });
 }
@@ -1785,8 +2006,11 @@ function cloudSummary(){
   const T = totals();
   const all = Object.keys(ITEMS).filter(id => counted(id)), done = all.filter(id => (S.items[id]||{}).d).length;
   const A = S.away || {n:0, sec:0}, Q = Object.keys(S.items).map(k => S.items[k].q).filter(Boolean);
+  const tx = t => { const o = tSt(t); return testDone(t) ? testScore(t) + ' / ' + tItems(t).length + (o.sec ? ' · ⏱' + mmss(o.sec) : '') + (o.away ? ' · 👀' + o.away : '') : (testStarted(t) ? 'begonnen' + (o.away ? ' · 👀' + o.away : '') : '–'); };
   const extra = {
     away: ['🚪 Seite verlassen', A.n ? A.n + '× · ' + mmss(A.sec) : '–'],
+    testF: ['📝 Test Franck-Hertz', tx('TF')],
+    testR: ['📝 Test Röntgen', tx('TR')],
     slow: ['⏰ zu langsam', Q.length ? Q.filter(q => q[1] === 2).length + ' von ' + Q.length + ' · Σ ' + mmss(Q.reduce((a, q) => a + q[0], 0)) : '–']
   };
 
@@ -1796,7 +2020,7 @@ let logoutArm = 0;
 function cloudStart(){
   Cloud.init({
     app: APP_ID, titel: APP_TITEL,
-    getState: () => ({mode:S.mode, items:S.items, name:S.name, away:S.away}),
+    getState: () => ({mode:S.mode, items:S.items, name:S.name, away:S.away, tests:S.tests, tans:S.tans}),
     hasProgress: () => Object.keys(S.items).length > 0,
     setState: st => {
       const nm = S.name;
