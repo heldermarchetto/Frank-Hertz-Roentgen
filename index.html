@@ -928,19 +928,23 @@ document.addEventListener("focusin", e => { const it = e.target.closest && e.tar
 /* ---------- Seite verlassen (anderer Tab / andere App) ---------- */
 let AWAY_IGNORE = false, AWAY_T0 = 0, AWAY_HID = false, AWAY_WHERE = "";
 /* ---------- Kamera / Dateiauswahl: zählt NICHT als „Seite verlassen“ ----------
-   Solange die Kamera (oder die Dateiauswahl) offen ist, wird das Verlassen nicht gezählt.
-   Ende: wenn das Foto zurückkommt („change“) oder abgebrochen wird („cancel“) – plus 3 s; spätestens nach 5 Minuten. */
-let CAM_UNTIL = 0;
+   Pause beginnt beim Tippen auf den Foto-Knopf. Sie endet, sobald das Foto zurück ist („change“/„cancel“)
+   oder die Seite wieder sichtbar ist – plus ein paar Sekunden. Wer länger als 3 Minuten weg ist, wird trotzdem gemeldet. */
+const CAM_MAX = 180000;
+let CAM_UNTIL = 0, CAM_HID = 0;
 function camOpen(inp) {
-  CAM_UNTIL = Date.now() + 300000;
-  if (inp && !inp._camHook) { inp._camHook = 1; const end = () => { CAM_UNTIL = Date.now() + 3000; }; inp.addEventListener('change', end); inp.addEventListener('cancel', end); }
+  CAM_UNTIL = Date.now() + CAM_MAX; CAM_HID = 0;
+  if (inp && !inp._camHook) { inp._camHook = 1; const end = () => { CAM_UNTIL = Date.now() + 5000; }; inp.addEventListener('change', end); inp.addEventListener('cancel', end); }
 }
-const camActive = () => Date.now() < CAM_UNTIL;
+const camActive = () => Date.now() < CAM_UNTIL && !(CAM_HID && Date.now() - CAM_HID > CAM_MAX);
 (function () {
   const orig = HTMLInputElement.prototype.click;
   HTMLInputElement.prototype.click = function () { if (this.type === 'file') camOpen(this); return orig.apply(this, arguments); };
   const hit = e => { const t = e.target; if (!t || !t.closest) return; const i = t.closest('input[type=file]') || (t.closest('label') && t.closest('label').querySelector('input[type=file]')); if (i) camOpen(i); };
-  document.addEventListener('pointerdown', hit, true); document.addEventListener('click', hit, true);
+  ['touchstart', 'pointerdown', 'mousedown', 'click'].forEach(ev => document.addEventListener(ev, hit, true));
+  const back = () => { if (Date.now() < CAM_UNTIL) CAM_UNTIL = Math.min(CAM_UNTIL, Date.now() + 8000); };   // wieder auf der Seite → Schutz endet bald
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { if (Date.now() < CAM_UNTIL && !CAM_HID) CAM_HID = Date.now(); } else back(); }, true);
+  window.addEventListener('focus', back, true);
 })();
 
 /* ---------- Pop-up nach dem Zurückkommen: 👀 – wird gemeldet ---------- */
@@ -973,7 +977,7 @@ function awayAlarm(sec, inTest) {
   try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) { }
 }
 
-function awayStart(hidden){ if (camActive()) return; if (hidden) AWAY_HID = true; if (AWAY_T0) return; AWAY_T0 = Date.now(); AWAY_WHERE = activeTest() || TAB; QT.pause(); }
+function awayStart(hidden){ if (hidden) AWAY_HID = true; if (AWAY_T0) return; AWAY_T0 = Date.now(); AWAY_WHERE = activeTest() || TAB; QT.pause(); }
 function awayEnd(){
   if (!AWAY_T0 || document.visibilityState === "hidden" || !document.hasFocus()) return;
   const sec = (Date.now() - AWAY_T0) / 1000, hid = AWAY_HID; AWAY_T0 = 0; AWAY_HID = false;
